@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "954362238732",
-    "firebase_url": "https://powerrangers-3ff3d.firebaseio.com",
-    "project_id": "powerrangers-3ff3d",
-    "storage_bucket": "powerrangers-3ff3d.appspot.com"
+    "project_number": "738448293472",
+    "firebase_url": "https://powerrangers-b4dcf.firebaseio.com",
+    "project_id": "powerrangers-b4dcf",
+    "storage_bucket": "powerrangers-b4dcf.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:954362238732:android:bafb423eaaab2d69",
+        "mobilesdk_app_id": "1:738448293472:android:bafb423eaaab2d69",
         "android_client_info": {
           "package_name": "msp.powerrangers"
         }
       },
       "oauth_client": [
         {
-          "client_id": "954362238732-vi48udjov8otdshlbvl31p220rhskdb1.apps.googleusercontent.com",
+          "client_id": "738448293472-3fpbpkp8ca2p14eut5hr9s2rbc4cho3n.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDqyKdQFe0ZVTM0r6slmtcaqo-ISoKmjWg"
+          "current_key": "AIzaSyBz3DA-E2pts7AFIA2VWMKKXJ8rOhmQWg8"
         }
       ],
       "services": {

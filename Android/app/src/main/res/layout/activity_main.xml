@@ -37,6 +37,7 @@
             android:id="@+id/editTextPassword"
             android:hint="Enter your password"
             android:inputType="textPassword"
+            android:layout_margin="10dp"
             />
 
         <Button
