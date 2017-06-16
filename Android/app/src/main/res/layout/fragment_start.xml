@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="14dp">
+
+        <!-- User pic -->
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/userimage"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:src="@drawable/defaultuser"
+            app:civ_border_width="1dp"
+            app:civ_border_color="#FF000000"
+            android:layout_gravity="center"/>
+
+        <!-- Row 1 -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="25dp">
+
+            <!-- Balance -->
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_horizontal">
+                <TextView
+                    android:id="@+id/numberBalance"
+                    android:layout_height="60dp"
+                    android:layout_width="60dp"
+                    android:text="0 €"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="20sp"
+                    android:background="@drawable/startcircle"
+                    android:gravity="center_vertical|center_horizontal"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textBalance"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="16dp"
+                    android:layout_marginTop="7dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="@string/balance" />
+            </LinearLayout>
+
+            <!-- open tasks -->
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_horizontal">
+                <TextView
+                    android:id="@+id/numberOpenTasks"
+                    android:layout_height="60dp"
+                    android:layout_width="60dp"
+                    android:text="0"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="20sp"
+                    android:background="@drawable/startcircle"
+                    android:gravity="center_vertical|center_horizontal"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textOpenTasks"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="16dp"
+                    android:layout_marginTop="7dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="@string/openTasks_2" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Row 2 -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="35dp">
+
+            <!-- gemeldete Fälle -->
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_horizontal">
+                <TextView
+                    android:id="@+id/numberOpenedCases"
+                    android:layout_height="60dp"
+                    android:layout_width="60dp"
+                    android:text="0"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="20sp"
+                    android:background="@drawable/startcircle"
+                    android:gravity="center_vertical|center_horizontal"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textReportedCases"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="16dp"
+                    android:layout_marginTop="7dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="@string/reportesCases" />
+            </LinearLayout>
+
+            <!-- confirmte Fälle -->
+            <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_horizontal">
+            <TextView
+                android:id="@+id/numberConfirmedCases"
+                android:layout_height="60dp"
+                android:layout_width="60dp"
+                android:text="0"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                android:background="@drawable/startcircle"
+                android:gravity="center_vertical|center_horizontal"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textConfirmedCases"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16dp"
+                android:layout_marginTop="7dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="@string/confirmedCases" />
+        </LinearLayout>
+
+            <!-- abgeschlossene Taks -->
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_horizontal">
+                <TextView
+                    android:id="@+id/numberCompletedTasks"
+                    android:layout_height="60dp"
+                    android:layout_width="60dp"
+                    android:text="0"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="20sp"
+                    android:background="@drawable/startcircle"
+                    android:gravity="center_vertical|center_horizontal"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textCompletedTasks"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="16dp"
+                    android:layout_marginTop="7dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="@string/completedTasks" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

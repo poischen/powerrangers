@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">powerrangers</string>
+    <!-- Tabnames-->
+    <string name="start">Start</string>
+    <string name="confirmTasks">bestätige Taks</string>
+    <string name="openTasks">offene Taks</string>
+    <string name="findYorJob">get a /job</string>
+
+    <string name="balance">verdient</string>
+    <string name="openTasks_2">offene Tasks</string>
+    <string name="reportesCases">gemeldete\nFälle</string>
+    <string name="confirmedCases">bestätigte\nFälle</string>
+    <string name="completedTasks">abgeschlossene\nTasks</string>
+    <string name="chooseProfilePicture">Wähle neues Profilbild</string>
+    <string name="uploadPicture">Bild wird hochgeladen...</string>
+    <string name="errorSignUpFirst">Logge dich erst ein, bevor du ein Fotos hochlädst.</string>
+    <string name="errorUpload">Ups, das hat nicht geklappt. Probiers nochmal.</string>
+    <string name="uploaded">% hochgeladen...</string>
 </resources>
