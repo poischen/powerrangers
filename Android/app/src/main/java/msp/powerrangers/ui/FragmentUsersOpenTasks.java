@@ -123,7 +123,7 @@ public class FragmentUsersOpenTasks extends Fragment {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.fragment_item, parent, false);
+                    .inflate(R.layout.fragment_fragmentusersopentaskslistitem, parent, false);
             return new ViewHolder(view);
         }
 
