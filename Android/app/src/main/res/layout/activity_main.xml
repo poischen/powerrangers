@@ -4,8 +4,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="msp.powerrangers.MainActivity">
-
+    tools:context="msp.powerrangers.ui.MainActivity">
 
     <FrameLayout
         android:layout_width="match_parent"

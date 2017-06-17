@@ -2,9 +2,9 @@
     <string name="app_name">powerrangers</string>
     <!-- Tabnames-->
     <string name="start">Start</string>
-    <string name="confirmTasks">bestätige Taks</string>
-    <string name="openTasks">offene Taks</string>
-    <string name="findYorJob">get a /job</string>
+    <string name="confirmTasks">voting</string>
+    <string name="openTasks">meine Taks</string>
+    <string name="findYorJob">get a job</string>
 
     <string name="balance">verdient</string>
     <string name="openTasks_2">offene Tasks</string>
@@ -16,4 +16,8 @@
     <string name="errorSignUpFirst">Logge dich erst ein, bevor du ein Fotos hochlädst.</string>
     <string name="errorUpload">Ups, das hat nicht geklappt. Probiers nochmal.</string>
     <string name="uploaded">% hochgeladen...</string>
+    <string name="title_activity_detail_container">ActivityDetailContainer</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
