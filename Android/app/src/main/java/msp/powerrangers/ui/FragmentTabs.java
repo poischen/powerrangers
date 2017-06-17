@@ -34,20 +34,17 @@ public class FragmentTabs extends Fragment {
             Bundle arg2 = new Bundle();
             arg2.putInt("Arg for Frag2", 2);
             tabHost.addTab(tabHost.newTabSpec(getString(R.string.confirmTasks)).setIndicator(getString(R.string.confirmTasks)),
-                    FragmentStart.class, arg2);
-//TODO: entsprechendes Fragment einsetzen
+                    FragmentVotingTasks.class, arg2);
 
             Bundle arg3 = new Bundle();
             arg3.putInt("Arg for Frag3", 3);
             tabHost.addTab(tabHost.newTabSpec(getString(R.string.openTasks)).setIndicator(getString(R.string.openTasks)),
-                    FragmentStart.class, arg3);
-//TODO: entsprechendes Fragment einsetzen
+                    FragmentConfirmerCases.class, arg3);
 
             Bundle arg4 = new Bundle();
             arg2.putInt("Arg for Frag4", 4);
             tabHost.addTab(tabHost.newTabSpec(getString(R.string.findYorJob)).setIndicator(getString(R.string.findYorJob)),
-                    FragmentStart.class, arg4);
-//TODO: entsprechendes Fragment einsetzen
+                    FragmentRangerTasks.class, arg4);
 
             return rootView;
         }

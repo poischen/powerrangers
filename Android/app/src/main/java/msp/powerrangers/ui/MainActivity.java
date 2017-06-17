@@ -9,9 +9,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import msp.powerrangers.R;
+import msp.powerrangers.ui.listitems.FragmentConfirmerCasesListItem;
+import msp.powerrangers.ui.listitems.FragmentRangerTasksListItem;
+import msp.powerrangers.ui.listitems.FragmentUsersOpenTasksListItem;
+import msp.powerrangers.ui.listitems.FragmentVotingTasksListItem;
 
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements FragmentConfirmerCases.OnListFragmentInteractionListener, FragmentRangerTasks.OnListFragmentInteractionListener, FragmentUsersOpenTasks.OnListFragmentInteractionListener, FragmentVotingTasks.OnListFragmentInteractionListener{
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authListener;
@@ -42,9 +46,11 @@ public class MainActivity extends FragmentActivity {
 }
 
     private void changeToLoggedInView() {
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         FragmentTabs ft = new FragmentTabs();
-        ft.setArguments(getIntent().getExtras());
-        getSupportFragmentManager().beginTransaction().add(R.id.activity_main_fragment_container, ft).commit();
+        fragmentTransaction.replace(R.id.activity_main_fragment_container, ft);
+        fragmentTransaction.commit();
     }
 
 
@@ -60,5 +66,25 @@ public class MainActivity extends FragmentActivity {
         if (authListener != null) {
             firebaseAuth.removeAuthStateListener(authListener);
         }
+    }
+
+    @Override
+    public void onListFragmentInteraction(FragmentConfirmerCasesListItem.DummyItem item) {
+
+    }
+
+    @Override
+    public void onListFragmentInteraction(FragmentRangerTasksListItem.DummyItem item) {
+
+    }
+
+    @Override
+    public void onListFragmentInteraction(FragmentUsersOpenTasksListItem.DummyItem item) {
+
+    }
+
+    @Override
+    public void onListFragmentInteraction(FragmentVotingTasksListItem.DummyItem item) {
+
     }
 }
