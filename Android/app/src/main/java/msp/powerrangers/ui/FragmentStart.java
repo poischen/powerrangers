@@ -38,13 +38,17 @@ import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import msp.powerrangers.R;
+import msp.powerrangers.ui.listitems.FragmentConfirmerCasesListItem;
+import msp.powerrangers.ui.listitems.FragmentRangerTasksListItem;
+import msp.powerrangers.ui.listitems.FragmentUsersOpenTasksListItem;
+import msp.powerrangers.ui.listitems.FragmentVotingTasksListItem;
 
 import static android.app.Activity.RESULT_OK;
 
 
 /** Start screen, where a user can see information about his account and navigate between Tasks & Fälle
  */
-public class FragmentStart extends Fragment implements View.OnClickListener{
+public class FragmentStart extends Fragment implements View.OnClickListener {
     private static final int CHOOSE_IMAGE_REQUEST = 123;
     private static final int STORAGE_PERMISSION_REQUEST = 234;
 
@@ -113,10 +117,11 @@ public class FragmentStart extends Fragment implements View.OnClickListener{
                 }*/
                 break;
             case R.id.numberOpenTasks:
-                //TODO: Go to Fragment open Tasks instead of Login Fragment
-                /*FragmentOpenTasks fot = new FragmentOpenTasks();
-                fot.setArguments(getActivity().getIntent().getExtras());
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.activity_main_fragment_container, fot).commit();*/
+                android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                FragmentUsersOpenTasks fuot = new FragmentUsersOpenTasks();
+                fragmentTransaction.replace(R.id.activity_main_fragment_container, fuot);
+                fragmentTransaction.commit();
                 break;
         }
     }
@@ -234,4 +239,5 @@ public class FragmentStart extends Fragment implements View.OnClickListener{
 
 
     }
+
 }
