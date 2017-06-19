@@ -10,6 +10,7 @@
     <string name="balance">verdient</string>
     <string name="openTasks_2">offene Tasks</string>
     <string name="reportesCases">gemeldete\nFälle</string>
+    <string name="fStart_donatedPower">gespendete \nPower</string>
     <string name="confirmedCases">bestätigte\nFälle</string>
     <string name="completedTasks">abgeschlossene\nTasks</string>
     <string name="chooseProfilePicture">Wähle neues Profilbild</string>

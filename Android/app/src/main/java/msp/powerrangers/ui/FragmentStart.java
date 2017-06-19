@@ -221,7 +221,12 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
             };
             try {
                 localFile = File.createTempFile("images", "jpg");
-                final Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                //final Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 7;
+                final Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath(),options);
+
                 StorageReference riversRef = storageRef.child("images/" + uid + "/profilepic.jpg");
                 riversRef.getFile(localFile)
                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {

@@ -102,6 +102,34 @@
                     android:gravity="center_vertical|center_horizontal"
                     android:text="@string/openTasks_2" />
             </LinearLayout>
+
+            <!-- doanted power -->
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_horizontal">
+                <TextView
+                    android:id="@+id/numberDonatedPower"
+                    android:layout_height="60dp"
+                    android:layout_width="60dp"
+                    android:text="0 €"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="20sp"
+                    android:background="@drawable/startcircle"
+                    android:gravity="center_vertical|center_horizontal"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textDonatedPower"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="16dp"
+                    android:layout_marginTop="7dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="@string/fStart_donatedPower" />
+            </LinearLayout>
         </LinearLayout>
 
         <!-- Row 2 -->

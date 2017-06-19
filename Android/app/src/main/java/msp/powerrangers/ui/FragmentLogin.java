@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -191,11 +192,13 @@ public class FragmentLogin extends Fragment {
      * @param command String text value from the textEditSwitchRegisterSignin
      */
     public void reverseView(String command){
-       if (command.equals(R.string.fLogin_AlreadyRegistered)){
+       if (command.equals(getString(R.string.fLogin_AlreadyRegistered))){
+           Log.v("FragmentLogin", "switch view to sign in");
            buttonRegisterSignin.setText(R.string.fLogin_Signin);
            editTextName.setVisibility(View.GONE);
            textViewSwitchRegisterSignin.setText(R.string.fLogin_NotRegisteredYet);
-       } else if (command.equals(R.string.fLogin_NotRegisteredYet)){
+       } else if (command.equals(getString(R.string.fLogin_NotRegisteredYet))){
+           Log.v("FragmentLogin", "switch view to register");
            buttonRegisterSignin.setText(R.string.fLogin_Register);
            editTextName.setVisibility(View.VISIBLE);
            textViewSwitchRegisterSignin.setText(R.string.fLogin_AlreadyRegistered);
