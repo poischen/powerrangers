@@ -6,6 +6,7 @@
     <string name="openTasks">meine Taks</string>
     <string name="findYorJob">get a job</string>
 
+    <!-- FragmentStart-->
     <string name="balance">verdient</string>
     <string name="openTasks_2">offene Tasks</string>
     <string name="reportesCases">gemeldete\nFälle</string>
@@ -16,7 +17,28 @@
     <string name="errorSignUpFirst">Logge dich erst ein, bevor du ein Fotos hochlädst.</string>
     <string name="errorUpload">Ups, das hat nicht geklappt. Probiers nochmal.</string>
     <string name="uploaded">% hochgeladen...</string>
+    <string name="ctadonatenow">SPENDE JETZT!</string>
+    <string name="ctareportcasenow">MELDE EINEN FALL!</string>
+    <string name="welcome">Servus</string>
     <string name="title_activity_detail_container">ActivityDetailContainer</string>
+
+    <!-- FragmentLogin-->
+    <string name="fLogin_Signin">Sign in</string>
+    <string name="fLogin_Register">Register</string>
+    <string name="fLogin_AlreadyRegistered">Already registered? Sign in!</string>
+    <string name="fLogin_NotRegisteredYet">Do not have an account? Register now!</string>
+    <string name="fLogin_EnterPassword">Enter your password</string>
+    <string name="fLogin_EnterName">Enter your name</string>
+    <string name="fLogin_EnterEmail">Enter your email</string>
+    <string name="fLogin_Slogan">POWERS COMBINED!</string>
+
+    <!-- ActivityDonate-->
+    <string name="aDonate_donateIntro">Woho! Thanks, you wanna share your power and combine them with the rest of the world to save our planet! \n\nHow much you can effort?</string>
+    <string name="aDonate_buttonDonate">Combine Powers</string>
+    <string name="aDonate_toastSuccessDonate">Powers combined successfully</string>
+    <string name="aDonate_toastFailDonate">Something went wrong, please try again.</string>
+    <string name="aDonate_currency">€</string>
+    <string name="aDonate_prefixValue">Spende </string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

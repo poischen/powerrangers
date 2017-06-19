@@ -3,21 +3,24 @@ package msp.powerrangers.model;
 public class User {
 
     private String userName;
-    private int userId;
+    private String userId;
+    private String dbId;
     private String email;
     private double balance;
-    private Role role;
+    //private Role role;
 
-    public User(String userName, int userId, String email){
+    public User(String userName, String dbId, String userId, String email){
         this.userName = userName;
         this.userId = userId;
+        this.dbId = dbId;
+        this.email = email;
     }
 
-    public  int getId(){
+    public  String getId(){
         return userId;
     }
 
-    public  void setId(int newid){
+    public  void setId(String newid){
         userId = newid;
     }
 
@@ -38,7 +41,7 @@ public class User {
     }
 
 
-    public static void confirmTask(Task t){
+    /*public static void confirmTask(Task t){
 
     }
 
@@ -48,7 +51,7 @@ public class User {
 
     public static List<Case> showAllCasesToConfirm(){
         return null;
-    }
+    }*/
 
     public static void receiveReward(double reward){
 

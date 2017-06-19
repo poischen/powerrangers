@@ -29,7 +29,7 @@ public class MainActivity extends FragmentActivity implements FragmentConfirmerC
         fl.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().add(R.id.activity_main_fragment_container, fl).commit();
 
-        //create login/register fragment, if no user is signed in or creates tabs with start screen fragment if a user is signed in
+        //create login/fLogin_Register fragment, if no user is signed in or creates tabs with start screen fragment if a user is signed in
         firebaseAuth = FirebaseAuth.getInstance();
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override

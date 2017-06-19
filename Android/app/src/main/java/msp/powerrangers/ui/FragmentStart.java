@@ -2,21 +2,17 @@ package msp.powerrangers.ui;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,17 +27,11 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import org.w3c.dom.Text;
-
 import java.io.File;
 import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import msp.powerrangers.R;
-import msp.powerrangers.ui.listitems.FragmentConfirmerCasesListItem;
-import msp.powerrangers.ui.listitems.FragmentRangerTasksListItem;
-import msp.powerrangers.ui.listitems.FragmentUsersOpenTasksListItem;
-import msp.powerrangers.ui.listitems.FragmentVotingTasksListItem;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -53,7 +43,10 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     private static final int STORAGE_PERMISSION_REQUEST = 234;
 
     CircleImageView userImage;
-    TextView openTasks;
+    TextView textViewOpenTasks;
+    TextView textViewUsersName;
+    Button buttonCTADonateNow;
+    Button buttonCTAReportCase;
 
     private StorageReference storageRef;
 
@@ -69,15 +62,16 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
 
 
         //find View elements
-        userImage = (CircleImageView) getActivity().findViewById(R.id.userimage);
-        openTasks = (TextView) getActivity().findViewById(R.id.numberOpenTasks);
-        //TODO: userImage.setOnClickListener(this);
-        //TODO: openTasks.setOnClickListener(this);
+        userImage = (CircleImageView) view.findViewById(R.id.userimage);
+        textViewOpenTasks = (TextView) view.findViewById(R.id.numberOpenTasks);
+        textViewUsersName = (TextView) view.findViewById(R.id.textViewUsersName);
+        buttonCTADonateNow = (Button) view.findViewById(R.id.buttonCTADonate);
+        buttonCTAReportCase = (Button) view.findViewById(R.id.buttonCTAReportCase);;
+        userImage.setOnClickListener(this);
+        textViewOpenTasks.setOnClickListener(this);
+        buttonCTADonateNow.setOnClickListener(this);
+        buttonCTAReportCase.setOnClickListener(this);
 
-        //get and show profile pic
-        showUserPic();
-
-        //TODO: get and show user name
         return view;
     }
 
@@ -95,34 +89,37 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     public void onStart() {
         super.onStart();
         Bundle args = getArguments();
+
+        //get and show profile pic
+        showUserPic();
+
+        //get and show users name
+        FirebaseUser currentuser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentuser != null) {
+            textViewUsersName.setText(getResources().getText(R.string.welcome)+ " " + currentuser.getDisplayName() + "!");
+        }
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.userimage:
-
-                if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{
-                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    }, STORAGE_PERMISSION_REQUEST);}
-                else {
-                    showFileChooser();
-                }
-
-                /* (storagePermission != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_REQUEST);
-                } else {
-                    showFileChooser();
-                }*/
+                showFileChooser();
                 break;
             case R.id.numberOpenTasks:
                 android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 FragmentUsersOpenTasks fuot = new FragmentUsersOpenTasks();
                 fragmentTransaction.replace(R.id.activity_main_fragment_container, fuot);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 break;
+            case R.id.buttonCTADonate:
+                Intent intentDonate = new Intent(getActivity(), ActivityDonate.class);
+                startActivity(intentDonate);
+            case R.id.buttonCTAReportCase:
+                Intent intentReportCase = new Intent(getActivity(), ActivityReportCase.class);
+                startActivity(intentReportCase);
         }
     }
 
@@ -145,7 +142,6 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CHOOSE_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri filePath = data.getData();
-            //Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
             uploadFile(filePath);
         }
     }
@@ -167,6 +163,11 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
             progressDialog.setTitle(getString(R.string.uploadPicture));
             progressDialog.show();
+            //TODO: append random int to the url, so the user can upload several userpics -> erst möglich, wenn url in db geschrieben wird
+            //int p1 = (int)(Math.random() * 10);
+            //int p2 = (int)(Math.random() * 10);
+            //int p3 = (int)(Math.random() * 10);
+            //StorageReference riversRef = storageRef.child("images/" + uid + "/profilepic" + p1 + p2 + p3 + ".jpg");
 
             StorageReference riversRef = storageRef.child("images/" + uid + "/profilepic.jpg");
             riversRef.putFile(filePath)
@@ -191,7 +192,9 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                             double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                            progressDialog.setMessage(((int) progress) + getString(R.string.uploaded));
+                            if (getActivity() != null) {
+                                progressDialog.setMessage(((int) progress) + getString(R.string.uploaded));
+                            }
                         }
                     });
         } else {
@@ -202,9 +205,11 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     }
 
     /**
-     * method gets current user profiel picture fromk Firebase and shows it
+     * method gets current user profile picture from Firebase and shows it
      */
     //TODO: store profile picture as local file, so it does not have to be downlaoded all the time, and check first, if it is available on the device: "You can also download to device memory using getBytes()"
+    //TODO: Or store as Thumbnail on Firebase Storage during upload
+    //TODO: Write path into database
     private void showUserPic() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         File localFile = null;
@@ -236,7 +241,6 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
             }
 
         }
-
 
     }
 
