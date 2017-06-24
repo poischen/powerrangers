@@ -15,7 +15,11 @@ import msp.powerrangers.ui.listitems.FragmentUsersOpenTasksListItem;
 import msp.powerrangers.ui.listitems.FragmentVotingTasksListItem;
 
 
-public class MainActivity extends FragmentActivity implements FragmentConfirmerCases.OnListFragmentInteractionListener, FragmentRangerTasks.OnListFragmentInteractionListener, FragmentUsersOpenTasks.OnListFragmentInteractionListener, FragmentVotingTasks.OnListFragmentInteractionListener{
+public class MainActivity extends FragmentActivity
+        implements FragmentConfirmerCases.OnListFragmentInteractionListener,
+        FragmentRangerTasks.OnListFragmentInteractionListener,
+        FragmentUsersOpenTasks.OnListFragmentInteractionListener,
+        FragmentVotingTasks.OnListFragmentInteractionListener{
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authListener;

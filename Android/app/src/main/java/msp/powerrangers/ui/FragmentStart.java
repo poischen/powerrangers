@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +55,9 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
 
     CircleImageView userImage;
     TextView openTasks;
+    Button donateButton;
+    Button reportACaseButton;
+
 
     private StorageReference storageRef;
 
@@ -74,8 +78,11 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         //TODO: userImage.setOnClickListener(this);
         //TODO: openTasks.setOnClickListener(this);
 
-        //get and show profile pic
-        showUserPic();
+        donateButton = (Button) view.findViewById(R.id.donateButton);
+        reportACaseButton = (Button) view.findViewById(R.id.reportACaseButton);
+
+        donateButton.setOnClickListener(this);
+        reportACaseButton.setOnClickListener(this);
 
         //TODO: get and show user name
         return view;
@@ -88,13 +95,16 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         //Firebase stuff
         storageRef = FirebaseStorage.getInstance().getReference();
 
-    }
 
+    }
 
     @Override
     public void onStart() {
         super.onStart();
         Bundle args = getArguments();
+
+        //get and show profile pic
+        showUserPic();
     }
 
     @Override
@@ -122,6 +132,11 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                 FragmentUsersOpenTasks fuot = new FragmentUsersOpenTasks();
                 fragmentTransaction.replace(R.id.activity_main_fragment_container, fuot);
                 fragmentTransaction.commit();
+                break;
+
+            case R.id.reportACaseButton:
+                Intent intentReportCase = new Intent(getActivity(), ActivityReportCase.class);
+                startActivity(intentReportCase);
                 break;
         }
     }

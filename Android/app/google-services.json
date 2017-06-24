@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "738448293472-3f9frvvl1s8c244qkcpu65k4t86bc01m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "msp.powerrangers",
+            "certificate_hash": "db21cb930c96a6f23c9e71152e132081df3a6349"
+          }
+        },
+        {
           "client_id": "738448293472-huotge2olu4rl6ullqub0ast3o42r3j5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

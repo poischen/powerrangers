@@ -46,6 +46,7 @@ public class FragmentTabs extends Fragment {
             tabHost.addTab(tabHost.newTabSpec(getString(R.string.findYorJob)).setIndicator(getString(R.string.findYorJob)),
                     FragmentRangerTasks.class, arg4);
 
+
             return rootView;
         }
 
