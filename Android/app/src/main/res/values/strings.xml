@@ -27,7 +27,7 @@
     <string name="reportTitleOfCase">Title</string>
     <string name="reportCityOfCase">City</string>
     <string name="reportCountryOfCase">Country</string>
-    <string name="reportScalaOfCase">How dirty?</string>
+    <string name="reportScalaOfCase">Pollution Scale:</string>
     <string name="reportXCoordinateOfCase">X Coordinate</string>
     <string name="reportYCoordinateOfCase">Y Coordinate</string>
     <string name="reportPictureOfCase">Upload picture</string>
