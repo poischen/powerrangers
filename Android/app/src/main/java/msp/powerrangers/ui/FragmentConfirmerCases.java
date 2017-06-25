@@ -56,7 +56,7 @@ public class FragmentConfirmerCases extends Fragment {
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getContext(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
-                        // TODO: show FragmentDetailRangerTask
+                        // TODO: show FragmentDetailConfirmerCase
                         Toast.makeText(getContext(),  "A case was clicked!", Toast.LENGTH_SHORT).show();
                     }
 
