@@ -3,16 +3,13 @@ package msp.powerrangers.ui;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,17 +28,11 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import org.w3c.dom.Text;
-
 import java.io.File;
 import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import msp.powerrangers.R;
-import msp.powerrangers.ui.listitems.FragmentConfirmerCasesListItem;
-import msp.powerrangers.ui.listitems.FragmentRangerTasksListItem;
-import msp.powerrangers.ui.listitems.FragmentUsersOpenTasksListItem;
-import msp.powerrangers.ui.listitems.FragmentVotingTasksListItem;
 
 import static android.app.Activity.RESULT_OK;
 

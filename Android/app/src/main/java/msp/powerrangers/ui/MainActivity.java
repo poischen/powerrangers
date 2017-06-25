@@ -9,13 +9,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import msp.powerrangers.R;
-import msp.powerrangers.ui.listitems.FragmentConfirmerCasesListItem;
-import msp.powerrangers.ui.listitems.FragmentRangerTasksListItem;
+import msp.powerrangers.ui.listitems.ConfirmerCasesListItem;
 import msp.powerrangers.ui.listitems.FragmentUsersOpenTasksListItem;
 import msp.powerrangers.ui.listitems.FragmentVotingTasksListItem;
 
 
-public class MainActivity extends FragmentActivity implements FragmentConfirmerCases.OnListFragmentInteractionListener, FragmentRangerTasks.OnListFragmentInteractionListener, FragmentUsersOpenTasks.OnListFragmentInteractionListener, FragmentVotingTasks.OnListFragmentInteractionListener{
+public class MainActivity extends FragmentActivity
+        implements FragmentUsersOpenTasks.OnListFragmentInteractionListener,
+        FragmentVotingTasks.OnListFragmentInteractionListener{
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authListener;
@@ -66,16 +67,6 @@ public class MainActivity extends FragmentActivity implements FragmentConfirmerC
         if (authListener != null) {
             firebaseAuth.removeAuthStateListener(authListener);
         }
-    }
-
-    @Override
-    public void onListFragmentInteraction(FragmentConfirmerCasesListItem.DummyItem item) {
-
-    }
-
-    @Override
-    public void onListFragmentInteraction(FragmentRangerTasksListItem.DummyItem item) {
-
     }
 
     @Override

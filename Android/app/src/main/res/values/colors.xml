@@ -5,6 +5,7 @@
     <color name="colorPrimaryDark">#003d33</color>
     <color name="colorAccent">#439889</color>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="colorCardViewBackground">#d9f2e6</color>
 
 
 </resources>

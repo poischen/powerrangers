@@ -18,7 +18,7 @@ import msp.powerrangers.ui.listitems.FragmentUsersOpenTasksListItem;
 import msp.powerrangers.ui.listitems.FragmentUsersOpenTasksListItem.DummyItem;
 
 /**
- * A fragment representing a list of Items.
+ * A fragment representing a listItem of Items.
  * <p/>
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
@@ -160,7 +160,7 @@ public class FragmentUsersOpenTasks extends Fragment {
                 super(view);
                 mView = view;
                 mIdView = (TextView) view.findViewById(R.id.id);
-                mContentView = (TextView) view.findViewById(R.id.content);
+                mContentView = (TextView) view.findViewById(R.id.location);
             }
 
             @Override

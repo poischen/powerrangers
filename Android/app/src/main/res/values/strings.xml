@@ -3,7 +3,7 @@
     <!-- Tabnames-->
     <string name="start">Start</string>
     <string name="confirmTasks">voting</string>
-    <string name="openTasks">meine Taks</string>
+    <string name="confirmCases">confirm cases</string>
     <string name="findYorJob">get a job</string>
 
     <string name="balance">verdient</string>
@@ -17,6 +17,20 @@
     <string name="errorUpload">Ups, das hat nicht geklappt. Probiers nochmal.</string>
     <string name="uploaded">% hochgeladen...</string>
     <string name="title_activity_detail_container">ActivityDetailContainer</string>
+
+
+    <!-- FragmentRangerTasks-->
+    <string name="titleRangerTasks">Ranger Tasks</string>
+    <string name="searchView">Search...</string>
+
+    <!-- FragmentConfirmerCases-->
+    <string name="titleConfirmerCases">Cases to confirm</string>
+
+    <!-- ListItems-->
+    <string name="placeholderTitle">Title Placeholder</string>
+    <string name="placeholderDesc">Description Placeholder</string>
+
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
