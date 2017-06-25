@@ -14,10 +14,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +36,8 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import msp.powerrangers.R;
 
@@ -60,7 +64,7 @@ public class ActivityReportCase extends AppCompatActivity {
     private EditText editTextCaseCountry;
     private EditText editTextCaseXCoordinate;
     private EditText editTextCaseYCoordinate;
-    private  EditText editTextCaseInformation;
+    private EditText editTextCaseInformation;
 
     // checkboxes scale
     private CheckBox checkBoxCaseLow;
@@ -110,6 +114,7 @@ public class ActivityReportCase extends AppCompatActivity {
 
 
 
+
         // add action bar going back to parent
         // TODO: im Moment geht man zurück zur MainActivity, trotzdem zur FragmentStart, abchecken wie man das sauber macht
         ActionBar actionBar = getSupportActionBar();
@@ -122,15 +127,11 @@ public class ActivityReportCase extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(v.getContext(), "file chooser should be shown soon", Toast.LENGTH_LONG).show();
-
                 showFileChooser();
-
 
 
             }
         });
-
 
 
         // report a case
@@ -138,12 +139,14 @@ public class ActivityReportCase extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // check if edittexts empty, if yes maketoast, if not create new case
-                Toast.makeText(v.getContext(), "still needs to be implemented", Toast.LENGTH_LONG).show();
+                Toast.makeText(v.getContext(), "to implement ;-)", Toast.LENGTH_LONG).show();
 
-            }
+                }
         });
 
     }
+
+
 
 
     /**
@@ -166,7 +169,6 @@ public class ActivityReportCase extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CHOOSE_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri filePath = data.getData();
-            //Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
             uploadFile(filePath);
         }
     }
@@ -185,28 +187,22 @@ public class ActivityReportCase extends AppCompatActivity {
                 uid = profile.getUid();
             };
 
-            //give user uploading feedback by a progress dialog
-           // final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-            //progressDialog.setTitle(getString(R.string.uploadPicture));
-            //progressDialog.show();
-
-            StorageReference riversRef = storageRef.child("images/" + uid + "casepicture.jpg");
+            StorageReference riversRef = storageRef.child("images/" + uid + "/cases/case1/casepicture.jpg");
+            Toast.makeText(getApplicationContext(), R.string.uploadPicture, Toast.LENGTH_LONG).show();
             riversRef.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            //upload succesfull, update view
-                          //  progressDialog.dismiss();
-                          //  showUserPic();
+                            //upload succesfull, give information
+                          Toast.makeText(getApplicationContext(), R.string.uploaded, Toast.LENGTH_LONG).show();
+
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
                             //upload not successfull
-                          //  progressDialog.dismiss();
-                           // Toast.makeText(getContext(), R.string.errorUpload, Toast.LENGTH_LONG).show();
-                            Log.d("Activity Report Case", exception.getMessage());
+                            Toast.makeText(getApplicationContext(), R.string.errorUpload, Toast.LENGTH_LONG).show();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -217,7 +213,7 @@ public class ActivityReportCase extends AppCompatActivity {
                         }
                     });
         } else {
-            //Toast.makeText(getContext(), R.string.errorSignUpFirst, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.errorSignUpFirst, Toast.LENGTH_LONG).show();
         }
 
 
