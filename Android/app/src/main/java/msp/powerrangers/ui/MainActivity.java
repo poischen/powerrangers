@@ -15,6 +15,7 @@ import msp.powerrangers.ui.listitems.FragmentVotingTasksListItem;
 
 
 public class MainActivity extends FragmentActivity
+
         implements FragmentUsersOpenTasks.OnListFragmentInteractionListener,
         FragmentVotingTasks.OnListFragmentInteractionListener{
 

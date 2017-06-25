@@ -19,7 +19,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.ActivityDonate" />
-        <activity android:name=".ui.ActivityReportCase" />
+        <activity
+            android:name=".ui.ActivityReportCase"
+            android:label="@string/reportCaseActivityTitle"
+            android:parentActivityName=".ui.MainActivity" />
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".ui.MainActivity" />
         <activity
             android:name=".ui.ActivityDetailContainer"
             android:label="@string/title_activity_detail_container"
