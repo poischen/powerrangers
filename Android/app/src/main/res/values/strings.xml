@@ -1,9 +1,9 @@
 <resources>
   <string name="app_name">powerrangers</string>
   <!-- Tabnames-->
-  <string name="start">Start</string>
+  <string name="start">start</string>
   <string name="confirmTasks">voting</string>
-  <string name="confirmCases">confirm cases</string>
+  <string name="confirmCases">confirm</string>
   <string name="findYorJob">get a job</string>
 
   <string name="balance">balance</string>
