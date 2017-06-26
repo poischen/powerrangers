@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +35,8 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -47,16 +50,19 @@ public class ActivityReportCase extends AppCompatActivity {
 
     private static final int CHOOSE_IMAGE_REQUEST = 123;
     private static final int STORAGE_PERMISSION_REQUEST = 234;
+    final long ONE_MEGABYTE = 1024 * 1024;
 
     // text Views
     private TextView textViewCaseTitle;
     private TextView textViewCaseCity;
     private TextView textViewCaseCountry;
     private TextView textViewCaseScala;
+    private TextView textViewCaseAreaCoordinates;
     private TextView textViewCaseXCoordinate;
     private TextView textViewCaseYCoordinate;
     private TextView textViewCasePicture;
     private TextView textViewCaseInformation;
+    private TextView textViewUploadedPictures;
 
     // edit Texts
     private EditText editTextCaseTitle;
@@ -74,6 +80,7 @@ public class ActivityReportCase extends AppCompatActivity {
     // buttons
     private Button buttonCaseReport;
     private ImageButton imageButtonUploadPicture;
+    private ImageView imageViewUploadedPicture;
 
     // firebase storage Ref
     private StorageReference storageRef;
@@ -92,10 +99,12 @@ public class ActivityReportCase extends AppCompatActivity {
         textViewCaseCity = (TextView) findViewById(R.id.textViewCaseCity);
         textViewCaseCountry = (TextView) findViewById(R.id.textViewCaseCountry);
         textViewCaseScala = (TextView) findViewById(R.id.textViewCaseScala);
+        textViewCaseAreaCoordinates = (TextView) findViewById(R.id.textViewCaseAreaCoordinates);
         textViewCaseXCoordinate = (TextView) findViewById(R.id.textViewCaseXCoordinate);
         textViewCaseYCoordinate = (TextView) findViewById(R.id.textViewCaseYCoordinate);
         textViewCasePicture = (TextView) findViewById(R.id.textViewCasePicture);
         textViewCaseInformation = (TextView) findViewById(R.id.textViewCaseInformation);
+        textViewUploadedPictures = (TextView) findViewById(R.id.textViewUploadedPictures);
 
         editTextCaseTitle = (EditText) findViewById(R.id.editTextCaseTitle);
         editTextCaseCity = (EditText) findViewById(R.id.editTextCaseCity);
@@ -109,6 +118,7 @@ public class ActivityReportCase extends AppCompatActivity {
         checkBoxCaseHigh = (CheckBox) findViewById(R.id.checkBoxCaseHigh);
 
         imageButtonUploadPicture = (ImageButton) findViewById(R.id.imageButtonUploadPicture);
+        imageViewUploadedPicture = (ImageView) findViewById(R.id.imageViewUploadedPicture);
 
         buttonCaseReport = (Button) findViewById(R.id.buttonCaseReport);
 
@@ -194,7 +204,8 @@ public class ActivityReportCase extends AppCompatActivity {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             //upload succesfull, give information
-                          Toast.makeText(getApplicationContext(), R.string.uploaded, Toast.LENGTH_LONG).show();
+                         // Toast.makeText(getApplicationContext(), R.string.uploaded, Toast.LENGTH_LONG).show();
+                            showUploadedPic();
 
                         }
                     })
@@ -209,7 +220,7 @@ public class ActivityReportCase extends AppCompatActivity {
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                             double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                           // progressDialog.setMessage(((int) progress) + getString(R.string.uploaded));
+
                         }
                     });
         } else {
@@ -219,7 +230,44 @@ public class ActivityReportCase extends AppCompatActivity {
 
     }
 
+    private void showUploadedPic() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        File localFile = null;
+        if (user != null) {
+            String uid = null;
+            //get UID to identify user
+            for (UserInfo profile : user.getProviderData()) {
+                uid = profile.getUid();
+            };
+            try {
+                localFile = File.createTempFile("images", "jpg");
+                StorageReference riversRef = storageRef.child("images/" + uid + "/cases/case1/casepicture.jpg");
 
+
+                riversRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        final Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        textViewUploadedPictures.setVisibility(View.VISIBLE);
+                        imageViewUploadedPicture.setImageBitmap(bitmap);
+                        imageViewUploadedPicture.setVisibility(View.VISIBLE);
+                    }
+                    }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Toast.makeText(getApplicationContext(), R.string.reportCanNotShowUploadedPicture, Toast.LENGTH_LONG).show();
+
+                    }
+                });
+
+            } catch (IOException e) {
+                Toast.makeText(getApplicationContext(), R.string.reportException, Toast.LENGTH_LONG).show();
+            }
+
+        }
+
+
+    }
 
 
 

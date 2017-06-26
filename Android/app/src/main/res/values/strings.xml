@@ -28,6 +28,7 @@
   <string name="reportCityOfCase">City</string>
   <string name="reportCountryOfCase">Country</string>
   <string name="reportScalaOfCase">Pollution Scale:</string>
+  <string name="reportAreaCoordinates">Area coordinates:</string>
   <string name="reportXCoordinateOfCase">X Coordinate</string>
   <string name="reportYCoordinateOfCase">Y Coordinate</string>
   <string name="reportPictureOfCase">Upload picture</string>
@@ -36,6 +37,9 @@
   <string name="reportCaseCheckboxLow">Low</string>
   <string name="reportCaseCheckboxMiddle">Medium</string>
   <string name="reportCaseCheckboxHigh">High</string>
+  <string name="reportUploadedPicture">Uploaded pictures: </string>
+  <string name="reportCanNotShowUploadedPicture">Sorry can not show the picture you uploaded</string>
+  <string name="reportException">Something went wrong!</string>
 
   <!-- FragmentRangerTasks-->
   <string name="titleRangerTasks">Ranger Tasks</string>
