@@ -1,15 +1,16 @@
-package powerRangers;
 
-public class Confirmer extends User {
-	
+public class Confirmer extends RoleForwarding {
+
 	double fixedReward;
 	int caseId;
 
-	public Confirmer(String userName, int userId, String email, double fixedReward, int caseId) {
-		super(userName, userId, email);
+	public Confirmer(User user, double fixedReward, int caseId) {
+
 		this.fixedReward = fixedReward;
 		this.caseId = caseId;
-		
+		this.user = user;
 	}
+
+
 
 }

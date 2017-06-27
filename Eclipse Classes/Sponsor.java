@@ -1,13 +1,12 @@
-package powerRangers;
 
-public class Sponsor extends User {
+public class Sponsor extends RoleForwarding {
 
 	double amount;
+
 	
-	
-	public Sponsor(String userName, int userId, String email, double amount) {
-		super(userName, userId, email);
+	public Sponsor(User user, double amount) {
 		this.amount = amount;
+		this.user = user;
 
 	}
 	
@@ -15,4 +14,10 @@ public class Sponsor extends User {
 		
 	}
 
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return userName;
+	}
+	
 }

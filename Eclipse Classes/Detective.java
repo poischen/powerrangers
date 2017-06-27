@@ -1,17 +1,21 @@
-package powerRangers;
 
-public class Detective extends User {
+public class Detective extends RoleForwarding{
 
 	int caseId;
 	double rewardPerCase;
 	
 
-	public Detective(String userName, int userId, String email, int caseId, double rewardPerCase){
-		super(userName, userId, email);
+	public Detective(User user, int caseId, double rewardPerCase){
+		this.user = user;
 		this.caseId = caseId;
 		this.rewardPerCase = rewardPerCase;
+		
 	}
+	
 	public void reportCase(){
 		System.out.println("Detective Task completed");
 	}
+
+
+	
 }

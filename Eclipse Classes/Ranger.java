@@ -1,17 +1,19 @@
-package powerRangers;
 
-public class Ranger extends User{
-	
+public class Ranger extends RoleForwarding{
+
 	int taskId;
+	
 
-	public Ranger(String userName, int userId, String email, int taskId){
-		super(userName, userId, email);
+	public Ranger(User user, int taskId){
+		this.user = user;
 		this.taskId = taskId;
+		
 	}
 	
 	
 	public void completeTask(){
 		System.out.println("Ranger Task completed");
 	}
-	
+
+
 }
