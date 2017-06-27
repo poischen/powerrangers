@@ -1,5 +1,6 @@
 <resources>
   <string name="app_name">powerrangers</string>
+
   <!-- Tabnames-->
   <string name="start">start</string>
   <string name="confirmTasks">voting</string>
@@ -17,6 +18,16 @@
   <string name="errorUpload">Ups, das hat nicht geklappt. Probiers nochmal.</string>
   <string name="uploaded">% hochgeladen...</string>
   <string name="title_activity_detail_container">ActivityDetailContainer</string>
+
+  <!-- FragmentLogin-->
+  <string name="fLogin_Signin">Sign in</string>
+  <string name="fLogin_Register">Register</string>
+  <string name="fLogin_AlreadyRegistered">Already registered? Sign in!</string>
+  <string name="fLogin_NotRegisteredYet">Do not have an account? Register now!</string>
+  <string name="fLogin_EnterPassword">Enter your password</string>
+  <string name="fLogin_EnterName">Enter your name</string>
+  <string name="fLogin_EnterEmail">Enter your email</string>
+  <string name="fLogin_Slogan">POWERS COMBINED!</string>
 
   <!-- Buttonnames in Start Screen-->
   <string name="donate">donate</string>
