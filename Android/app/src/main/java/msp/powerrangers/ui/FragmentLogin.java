@@ -21,7 +21,8 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import msp.powerrangers.R;
-import msp.powerrangers.database.User;
+import msp.powerrangers.logic.User;
+
 /** Login screen, where a user can fLogin_Register or login via his email
  * Auth via Firebase
  */

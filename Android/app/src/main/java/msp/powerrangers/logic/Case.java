@@ -1,10 +1,9 @@
-package msp.powerrangers.database;
+package msp.powerrangers.logic;
 
-/**
- * Created by Katja on 27.06.2017.
- */
+import java.util.List;
 
 public class Case {
+
     private String dbId;
     private String caseId;
     private String name;
@@ -16,6 +15,7 @@ public class Case {
     //private String pictureURL;
     private String comment;
     private boolean isConfirmed;
+    List<Task> relatedTasks;
 
     public Case(String dbId, String caseId, String name, String city, String country,
                 int scale, int areaX, int areaY, //String pictureURL,
@@ -34,7 +34,11 @@ public class Case {
     }
 
 
-    // Getter
+    // getter
+    public String getId() {
+        return caseId;
+    }
+
     public String getName() {
         return name;
     }
@@ -59,11 +63,6 @@ public class Case {
         return areaY;
     }
 
-    /*public String getPictureURL() {
-        return pictureURL;
-    }
-    */
-
     public String getComment() {
         return comment;
     }
@@ -72,7 +71,19 @@ public class Case {
         return isConfirmed;
     }
 
-    // Setter
+    public List<Task> getRelatedTasks() {
+        return relatedTasks;
+    }
+    /*
+    public String getPictureURL() {
+        return pictureURL;
+    }*/
+
+    // setter
+    public void setId(String caseId) {
+        this.caseId = caseId;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -97,16 +108,41 @@ public class Case {
         this.areaY = areaY;
     }
 
-    /*public void setPictureURL(String pictureURL) {
+    public void setConfirmed(boolean confirmed) {
+        isConfirmed = confirmed;
+    }
+
+    public void setRelatedTasks(List<Task> relatedTasks) {
+        this.relatedTasks = relatedTasks;
+    }
+
+    /*
+    public void setPictureURL(String pictureURL) {
         this.pictureURL = pictureURL;
     }
     */
 
-    public void setComment(String comment) {
-        this.comment = comment;
+
+    /*
+	 * assign a task to a particular user
+	 */
+    public void assignTask(User user){
+
     }
 
-    public void setConfirmed(boolean confirmed) {
-        isConfirmed = confirmed;
+    /*
+     * compute the reward that the ranger should get
+     */
+    public double computeReward (double areaSize, int skala){
+        return 1;
     }
+
+
+    /*
+     * compute the number of tasks for a particular case
+     */
+    public int computeNumberOfTasks (double areaSize, int skala){
+        return 1;
+    }
+
 }

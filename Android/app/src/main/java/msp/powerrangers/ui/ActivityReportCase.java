@@ -29,7 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 import msp.powerrangers.R;
-import msp.powerrangers.database.Case;
+
 public class ActivityReportCase extends AppCompatActivity
 {
     private static final int CHOOSE_IMAGE_REQUEST = 123;
@@ -55,6 +55,8 @@ public class ActivityReportCase extends AppCompatActivity
     private EditText editTextCaseXCoordinate;
     private EditText editTextCaseYCoordinate;
     private EditText editTextCaseInformation;
+
+    // TODO: only one radio button should be selectable
     // radio buttons scale
     private RadioButton radioButtonCaseLow;
     private RadioButton radioButtonCaseMiddle;
