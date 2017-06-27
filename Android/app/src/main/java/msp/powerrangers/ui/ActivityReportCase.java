@@ -149,13 +149,12 @@ public class ActivityReportCase extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // check if edittexts empty, if yes maketoast, if not create new case
-                Toast.makeText(v.getContext(), "to implement ;-)", Toast.LENGTH_LONG).show();
+                Toast.makeText(v.getContext(), "to be implemented ;-)", Toast.LENGTH_LONG).show();
 
                 }
         });
 
     }
-
 
 
 
