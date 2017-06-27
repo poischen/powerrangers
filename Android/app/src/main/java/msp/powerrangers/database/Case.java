@@ -13,12 +13,12 @@ public class Case {
     private int scale;
     private int areaX;
     private int areaY;
-    private String pictureURL;
+    //private String pictureURL;
     private String comment;
     private boolean isConfirmed;
 
     public Case(String dbId, String caseId, String name, String city, String country,
-                int scale, int areaX, int areaY, String pictureURL,
+                int scale, int areaX, int areaY, //String pictureURL,
                 String comment){
         this.dbId = dbId;
         this.name = name;
@@ -28,8 +28,9 @@ public class Case {
         this.scale = scale;
         this.areaX = areaX;
         this.areaY = areaY;
-        this.pictureURL = pictureURL;
+        //this.pictureURL = pictureURL;
         this.comment = comment;
+        this.isConfirmed = false;
     }
 
 
@@ -58,9 +59,10 @@ public class Case {
         return areaY;
     }
 
-    public String getPictureURL() {
+    /*public String getPictureURL() {
         return pictureURL;
     }
+    */
 
     public String getComment() {
         return comment;
@@ -95,9 +97,10 @@ public class Case {
         this.areaY = areaY;
     }
 
-    public void setPictureURL(String pictureURL) {
+    /*public void setPictureURL(String pictureURL) {
         this.pictureURL = pictureURL;
     }
+    */
 
     public void setComment(String comment) {
         this.comment = comment;

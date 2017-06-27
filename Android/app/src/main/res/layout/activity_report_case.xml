@@ -104,22 +104,22 @@
                         android:layout_weight="1"
                         android:text="@string/reportScalaOfCase" />
 
-                    <CheckBox
-                        android:id="@+id/checkBoxCaseLow"
+                    <RadioButton
+                        android:id="@+id/radioButtonCaseLow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/reportCaseCheckboxLow" />
 
-                    <CheckBox
-                        android:id="@+id/checkBoxCaseMiddle"
+                    <RadioButton
+                        android:id="@+id/radioButtonCaseMiddle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/reportCaseCheckboxMiddle" />
 
-                    <CheckBox
-                        android:id="@+id/checkBoxCaseHigh"
+                    <RadioButton
+                        android:id="@+id/radioButtonCaseHigh"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -140,11 +140,6 @@
                         android:text="@string/reportAreaCoordinates" />
 
                 </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"></LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

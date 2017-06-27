@@ -1,52 +1,43 @@
 package msp.powerrangers.ui;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
-import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import org.w3c.dom.Text;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.UUID;
 
 import msp.powerrangers.R;
+import msp.powerrangers.database.Case;
 
-import static java.security.AccessController.getContext;
-
-public class ActivityReportCase extends AppCompatActivity {
+public class ActivityReportCase extends AppCompatActivity
+        {
 
     private static final int CHOOSE_IMAGE_REQUEST = 123;
     private static final int STORAGE_PERMISSION_REQUEST = 234;
@@ -72,10 +63,10 @@ public class ActivityReportCase extends AppCompatActivity {
     private EditText editTextCaseYCoordinate;
     private EditText editTextCaseInformation;
 
-    // checkboxes scale
-    private CheckBox checkBoxCaseLow;
-    private CheckBox checkBoxCaseMiddle;
-    private CheckBox checkBoxCaseHigh;
+    // radio buttons scale
+    private RadioButton radioButtonCaseLow;
+    private RadioButton radioButtonCaseMiddle;
+    private RadioButton radioButtonCaseHigh;
 
     // buttons
     private Button buttonCaseReport;
@@ -84,6 +75,11 @@ public class ActivityReportCase extends AppCompatActivity {
 
     // firebase storage Ref
     private StorageReference storageRef;
+
+    // firebase db instance
+    private DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("cases");
+
+
 
 
     @Override
@@ -113,9 +109,9 @@ public class ActivityReportCase extends AppCompatActivity {
         editTextCaseYCoordinate = (EditText) findViewById(R.id.editTextCaseYCoordinate);
         editTextCaseInformation = (EditText) findViewById(R.id.editTextCaseInformation);
 
-        checkBoxCaseLow = (CheckBox) findViewById(R.id.checkBoxCaseLow);
-        checkBoxCaseMiddle = (CheckBox) findViewById(R.id.checkBoxCaseMiddle);
-        checkBoxCaseHigh = (CheckBox) findViewById(R.id.checkBoxCaseHigh);
+        radioButtonCaseLow = (RadioButton) findViewById(R.id.radioButtonCaseLow);
+        radioButtonCaseMiddle = (RadioButton) findViewById(R.id.radioButtonCaseMiddle);
+        radioButtonCaseHigh = (RadioButton) findViewById(R.id.radioButtonCaseHigh);
 
         imageButtonUploadPicture = (ImageButton) findViewById(R.id.imageButtonUploadPicture);
         imageViewUploadedPicture = (ImageView) findViewById(R.id.imageViewUploadedPicture);
@@ -136,10 +132,7 @@ public class ActivityReportCase extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-
                 showFileChooser();
-
-
             }
         });
 
@@ -151,9 +144,39 @@ public class ActivityReportCase extends AppCompatActivity {
                 // check if edittexts empty, if yes maketoast, if not create new case
                 Toast.makeText(v.getContext(), "to be implemented ;-)", Toast.LENGTH_LONG).show();
 
+                // get attributes from a case
+                String dbId = dbRef.push().getKey();
+                String caseId = UUID.randomUUID().toString();
+
+                Case c = new Case(dbId, caseId,
+                        editTextCaseTitle.getText().toString(),
+                        editTextCaseCity.getText().toString(),
+                        editTextCaseCountry.getText().toString(),
+                        getScaleValue(radioButtonCaseLow, radioButtonCaseMiddle, radioButtonCaseHigh),
+                        Integer.parseInt(editTextCaseXCoordinate.getText().toString()),
+                        Integer.parseInt(editTextCaseYCoordinate.getText().toString()),
+                        editTextCaseInformation.getText().toString());
+
+                // write in database cases
+                dbRef.child(dbId).setValue(c);
                 }
         });
 
+    }
+
+
+    /**
+     * Get the value of a checkbox
+     * @param low
+     * @param medium
+     * @param high
+     * @return
+     */
+    public int getScaleValue(RadioButton low, RadioButton medium, RadioButton high) {
+        if(low.isChecked()) return 1;
+        if(medium.isChecked()) return 2;
+        if(high.isChecked()) return 3;
+        else return -1;
     }
 
 
@@ -181,6 +204,7 @@ public class ActivityReportCase extends AppCompatActivity {
             uploadFile(filePath);
         }
     }
+
 
 
     /**
