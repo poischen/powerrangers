@@ -1,8 +1,17 @@
 package msp.powerrangers.database;
 
-/**
- * Created by T410 on 27.06.2017.
- */
-
 public class Detective {
+
+    private String caseId;
+    private double rewardPerCase;
+    private String userId;
+
+
+    public Detective(String userId, String caseId, double rewardPerCase){
+        this.userId = userId;
+        this.caseId = caseId;
+        this.rewardPerCase = rewardPerCase;
+
+    }
+
 }
