@@ -40,8 +40,8 @@
   <string name="reportCountryOfCase">Country</string>
   <string name="reportScalaOfCase">Pollution Scale:</string>
   <string name="reportAreaCoordinates">Area coordinates:</string>
-  <string name="reportXCoordinateOfCase">X Coordinate</string>
-  <string name="reportYCoordinateOfCase">Y Coordinate</string>
+  <string name="reportXCoordinateOfCase">X Coordinate *</string>
+  <string name="reportYCoordinateOfCase">Y Coordinate *</string>
   <string name="reportPictureOfCase">Upload picture</string>
   <string name="reportInformationOfCase">Comment</string>
   <string name="reportCaseButton">Report Case</string>

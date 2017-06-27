@@ -104,26 +104,27 @@
                         android:layout_weight="1"
                         android:text="@string/reportScalaOfCase" />
 
-                    <RadioButton
-                        android:id="@+id/radioButtonCaseLow"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/reportCaseCheckboxLow" />
+                        <RadioButton
+                            android:id="@+id/radioButtonCaseLow"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/reportCaseCheckboxLow" />
 
-                    <RadioButton
-                        android:id="@+id/radioButtonCaseMiddle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/reportCaseCheckboxMiddle" />
+                        <RadioButton
+                            android:id="@+id/radioButtonCaseMiddle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/reportCaseCheckboxMiddle" />
 
-                    <RadioButton
-                        android:id="@+id/radioButtonCaseHigh"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/reportCaseCheckboxHigh" />
+                        <RadioButton
+                            android:id="@+id/radioButtonCaseHigh"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/reportCaseCheckboxHigh" />
+
 
                 </LinearLayout>
 
