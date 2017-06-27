@@ -29,6 +29,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 import msp.powerrangers.R;
+import msp.powerrangers.logic.Case;
+import msp.powerrangers.logic.Detective;
+import msp.powerrangers.logic.User;
 
 public class ActivityReportCase extends AppCompatActivity
 {
@@ -48,6 +51,7 @@ public class ActivityReportCase extends AppCompatActivity
     private TextView textViewCasePicture;
     private TextView textViewCaseInformation;
     private TextView textViewUploadedPictures;
+
     // edit Texts
     private EditText editTextCaseTitle;
     private EditText editTextCaseCity;
@@ -61,20 +65,40 @@ public class ActivityReportCase extends AppCompatActivity
     private RadioButton radioButtonCaseLow;
     private RadioButton radioButtonCaseMiddle;
     private RadioButton radioButtonCaseHigh;
+
     // buttons
     private Button buttonCaseReport;
     private ImageButton imageButtonUploadPicture;
     private ImageView imageViewUploadedPicture;
+
     // firebase storage Ref
     private StorageReference storageRef;
-    // firebase db instance
-    private DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("cases");
+
+    // firebase db instances
+    private DatabaseReference dbRefCases = FirebaseDatabase.getInstance().getReference("cases");
+    private DatabaseReference dbRefUsers = FirebaseDatabase.getInstance().getReference("users");
+
+    // current user
+    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+    // TODO: soll in FragmentLogin passieren!
+    String testDbId = dbRefUsers.push().getKey();
+
+
+    User testUser = new User(testDbId,
+            firebaseUser.getUid(),
+            firebaseUser.getDisplayName(),
+            firebaseUser.getEmail());
+    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_case);
+
         //Firebase stuff
         storageRef = FirebaseStorage.getInstance().getReference();
+
         // find UI elements
         textViewCaseTitle = (TextView) findViewById(R.id.textViewCaseTitle);
         textViewCaseCity = (TextView) findViewById(R.id.textViewCaseCity);
@@ -98,6 +122,7 @@ public class ActivityReportCase extends AppCompatActivity
         imageButtonUploadPicture = (ImageButton) findViewById(R.id.imageButtonUploadPicture);
         imageViewUploadedPicture = (ImageView) findViewById(R.id.imageViewUploadedPicture);
         buttonCaseReport = (Button) findViewById(R.id.buttonCaseReport);
+
         // add action bar going back to parent
         // TODO: im Moment geht man zurück zur MainActivity, trotzdem zur FragmentStart, abchecken wie man das sauber macht
         ActionBar actionBar = getSupportActionBar();
@@ -113,11 +138,14 @@ public class ActivityReportCase extends AppCompatActivity
         buttonCaseReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 // check if edittexts empty, if yes maketoast, if not create new case
                 Toast.makeText(v.getContext(), "to be implemented ;-)", Toast.LENGTH_LONG).show();
+
                 // get attributes from a case
-                String dbId = dbRef.push().getKey();
+                String dbId = dbRefCases.push().getKey();
                 String caseId = UUID.randomUUID().toString();
+
                 Case c = new Case(dbId, caseId,
                         editTextCaseTitle.getText().toString(),
                         editTextCaseCity.getText().toString(),
@@ -126,9 +154,13 @@ public class ActivityReportCase extends AppCompatActivity
                         Integer.parseInt(editTextCaseXCoordinate.getText().toString()),
                         Integer.parseInt(editTextCaseYCoordinate.getText().toString()),
                         editTextCaseInformation.getText().toString());
+
                 // write in database cases
-                dbRef.child(dbId).setValue(c);
+                dbRefCases.child(dbId).setValue(c);
+
+                Detective detective = new Detective(testUser, caseId);
             }
+
         });
     }
     /**
@@ -170,11 +202,11 @@ public class ActivityReportCase extends AppCompatActivity
      * @param filePath Path of image on device storage
      */
     private void uploadFile(Uri filePath) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
+
+        if (firebaseUser != null) {
             String uid = null;
             //get UID to identify user
-            for (UserInfo profile : user.getProviderData()) {
+            for (UserInfo profile : firebaseUser.getProviderData()) {
                 uid = profile.getUid();
             };
             StorageReference riversRef = storageRef.child("images/" + uid + "/cases/case1/casepicture.jpg");
@@ -206,12 +238,11 @@ public class ActivityReportCase extends AppCompatActivity
         }
     }
     private void showUploadedPic() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         File localFile = null;
-        if (user != null) {
+        if (firebaseUser != null) {
             String uid = null;
             //get UID to identify user
-            for (UserInfo profile : user.getProviderData()) {
+            for (UserInfo profile : firebaseUser.getProviderData()) {
                 uid = profile.getUid();
             };
             try {

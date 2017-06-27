@@ -1,21 +1,26 @@
 package msp.powerrangers.logic;
 
+import android.provider.ContactsContract;
+
 import java.util.ArrayList;
 import java.util.List;
 
 // in pattern RoleCore
 public class User extends Role {
 
-    private String userName;
+    private String dbId;
     private String userId;
+    private String userName;
     private String email;
     private double balance;
     private List<Role> roleList;
 
 
-    public User(String userName, String userId){
-        this.userName = userName;
+    public User(String dbId, String userId, String userName, String email){
+        this.dbId = dbId;
         this.userId = userId;
+        this.userName = userName;
+        this.email = email;
         roleList = new ArrayList<Role>();
     }
 
