@@ -89,7 +89,7 @@ public class ActivityReportCase extends AppCompatActivity
             firebaseUser.getUid(),
             firebaseUser.getDisplayName(),
             firebaseUser.getEmail());
-    
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
