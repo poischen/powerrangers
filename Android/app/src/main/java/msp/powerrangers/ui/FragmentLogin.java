@@ -23,7 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import msp.powerrangers.R;
 import msp.powerrangers.logic.User;
 
-/** Login screen, where a user can fLogin_Register or login via his email
+/** Login screen, where a firebaseUser can fLogin_Register or login via his email
  * Auth via Firebase
  */
 public class FragmentLogin extends Fragment {
@@ -50,7 +50,7 @@ public class FragmentLogin extends Fragment {
         textViewSwitchRegisterSignin = (TextView) view.findViewById(R.id.textViewSignin);
         progressDialog = new ProgressDialog(getContext());
         /*set OnClick Listener on Button for registering unregistered users via email or sign in registered users
-         * A user can only fLogin_Register, if he enters his mailaddress, a password, and a name (analog sign in only with both mailadress and password)
+         * A firebaseUser can only fLogin_Register, if he enters his mailaddress, a password, and a name (analog sign in only with both mailadress and password)
          */
         buttonRegisterSignin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +63,7 @@ public class FragmentLogin extends Fragment {
                 } if (TextUtils.isEmpty((password))){
                     Toast.makeText(getActivity(), "Please enter a password", Toast.LENGTH_SHORT).show();
                 }
-                //see, if the user wants to fLogin_Register or to sign in
+                //see, if the firebaseUser wants to fLogin_Register or to sign in
                 else if (buttonRegisterSignin.getText().equals(R.string.fLogin_Signin)){
                     signIn(mail, password);
                 } else if (TextUtils.isEmpty((name))){
@@ -74,7 +74,7 @@ public class FragmentLogin extends Fragment {
             }
         });
         /* set OnClick Listener on TextView for sign in via email
-         * user can only sign in, if he enters both his mailaddress and a password
+         * firebaseUser can only sign in, if he enters both his mailaddress and a password
          */
         textViewSwitchRegisterSignin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,8 +89,8 @@ public class FragmentLogin extends Fragment {
         super.onStart();
         Bundle args = getArguments();
     }
-    /** Method for registering the user via Firebase
-     * after the user registers, he will be written into the database
+    /** Method for registering the firebaseUser via Firebase
+     * after the firebaseUser registers, he will be written into the database
      * @param mail String
      * @param password String
      * @param name String
@@ -106,9 +106,9 @@ public class FragmentLogin extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
-                            //user is successfully registered
+                            //firebaseUser is successfully registered
                             Toast.makeText(getActivity(), "Power registered successfully!", Toast.LENGTH_SHORT).show();
-                            //store name of the user in Firebase Auth
+                            //store name of the firebaseUser in Firebase Auth
                             FirebaseUser currentuser = firebaseAuth.getCurrentUser();
                             if (currentuser != null) {
                                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
@@ -125,14 +125,14 @@ public class FragmentLogin extends Fragment {
                             }
 
 
-                            //write user into the database
+                            //write firebaseUser into the database
                             //Tutorial for database: http://www.androidhive.info/2016/10/android-working-with-firebase-realtime-database/
                             DatabaseReference database = FirebaseDatabase.getInstance().getReference("users");
                             String dbId = database.push().getKey();
                             String userId = currentuser.getUid();
 
                             User user = new User(currentName, dbId, userId, currentMail);
-                            // pushing user to 'users' node using the userId
+                            // pushing firebaseUser to 'users' node using the userId
                             database.child(dbId).setValue(user);
 
                             //switch to Start

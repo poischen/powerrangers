@@ -26,13 +26,13 @@ public class MainActivity extends FragmentActivity implements FragmentUsersOpenT
         fl.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().add(R.id.activity_main_fragment_container, fl).commit();
 
-        //create login/register fragment, if no user is signed in or creates tabs with start screen fragment if a user is signed in
+        //create login/register fragment, if no firebaseUser is signed in or creates tabs with start screen fragment if a firebaseUser is signed in
         firebaseAuth = FirebaseAuth.getInstance();
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 Log.v("MainActivity", "state changed");
-                //FirebaseUser user = firebaseAuth.getCurrentUser();
+                //FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                 currentUser = firebaseAuth.getCurrentUser();
                 if (currentUser != null){
                     changeToLoggedInView();

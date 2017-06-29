@@ -38,7 +38,7 @@ import msp.powerrangers.R;
 import static android.app.Activity.RESULT_OK;
 
 
-/** Start screen, where a user can see information about his account and navigate between Tasks & Fälle
+/** Start screen, where a firebaseUser can see information about his account and navigate between Tasks & Fälle
  */
 public class FragmentStart extends Fragment implements View.OnClickListener {
     private static final int CHOOSE_IMAGE_REQUEST = 123;
@@ -49,6 +49,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     Button donateButton;
     Button reportACaseButton;
 
+    FirebaseUser firebaseUser;
 
     private StorageReference storageRef;
 
@@ -75,7 +76,9 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         donateButton.setOnClickListener(this);
         reportACaseButton.setOnClickListener(this);
 
-        //TODO: get and show user name
+
+
+        //TODO: get and show firebaseUser name
         return view;
     }
 
@@ -86,9 +89,10 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         //Firebase stuff
         storageRef = FirebaseStorage.getInstance().getReference();
 
-        // TODO: test
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        Log.d("Current user id: ", user.getUid());
+
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        Toast.makeText(getContext(), "Current firebaseUser id:" + firebaseUser.getUid(), Toast.LENGTH_LONG).show();
+
     }
 
     @Override
@@ -129,6 +133,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
 
             case R.id.reportACaseButton:
                 Intent intentReportCase = new Intent(getActivity(), ActivityReportCase.class);
+                //intentReportCase.putExtra("UserID", firebaseUser.getUid());
                 startActivity(intentReportCase);
                 break;
         }
@@ -159,19 +164,19 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     }
 
     /**
-     * method to upload a profile picture via firebase if the user is logged in
+     * method to upload a profile picture via firebase if the firebaseUser is logged in
      * @param filePath Path of image on device storage
      */
     private void uploadFile(Uri filePath) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
+     //   FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser != null) {
             String uid = null;
-            //get UID to identify user
-            for (UserInfo profile : user.getProviderData()) {
+            //get UID to identify firebaseUser
+            for (UserInfo profile : firebaseUser.getProviderData()) {
                 uid = profile.getUid();
             };
 
-            //give user uploading feedback by a progress dialog
+            //give firebaseUser uploading feedback by a progress dialog
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
             progressDialog.setTitle(getString(R.string.uploadPicture));
             progressDialog.show();
@@ -210,16 +215,16 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     }
 
     /**
-     * method gets current user profiel picture fromk Firebase and shows it
+     * method gets current firebaseUser profiel picture fromk Firebase and shows it
      */
     //TODO: store profile picture as local file, so it does not have to be downlaoded all the time, and check first, if it is available on the device: "You can also download to device memory using getBytes()"
     private void showUserPic() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+     //   FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         File localFile = null;
-        if (user != null) {
+        if (firebaseUser != null) {
             String uid = null;
-            //get UID to identify user
-            for (UserInfo profile : user.getProviderData()) {
+            //get UID to identify firebaseUser
+            for (UserInfo profile : firebaseUser.getProviderData()) {
                 uid = profile.getUid();
             };
             try {

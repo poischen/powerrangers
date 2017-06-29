@@ -78,8 +78,8 @@ public class ActivityReportCase extends AppCompatActivity
     private DatabaseReference dbRefCases;
     private DatabaseReference dbRefUsers;
 
-    // current user
-    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();;
+    // current firebaseUser
+    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
 
     @Override
@@ -139,19 +139,24 @@ public class ActivityReportCase extends AppCompatActivity
                 String dbId = dbRefCases.push().getKey();
                 String caseId = UUID.randomUUID().toString();
 
+                // get values for the X and Y area 
+                int areaX = Integer.valueOf(editTextCaseXCoordinate.getText().toString());
+                int areaY = Integer.valueOf(editTextCaseYCoordinate.getText().toString());
+
                 Case c = new Case(dbId, caseId,
                         editTextCaseTitle.getText().toString(),
                         editTextCaseCity.getText().toString(),
                         editTextCaseCountry.getText().toString(),
                         getScaleValue(radioButtonCaseLow, radioButtonCaseMiddle, radioButtonCaseHigh),
-                        Integer.parseInt(editTextCaseXCoordinate.getText().toString()),
-                        Integer.parseInt(editTextCaseYCoordinate.getText().toString()),
+                        areaX,
+                        areaY,
                         editTextCaseInformation.getText().toString());
 
                 // write in database cases
                 dbRefCases.child(dbId).setValue(c);
 
-              //  Detective detective = new Detective(testUser, caseId);
+               // TODO
+             //   Detective detective = new Detective(dbRefUsers.child(), caseId);
             }
 
         });
@@ -198,7 +203,7 @@ public class ActivityReportCase extends AppCompatActivity
 
         if (firebaseUser != null) {
             String uid = null;
-            //get UID to identify user
+            //get UID to identify firebaseUser
             for (UserInfo profile : firebaseUser.getProviderData()) {
                 uid = profile.getUid();
             };
@@ -234,7 +239,7 @@ public class ActivityReportCase extends AppCompatActivity
         File localFile = null;
         if (firebaseUser != null) {
             String uid = null;
-            //get UID to identify user
+            //get UID to identify firebaseUser
             for (UserInfo profile : firebaseUser.getProviderData()) {
                 uid = profile.getUid();
             };
