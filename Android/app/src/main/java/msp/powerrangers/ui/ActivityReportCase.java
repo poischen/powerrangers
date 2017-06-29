@@ -75,20 +75,11 @@ public class ActivityReportCase extends AppCompatActivity
     private StorageReference storageRef;
 
     // firebase db instances
-    private DatabaseReference dbRefCases = FirebaseDatabase.getInstance().getReference("cases");
-    private DatabaseReference dbRefUsers = FirebaseDatabase.getInstance().getReference("users");
+    private DatabaseReference dbRefCases;
+    private DatabaseReference dbRefUsers;
 
     // current user
-    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-    // TODO: soll in FragmentLogin passieren!
-    String testDbId = dbRefUsers.push().getKey();
-
-
-    User testUser = new User(testDbId,
-            firebaseUser.getUid(),
-            firebaseUser.getDisplayName(),
-            firebaseUser.getEmail());
+    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();;
 
 
     @Override
@@ -98,6 +89,8 @@ public class ActivityReportCase extends AppCompatActivity
 
         //Firebase stuff
         storageRef = FirebaseStorage.getInstance().getReference();
+        dbRefCases =  FirebaseDatabase.getInstance().getReference("cases");
+        dbRefUsers =  FirebaseDatabase.getInstance().getReference("users");
 
         // find UI elements
         textViewCaseTitle = (TextView) findViewById(R.id.textViewCaseTitle);
@@ -158,7 +151,7 @@ public class ActivityReportCase extends AppCompatActivity
                 // write in database cases
                 dbRefCases.child(dbId).setValue(c);
 
-                Detective detective = new Detective(testUser, caseId);
+              //  Detective detective = new Detective(testUser, caseId);
             }
 
         });

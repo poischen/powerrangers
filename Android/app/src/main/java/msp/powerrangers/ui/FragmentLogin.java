@@ -139,6 +139,8 @@ public class FragmentLogin extends Fragment {
                             FragmentTabs ft = new FragmentTabs();
                             ft.setArguments(getActivity().getIntent().getExtras());
                             getActivity().getSupportFragmentManager().beginTransaction().add(R.id.activity_main_fragment_container, ft).commit();
+
+
                         } else {
                             Toast.makeText(getActivity(), "Noooooooo! Try again!", Toast.LENGTH_SHORT).show();
                         }

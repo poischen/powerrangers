@@ -86,7 +86,9 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         //Firebase stuff
         storageRef = FirebaseStorage.getInstance().getReference();
 
-
+        // TODO: test
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        Log.d("Current user id: ", user.getUid());
     }
 
     @Override
