@@ -5,27 +5,49 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import msp.powerrangers.R;
 
 public class ActivityDetailContainer extends AppCompatActivity {
 
-    @Override
+    private String target;
+
+     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_container);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        Bundle  bundle = getIntent().getExtras();
+        target = bundle.getString(String.valueOf(R.string.activityDetailContainer_targetFr));
+
+        // open details about RangerTask
+        if (target.equals(getString(R.string.targetFrDetailRangerTask))) {
+
+            Toast.makeText(this, "Strings match!", Toast.LENGTH_SHORT).show();
+
+            FragmentDetailRangerTask f = new FragmentDetailRangerTask();
+            f.setArguments(getIntent().getExtras());
+            getSupportFragmentManager().beginTransaction().add(R.id.activity_detail_container, f).commit();
+        }
+
+        // open details about UsersOpenTask
+        else if (target.equals(getString(R.string.targetFrDetailUsersOpenTask))) {
+            FragmentDetailUsersOpenTask f = new FragmentDetailUsersOpenTask();
+            f.setArguments(getIntent().getExtras());
+            getSupportFragmentManager().beginTransaction().add(R.id.activity_detail_container, f).commit();
+        }
+
+        // open details about ConfirmerCase
+        else if (target.equals(getString(R.string.targetFrDetailConfirmerCase))) {
+            FragmentDetailConfirmerCase f = new FragmentDetailConfirmerCase();
+            f.setArguments(getIntent().getExtras());
+            getSupportFragmentManager().beginTransaction().add(R.id.activity_detail_container, f).commit();
+        }
+
+
     }
 
 }

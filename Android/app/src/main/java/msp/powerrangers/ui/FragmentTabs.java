@@ -44,7 +44,7 @@ public class FragmentTabs extends Fragment {
             Bundle arg4 = new Bundle();
             arg2.putInt("Arg for Frag4", 4);
             tabHost.addTab(tabHost.newTabSpec(getString(R.string.findYorJob)).setIndicator(getString(R.string.findYorJob)),
-                    FragmentRangerTasks.class, arg4);
+                   FragmentRangerTasks.class, arg4);
 
             // set the width of Confirm-Tab (else the text appears over two lines)
             tabHost.getTabWidget().getChildAt(2).getLayoutParams().width = 80;

@@ -73,9 +73,10 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
 
         //find View elements
         userImage = (CircleImageView) getActivity().findViewById(R.id.userimage);
-        openTasks = (TextView) getActivity().findViewById(R.id.numberOpenTasks);
+        openTasks = (TextView) view.findViewById(R.id.numberOpenTasks);
         //TODO: userImage.setOnClickListener(this);
-        //TODO: openTasks.setOnClickListener(this);
+
+        openTasks.setOnClickListener(this);
 
         // call to action buttons
         donateButton = (Button) view.findViewById(R.id.donateButton);
@@ -94,7 +95,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         //Firebase stuff
         storageRef = FirebaseStorage.getInstance().getReference();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        Toast.makeText(getContext(), "Current firebaseUser id:" + firebaseUser.getUid(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(getContext(), "Current firebaseUser id:" + firebaseUser.getUid(), Toast.LENGTH_LONG).show();
         
     }
 

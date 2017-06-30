@@ -9,10 +9,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import msp.powerrangers.R;
-import msp.powerrangers.ui.listitems.FragmentUsersOpenTasksListItem;
+import msp.powerrangers.ui.listitems.UsersOpenTasksListItem;
 
 
-public class MainActivity extends FragmentActivity implements FragmentUsersOpenTasks.OnListFragmentInteractionListener {
+public class MainActivity extends FragmentActivity {
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authListener;
@@ -65,9 +65,5 @@ public class MainActivity extends FragmentActivity implements FragmentUsersOpenT
         }
     }
 
-    @Override
-    public void onListFragmentInteraction(FragmentUsersOpenTasksListItem.DummyItem item) {
-
-    }
 
 }

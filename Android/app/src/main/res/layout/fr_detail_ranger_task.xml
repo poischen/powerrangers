@@ -1,0 +1,136 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="msp.powerrangers.ui.FragmentDetailRangerTask">
+
+        <RelativeLayout
+            android:id="@+id/relLayoutDetailRT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <ImageView
+                android:id="@+id/rangerImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:adjustViewBounds="true"
+                android:scaleType="centerInside"
+                android:layout_marginTop="10pt"
+                app:srcCompat="@drawable/polluted_beach1"
+                />
+            <!-- Row 1 -->
+            <LinearLayout
+                android:id="@+id/linLayoutDetailRT1"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_below="@+id/rangerImage"
+                android:layout_weight="3"
+                android:layout_marginTop="10pt">
+                <!-- Reward -->
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:layout_weight="1">
+                    <ImageView
+                        android:id="@+id/rangerReward"
+                        android:layout_height="40dp"
+                        android:layout_width="40dp"
+                        app:srcCompat="@drawable/iconrewardsmall"
+                        android:gravity="center_vertical|center_horizontal"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textRangerReward"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="30dp"
+                        android:layout_marginLeft="7dp"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="10" />
+                </LinearLayout>
+                <!-- Number of Rangers -->
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:layout_weight="1">
+                    <ImageView
+                        android:id="@+id/imageNumberRangers"
+                        android:layout_height="40dp"
+                        android:layout_width="40dp"
+                        app:srcCompat="@drawable/iconranger"
+                        android:gravity="center_vertical|center_horizontal"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textNumberRangers"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="30dp"
+                        android:layout_marginLeft="15dp"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="5" />
+                </LinearLayout>
+                <!-- Pollution -->
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:layout_weight="1">
+                    <ImageView
+                        android:id="@+id/imageScalePollution"
+                        android:layout_height="60dp"
+                        android:layout_width="60dp"
+                        app:srcCompat="@drawable/iconpollutionmedium"
+                        android:gravity="center_vertical|center_horizontal"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textPollution"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="15dp"
+                        android:layout_marginTop="7dp"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="Pollution" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textScalePollution"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="20dp"
+                        android:layout_marginTop="7dp"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="medium" />
+                </LinearLayout>
+            </LinearLayout>
+            <!-- Task Description -->
+            <TextView
+                android:id="@+id/userTaskDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Task Description"
+                android:layout_below="@+id/linLayoutDetailRT1"
+                android:layout_marginTop="10pt"/>
+            <!-- Button Join as Ranger -->
+            <Button
+                android:id="@+id/buttonCompleteTask"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Join as Ranger"
+                android:layout_below="@+id/userTaskDescription"
+                android:layout_marginTop="15pt"/>
+        </RelativeLayout>
+
+</ScrollView>
