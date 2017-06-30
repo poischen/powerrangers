@@ -23,6 +23,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -63,6 +65,9 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_start, container, false);
 
+        // display user name
+        TextView tvUserName= (TextView) view.findViewById(R.id.textViewUserName);
+        tvUserName.setText(firebaseUser.getDisplayName());
 
         //find View elements
         userImage = (CircleImageView) getActivity().findViewById(R.id.userimage);
@@ -70,15 +75,13 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         //TODO: userImage.setOnClickListener(this);
         //TODO: openTasks.setOnClickListener(this);
 
+        // call to action buttons
         donateButton = (Button) view.findViewById(R.id.donateButton);
         reportACaseButton = (Button) view.findViewById(R.id.reportACaseButton);
 
         donateButton.setOnClickListener(this);
         reportACaseButton.setOnClickListener(this);
 
-
-
-        //TODO: get and show firebaseUser name
         return view;
     }
 
@@ -88,10 +91,9 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
 
         //Firebase stuff
         storageRef = FirebaseStorage.getInstance().getReference();
-
-
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         Toast.makeText(getContext(), "Current firebaseUser id:" + firebaseUser.getUid(), Toast.LENGTH_LONG).show();
+
 
     }
 

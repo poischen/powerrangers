@@ -26,6 +26,19 @@
             app:civ_border_color="#FF000000"
             android:layout_gravity="center"/>
 
+        <!-- User name -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0pt"
+            android:id="@+id/textViewUserName"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20dp"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            />
+
         <!-- Row 1 -->
         <LinearLayout
             android:orientation="horizontal"
@@ -44,7 +57,7 @@
                     android:id="@+id/numberBalance"
                     android:layout_height="60dp"
                     android:layout_width="60dp"
-                    android:text="0 €"
+                    android:text="42 €"
                     android:textColor="@color/colorWhite"
                     android:textSize="20sp"
                     android:background="@drawable/startcircle"
@@ -72,7 +85,7 @@
                     android:id="@+id/numberOpenTasks"
                     android:layout_height="60dp"
                     android:layout_width="60dp"
-                    android:text="0"
+                    android:text="2"
                     android:textColor="@color/colorWhite"
                     android:textSize="20sp"
                     android:background="@drawable/startcircle"
@@ -108,7 +121,7 @@
                     android:id="@+id/numberOpenedCases"
                     android:layout_height="60dp"
                     android:layout_width="60dp"
-                    android:text="0"
+                    android:text="4"
                     android:textColor="@color/colorWhite"
                     android:textSize="20sp"
                     android:background="@drawable/startcircle"
@@ -136,7 +149,7 @@
                 android:id="@+id/numberConfirmedCases"
                 android:layout_height="60dp"
                 android:layout_width="60dp"
-                android:text="0"
+                android:text="12"
                 android:textColor="@color/colorWhite"
                 android:textSize="20sp"
                 android:background="@drawable/startcircle"
@@ -164,7 +177,7 @@
                     android:id="@+id/numberCompletedTasks"
                     android:layout_height="60dp"
                     android:layout_width="60dp"
-                    android:text="0"
+                    android:text="3"
                     android:textColor="@color/colorWhite"
                     android:textSize="20sp"
                     android:background="@drawable/startcircle"
