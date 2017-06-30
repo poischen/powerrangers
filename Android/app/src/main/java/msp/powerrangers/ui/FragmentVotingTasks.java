@@ -2,34 +2,42 @@ package msp.powerrangers.ui;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.Collections;
-import java.util.List;
 
 import msp.powerrangers.R;
-import msp.powerrangers.ui.listitems.VotingTasksListItem;
+import msp.powerrangers.ui.listitems.FragmentVotingTasksListItem;
+import msp.powerrangers.ui.listitems.FragmentVotingTasksListItem.DummyItem;
 
+import java.util.List;
 
 /**
- * A fragment representing a listItem of Items.
+ * A fragment representing a list of Items.
+ * <p/>
+ * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * interface.
  */
 public class FragmentVotingTasks extends Fragment {
 
-    private static final String TAG = "VotingTasksFragment";
-    protected RecyclerView mRecyclerView;
-    protected RecyclerView.LayoutManager mLayoutManager;
-    protected Recycler_View_Adapter mAdapter;
+    // TODO: Customize parameter argument names
+    private static final String ARG_COLUMN_COUNT = "column-count";
+    // TODO: Customize parameters
+    private int mColumnCount = 1;
+    private OnListFragmentInteractionListener mListener;
+
+    TextView taskDescription;
+    TextView taskLocation;
+
+    ImageButton confirmButton;
+    ImageButton cancelButton;
 
 
     /**
@@ -39,146 +47,143 @@ public class FragmentVotingTasks extends Fragment {
     public FragmentVotingTasks() {
     }
 
+    // TODO: Customize parameter initialization
+    @SuppressWarnings("unused")
+    public static FragmentVotingTasks newInstance(int columnCount) {
+        FragmentVotingTasks fragment = new FragmentVotingTasks();
+        Bundle args = new Bundle();
+        args.putInt(ARG_COLUMN_COUNT, columnCount);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (getArguments() != null) {
+            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+        }
+
+        setHasOptionsMenu(true);
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fr_votingtasks, container, false);
-        rootView.setTag(TAG);
+        View view = inflater.inflate(R.layout.fragment_fragmentitemvotingtasks_list, container, false);
 
-        // 1. Get a reference to recyclerView & set the onClickListener
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewVT);
+        // Set the adapter
+        if (view instanceof RecyclerView) {
+            Context context = view.getContext();
+            RecyclerView recyclerView = (RecyclerView) view;
+            if (mColumnCount <= 1) {
+                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            } else {
+                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+            }
+            recyclerView.setAdapter(new MyFragmentItemVotingTaskRecyclerViewAdapter(FragmentVotingTasksListItem.ITEMS, mListener));
+        }
+        return view;
+    }
 
-        // TODO: make up/dowm button clickable
-        // TODO: make before/after images clickable
 
-        // 2. Set layoutManager (defines how the elements are laid out)
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnListFragmentInteractionListener) {
+            mListener = (OnListFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnListFragmentInteractionListener");
+        }
+    }
 
-        // test data
-        List<VotingTasksListItem> data = VotingTasksListItem.fill_with_data();
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
 
-        // 3. Create an adapter
-        mAdapter = new Recycler_View_Adapter(data, getContext());
-
-        // 4. set adapter
-        mRecyclerView.setAdapter(mAdapter);
-
-        return rootView;
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnListFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onListFragmentInteraction(DummyItem item);
     }
 
 
 
-    /**
-     * ##################################################################################################################
-     * ################################        RecyclerViewAdapter       ################################################
-     * ##################################################################################################################
-     *
-     */
-    private class Recycler_View_Adapter extends RecyclerView.Adapter<View_Holder> {
+    public class MyFragmentItemVotingTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyFragmentItemVotingTaskRecyclerViewAdapter.ViewHolder> {
 
-        List<VotingTasksListItem> listItem = Collections.emptyList();
-        Context context;
+        private final List<DummyItem> mValues;
+        private final OnListFragmentInteractionListener mListener;
 
-
-        Recycler_View_Adapter(List<VotingTasksListItem> listItem, Context context) {
-            this.listItem = listItem;
-            this.context = context;
+        public MyFragmentItemVotingTaskRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+            mValues = items;
+            mListener = listener;
         }
 
-
         @Override
-        public View_Holder onCreateViewHolder(ViewGroup parent, int viewType) {
-            //Inflate the layout, initialize the View Holder
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.fr_votingtasks_li, parent, false);
-            return new View_Holder(view);
+                    .inflate(R.layout.fragment_fragmentitemvotingtasks, parent, false);
+            return new ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(final View_Holder holder, int position) {
-            //Use the provided View Holder on the onCreateViewHolder method to populate the current row on the RecyclerView
-            holder.title.setText(listItem.get(position).title);
-            holder.location.setText(listItem.get(position).location);
-            holder.imageView1.setImageResource(listItem.get(position).imageID1);
-            holder.imageView2.setImageResource(listItem.get(position).imageID2);
+        public void onBindViewHolder(final ViewHolder holder, int position) {
+            holder.mItem = mValues.get(position);
+            holder.mIdView.setText(mValues.get(position).id);
+            holder.mContentView.setText(mValues.get(position).content);
 
-            // fixed icons/images
-            holder.locationIcon.setImageResource(R.drawable.location);
-            holder.up.setImageResource(R.drawable.up);
-            holder.down.setImageResource(R.drawable.down);
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (null != mListener) {
+                        // Notify the active callbacks interface (the activity, if the
+                        // fragment is attached to one) that an item has been selected.
+                        mListener.onListFragmentInteraction(holder.mItem);
+                    }
+                }
+            });
         }
 
         @Override
         public int getItemCount() {
-            //returns the number of elements the RecyclerView will display
-            return listItem.size();
+            return mValues.size();
         }
 
-        @Override
-        public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-            super.onAttachedToRecyclerView(recyclerView);
-        }
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            public final View mView;
+            public final TextView mIdView;
+            public final TextView mContentView;
+            public DummyItem mItem;
 
-        // Insert a new item to the RecyclerView on a predefined position
-        public void insert(int position, VotingTasksListItem listItem) {
-            this.listItem.add(position, listItem);
-            notifyItemInserted(position);
-        }
+            public ViewHolder(View view) {
+                super(view);
+                mView = view;
+                mIdView = (TextView) view.findViewById(R.id.id);
+                mContentView = (TextView) view.findViewById(R.id.content);
+            }
 
-        // Remove a RecyclerView item containing a specified Data object
-        public void remove(VotingTasksListItem data) {
-            int position = listItem.indexOf(data);
-            listItem.remove(position);
-            notifyItemRemoved(position);
-        }
-    }
-
-    /**
-     * ##################################################################################################################
-     * ###################################        VIEW HOLDER         ###################################################
-     * ##################################################################################################################
-     *
-     * The RecyclerView uses a ViewHolder to store the references to the relevant views for one entry in the RecyclerView.
-     * This solution avoids all the findViewById() method calls in the adapter to find the views to be filled with data.
-     *
-     * ##################################################################################################################
-     * ##################################################################################################################
-     *
-     */
-    private class View_Holder extends RecyclerView.ViewHolder {
-
-        CardView cv;
-        TextView title;
-        TextView location;
-        ImageView locationIcon;
-        ImageView imageView1;
-        ImageView imageView2;
-        ImageView up;
-        ImageView down;
-
-        View_Holder(View itemView) {
-            super(itemView);
-            cv = (CardView) itemView.findViewById(R.id.cvVT);
-            title = (TextView) itemView.findViewById(R.id.titleVT);
-            location = (TextView) itemView.findViewById(R.id.locationVT);
-            locationIcon = (ImageView) itemView.findViewById(R.id.ivLocationIcon);
-            imageView1 = (ImageView) itemView.findViewById(R.id.ivVotingPic1);
-            imageView2 = (ImageView) itemView.findViewById(R.id.ivVotingPic2);
-            up = (ImageView) itemView.findViewById(R.id.ivVotingUp);
-            down = (ImageView) itemView.findViewById(R.id.ivVotingDown);
+            @Override
+            public String toString() {
+                return super.toString() + " '" + mContentView.getText() + "'";
+            }
         }
     }
-
-
 
 }
+
 
 

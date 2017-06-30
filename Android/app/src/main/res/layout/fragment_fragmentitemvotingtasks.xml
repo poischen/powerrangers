@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:layout_width="386dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="14dp"
+        android:orientation="vertical">
+
+        <!-- Two Images side-by-side -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill_horizontal"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/image2"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/gruenerranger"
+                android:layout_weight="1"
+                android:layout_gravity="left"
+                android:paddingTop="15dp"
+                android:paddingEnd="2dp"/>
+
+            <ImageView
+                android:id="@+id/image1"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="150dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/gruenerranger"
+                android:layout_gravity="left"
+                android:paddingTop="15dp"
+                android:paddingStart="2dp"/>
+
+        </LinearLayout>
+
+        <!-- Buttons + Description -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- Confirm/Cancel Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="87dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="1.0dip"
+                android:paddingLeft="4.0dip"
+                android:paddingRight="4.0dip"
+                android:paddingTop="5.0dip">
+
+
+                <ImageButton
+                    android:id="@+id/confirmButton"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@null"
+                    app:srcCompat="@drawable/iconcheckedsmall" />
+
+                <ImageButton
+                    android:id="@+id/cancelButton"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="15dp"
+                    android:background="@null"
+                    app:srcCompat="@drawable/iconcancelsmall" />
+
+            </LinearLayout>
+
+            <!-- Task Description -->
+            <EditText
+                android:id="@+id/taskDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:gravity="center_horizontal"
+                android:inputType="textMultiLine" />
+
+            <!-- Task Location -->
+            <EditText
+                android:id="@+id/taskLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:gravity="center_horizontal"
+                android:inputType="textMultiLine" />
+
+        </LinearLayout>
+
+        <!-- Row 2 -->
+
+    </LinearLayout>
+</LinearLayout>

@@ -9,10 +9,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import msp.powerrangers.R;
+import msp.powerrangers.ui.listitems.FragmentConfirmerCasesListItem;
+import msp.powerrangers.ui.listitems.FragmentRangerTasksListItem;
 import msp.powerrangers.ui.listitems.FragmentUsersOpenTasksListItem;
+import msp.powerrangers.ui.listitems.FragmentVotingTasksListItem;
 
 
-public class MainActivity extends FragmentActivity implements FragmentUsersOpenTasks.OnListFragmentInteractionListener {
+public class MainActivity extends FragmentActivity implements FragmentConfirmerCases.OnListFragmentInteractionListener, FragmentRangerTasks.OnListFragmentInteractionListener, FragmentUsersOpenTasks.OnListFragmentInteractionListener, FragmentVotingTasks.OnListFragmentInteractionListener{
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authListener;
@@ -26,13 +29,13 @@ public class MainActivity extends FragmentActivity implements FragmentUsersOpenT
         fl.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().add(R.id.activity_main_fragment_container, fl).commit();
 
-        //create login/register fragment, if no firebaseUser is signed in or creates tabs with start screen fragment if a firebaseUser is signed in
+        //create login/register fragment, if no user is signed in or creates tabs with start screen fragment if a user is signed in
         firebaseAuth = FirebaseAuth.getInstance();
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 Log.v("MainActivity", "state changed");
-                //FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                //FirebaseUser user = firebaseAuth.getCurrentUser();
                 currentUser = firebaseAuth.getCurrentUser();
                 if (currentUser != null){
                     changeToLoggedInView();
@@ -66,8 +69,22 @@ public class MainActivity extends FragmentActivity implements FragmentUsersOpenT
     }
 
     @Override
+    public void onListFragmentInteraction(FragmentConfirmerCasesListItem.DummyItem item) {
+
+    }
+
+    @Override
+    public void onListFragmentInteraction(FragmentRangerTasksListItem.DummyItem item) {
+
+    }
+
+    @Override
     public void onListFragmentInteraction(FragmentUsersOpenTasksListItem.DummyItem item) {
 
     }
 
+    @Override
+    public void onListFragmentInteraction(FragmentVotingTasksListItem.DummyItem item) {
+
+    }
 }

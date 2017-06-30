@@ -15,7 +15,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="14dp">
 
-        <!-- UserDB pic -->
+        <!-- User pic -->
         <de.hdodenhof.circleimageview.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/userimage"
@@ -25,19 +25,6 @@
             app:civ_border_width="1dp"
             app:civ_border_color="#FF000000"
             android:layout_gravity="center"/>
-
-        <!-- User name -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0pt"
-            android:id="@+id/textViewUserName"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="20dp"
-            android:layout_marginTop="10dp"
-            android:textStyle="bold"
-            android:gravity="center_horizontal"
-            android:layout_weight="1"
-            />
 
         <!-- Row 1 -->
         <LinearLayout
@@ -57,7 +44,7 @@
                     android:id="@+id/numberBalance"
                     android:layout_height="60dp"
                     android:layout_width="60dp"
-                    android:text="42 €"
+                    android:text="0 €"
                     android:textColor="@color/colorWhite"
                     android:textSize="20sp"
                     android:background="@drawable/startcircle"
@@ -85,7 +72,7 @@
                     android:id="@+id/numberOpenTasks"
                     android:layout_height="60dp"
                     android:layout_width="60dp"
-                    android:text="2"
+                    android:text="0"
                     android:textColor="@color/colorWhite"
                     android:textSize="20sp"
                     android:background="@drawable/startcircle"
@@ -121,7 +108,7 @@
                     android:id="@+id/numberOpenedCases"
                     android:layout_height="60dp"
                     android:layout_width="60dp"
-                    android:text="4"
+                    android:text="0"
                     android:textColor="@color/colorWhite"
                     android:textSize="20sp"
                     android:background="@drawable/startcircle"
@@ -149,7 +136,7 @@
                 android:id="@+id/numberConfirmedCases"
                 android:layout_height="60dp"
                 android:layout_width="60dp"
-                android:text="12"
+                android:text="0"
                 android:textColor="@color/colorWhite"
                 android:textSize="20sp"
                 android:background="@drawable/startcircle"
@@ -177,7 +164,7 @@
                     android:id="@+id/numberCompletedTasks"
                     android:layout_height="60dp"
                     android:layout_width="60dp"
-                    android:text="3"
+                    android:text="0"
                     android:textColor="@color/colorWhite"
                     android:textSize="20sp"
                     android:background="@drawable/startcircle"
@@ -193,26 +180,6 @@
                     android:gravity="center_vertical|center_horizontal"
                     android:text="@string/completedTasks" />
             </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/donateButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/donate" />
-
-            <Button
-                android:id="@+id/reportACaseButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/reportACase" />
         </LinearLayout>
 
     </LinearLayout>

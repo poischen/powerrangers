@@ -38,16 +38,13 @@ public class FragmentTabs extends Fragment {
 
             Bundle arg3 = new Bundle();
             arg3.putInt("Arg for Frag3", 3);
-            tabHost.addTab(tabHost.newTabSpec(getString(R.string.confirmCases)).setIndicator(getString(R.string.confirmCases)),
+            tabHost.addTab(tabHost.newTabSpec(getString(R.string.openTasks)).setIndicator(getString(R.string.openTasks)),
                     FragmentConfirmerCases.class, arg3);
 
             Bundle arg4 = new Bundle();
             arg2.putInt("Arg for Frag4", 4);
             tabHost.addTab(tabHost.newTabSpec(getString(R.string.findYorJob)).setIndicator(getString(R.string.findYorJob)),
                     FragmentRangerTasks.class, arg4);
-
-            // set the width of Confirm-Tab (else the text appears over two lines)
-            tabHost.getTabWidget().getChildAt(2).getLayoutParams().width = 80;
 
             return rootView;
         }

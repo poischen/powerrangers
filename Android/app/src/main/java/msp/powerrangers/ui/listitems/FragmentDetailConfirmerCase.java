@@ -1,4 +1,4 @@
-package msp.powerrangers.ui;
+package msp.powerrangers.ui.listitems;
 
 import android.content.Context;
 import android.net.Uri;

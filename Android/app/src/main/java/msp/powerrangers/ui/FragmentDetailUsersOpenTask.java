@@ -11,12 +11,7 @@ import android.view.ViewGroup;
 import msp.powerrangers.R;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FragmentDetailUsersOpenTask.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FragmentDetailUsersOpenTask#newInstance} factory method to
- * create an instance of this fragment.
+ * Screen to show details of a user's open task and complete it
  */
 public class FragmentDetailUsersOpenTask extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -55,10 +50,6 @@ public class FragmentDetailUsersOpenTask extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -105,5 +96,6 @@ public class FragmentDetailUsersOpenTask extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+        public void onFragmentInteraction(String title);
     }
 }

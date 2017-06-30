@@ -1,13 +1,60 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="msp.powerrangers.ui.FragmentDetailUsersOpenTask">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <menu xmlns:android="http://schemas.android.com/apk/res/android" >
+        <item
+            android:id="@+id/edit_item"
+            android:showAsAction="ifRoom"
+            android:orderInCategory="10"
+            android:title="Edit">
+        </item>
+    </menu>
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="514dp"
+                android:orientation="vertical"
+                android:weightSum="1">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="290dp"
+                    app:srcCompat="@drawable/gruenerranger" />
+
+                <EditText
+                    android:id="@+id/userTaskDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:inputType="textMultiLine"
+                    android:text="Open Task Description" />
+
+                <!-- Image Upload -->
+                <ImageView
+                    android:id="@+id/imageUpload"
+                    android:layout_width="match_parent"
+                    android:layout_height="114dp"
+                    app:srcCompat="@drawable/imageupload" />
+
+                <!-- Button Complete Task -->
+                <Button
+                    android:id="@+id/buttonCompleteTask"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="Complete Task" />
+
+            </LinearLayout>
+    </ScrollView>
+
 
 </FrameLayout>
