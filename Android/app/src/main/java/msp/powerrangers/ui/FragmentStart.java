@@ -47,6 +47,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     private static final int STORAGE_PERMISSION_REQUEST = 234;
 
     CircleImageView userImage;
+    TextView tvUserName;
     TextView openTasks;
     Button donateButton;
     Button reportACaseButton;
@@ -66,7 +67,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_start, container, false);
 
         // display user name
-        TextView tvUserName= (TextView) view.findViewById(R.id.textViewUserName);
+        tvUserName = (TextView) view.findViewById(R.id.textViewUserName);
         tvUserName.setText(firebaseUser.getDisplayName());
 
         //find View elements
