@@ -16,11 +16,13 @@ public class Case {
     private String comment;
     private boolean isConfirmed;
     List<Task> relatedTasks;
+    private String userID;
 
-    public Case(String dbId, String caseId, String name, String city, String country,
+    public Case(String dbId, String userID, String caseId, String name, String city, String country,
                 int scale, int areaX, int areaY, //String pictureURL,
                 String comment){
         this.dbId = dbId;
+        this.userID = userID;
         this.name = name;
         this.caseId = caseId;
         this.city = city;
@@ -38,6 +40,8 @@ public class Case {
     public String getId() {
         return caseId;
     }
+
+    public String getUserID () { return userID; }
 
     public String getName() {
         return name;

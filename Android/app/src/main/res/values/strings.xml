@@ -19,6 +19,9 @@
   <string name="uploaded">% hochgeladen...</string>
   <string name="title_activity_detail_container">ActivityDetailContainer</string>
 
+    <!-- Intent Strings-->
+    <string name="intent_current_user">Current User</string>
+
   <!-- FragmentLogin-->
   <string name="fLogin_Signin">Sign in</string>
   <string name="fLogin_Register">Register</string>

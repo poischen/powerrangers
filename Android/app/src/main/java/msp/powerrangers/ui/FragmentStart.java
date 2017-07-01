@@ -23,8 +23,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -36,6 +34,7 @@ import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import msp.powerrangers.R;
+import msp.powerrangers.logic.User;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -43,8 +42,10 @@ import static android.app.Activity.RESULT_OK;
 /** Start screen, where a firebaseUser can see information about his account and navigate between Tasks & Fälle
  */
 public class FragmentStart extends Fragment implements View.OnClickListener {
+
     private static final int CHOOSE_IMAGE_REQUEST = 123;
     private static final int STORAGE_PERMISSION_REQUEST = 234;
+
 
     CircleImageView userImage;
     TextView tvUserName;
@@ -53,6 +54,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     Button reportACaseButton;
 
     FirebaseUser firebaseUser;
+    private User u;
 
     private StorageReference storageRef;
 
@@ -93,8 +95,12 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         //Firebase stuff
         storageRef = FirebaseStorage.getInstance().getReference();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        Toast.makeText(getContext(), "Current firebaseUser id:" + firebaseUser.getUid(), Toast.LENGTH_LONG).show();
 
+
+        //get current User Object
+        Bundle bundle = getArguments();
+        //Log.i("BUNDLE START" , bundle.toString());
+        u = (User) bundle.getSerializable("USER");
 
     }
 
@@ -135,8 +141,16 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.reportACaseButton:
+
+                //Log.i("User USERNAME IN START" , u.getId());
                 Intent intentReportCase = new Intent(getActivity(), ActivityReportCase.class);
-                //intentReportCase.putExtra("UserID", firebaseUser.getUid());
+                intentReportCase.putExtra("USER", u);
+                Log.i("I AM AFTER PUTEXTRA" , "IN REPORT A CASE");
+
+                //Bundle bundle = new Bundle();
+                //bundle.putSerializable(String.valueOf(R.string.intent_current_user), u);
+                //Toast.makeText(getContext(), u.toString(), Toast.LENGTH_LONG).show();
+                //intentReportCase.putExtras(bundle);
                 startActivity(intentReportCase);
                 break;
         }

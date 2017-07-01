@@ -1,7 +1,8 @@
 package msp.powerrangers.logic;
 
+import java.io.Serializable;
 import java.util.List;
-public abstract class RoleForwarding extends Role{
+public abstract class RoleForwarding extends Role {
 
     protected User user;
     String userName;

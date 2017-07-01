@@ -3,6 +3,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,6 +35,8 @@ public class FragmentLogin extends Fragment {
     private TextView textViewSwitchRegisterSignin;
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
+    private User user;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -131,15 +134,34 @@ public class FragmentLogin extends Fragment {
                             String dbId = database.push().getKey();
                             String userId = currentuser.getUid();
 
-                            User user = new User(currentName, dbId, userId, currentMail);
+
+                            user = new User(currentName, dbId, userId, currentMail);
+
+
                             // pushing firebaseUser to 'users' node using the userId
                             database.child(dbId).setValue(user);
+                            Log.i("THE USER ID" , user.getId());
+
+                            Log.i("The USER" , user.toString());
 
                             //switch to Start
-                            FragmentTabs ft = new FragmentTabs();
-                            ft.setArguments(getActivity().getIntent().getExtras());
-                            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.activity_main_fragment_container, ft).commit();
 
+                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                            FragmentStart fragmentStart = new FragmentStart();
+
+
+                            Bundle bundles = new Bundle();
+
+                            if (user != null){
+                                bundles.putSerializable("USER" , user);
+                                Log.i("USER" , "IS NOT NULL");
+                            } else {
+                                Log.i("USER" , "IS NULL");
+                            }
+
+                            fragmentStart.setArguments(bundles);
+                            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.activity_main_fragment_container, fragmentStart).commit();
 
                         } else {
                             Toast.makeText(getActivity(), "Noooooooo! Try again!", Toast.LENGTH_SHORT).show();

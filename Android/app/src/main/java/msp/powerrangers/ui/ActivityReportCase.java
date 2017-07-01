@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,8 +34,8 @@ import msp.powerrangers.logic.Case;
 import msp.powerrangers.logic.Detective;
 import msp.powerrangers.logic.User;
 
-public class ActivityReportCase extends AppCompatActivity
-{
+public class ActivityReportCase extends AppCompatActivity {
+
     private static final int CHOOSE_IMAGE_REQUEST = 123;
     private static final int STORAGE_PERMISSION_REQUEST = 234;
     final long ONE_MEGABYTE = 1024 * 1024;
@@ -81,6 +82,8 @@ public class ActivityReportCase extends AppCompatActivity
     // current firebaseUser
     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
+    private User us;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +94,13 @@ public class ActivityReportCase extends AppCompatActivity
         storageRef = FirebaseStorage.getInstance().getReference();
         dbRefCases =  FirebaseDatabase.getInstance().getReference("cases");
         dbRefUsers =  FirebaseDatabase.getInstance().getReference("users");
+
+        //get current User Object from Intent
+
+
+        Intent myIntent = getIntent();
+        us = (User) myIntent.getSerializableExtra("USER");
+
 
         // find UI elements
         textViewCaseTitle = (TextView) findViewById(R.id.textViewCaseTitle);
@@ -133,7 +143,7 @@ public class ActivityReportCase extends AppCompatActivity
             public void onClick(View v) {
 
                 // check if edittexts empty, if yes maketoast, if not create new case
-                Toast.makeText(v.getContext(), "to be implemented ;-)", Toast.LENGTH_LONG).show();
+
 
                 // get attributes from a case
                 String dbId = dbRefCases.push().getKey();
@@ -143,7 +153,8 @@ public class ActivityReportCase extends AppCompatActivity
                 int areaX = Integer.valueOf(editTextCaseXCoordinate.getText().toString());
                 int areaY = Integer.valueOf(editTextCaseYCoordinate.getText().toString());
 
-                Case c = new Case(dbId, caseId,
+
+                Case c = new Case(dbId, us.getId(), caseId,
                         editTextCaseTitle.getText().toString(),
                         editTextCaseCity.getText().toString(),
                         editTextCaseCountry.getText().toString(),
@@ -155,8 +166,16 @@ public class ActivityReportCase extends AppCompatActivity
                 // write in database cases
                 dbRefCases.child(dbId).setValue(c);
 
-               // TODO
-             //   Detective detective = new Detective(dbRefUsers.child(), caseId);
+
+                Detective detective = new Detective(us, caseId);
+                us.addCaseIDtoList(caseId);
+
+
+                Toast.makeText(getApplicationContext(), "Case was reported successfully", Toast.LENGTH_SHORT).show();
+
+               // user.setRole(detective);
+
+
             }
 
         });
