@@ -167,6 +167,8 @@ public class ActivityReportCase extends AppCompatActivity {
                         areaY,
                         editTextCaseInformation.getText().toString());
 
+             //   Toast.makeText(getApplicationContext(), "Created dat case", Toast.LENGTH_LONG).show();
+
                 // write in database cases
                 dbRefCases.child(dbId).setValue(c);
 
@@ -174,10 +176,11 @@ public class ActivityReportCase extends AppCompatActivity {
                 Detective detective = new Detective(us, caseId);
                 us.addCaseIDtoList(caseId);
 
-
-                Toast.makeText(getApplicationContext(), "Case was reported successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Case was reported successfully", Toast.LENGTH_LONG).show();
 
                // user.setRole(detective);
+
+                finish();
 
 
             }

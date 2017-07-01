@@ -147,11 +147,6 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                 Intent intentReportCase = new Intent(getActivity(), ActivityReportCase.class);
                 intentReportCase.putExtra("USER", u);
                 Log.i("I AM AFTER PUTEXTRA" , "IN REPORT A CASE");
-
-                //Bundle bundle = new Bundle();
-                //bundle.putSerializable(String.valueOf(R.string.intent_current_user), u);
-                //Toast.makeText(getContext(), u.toString(), Toast.LENGTH_LONG).show();
-                //intentReportCase.putExtras(bundle);
                 startActivity(intentReportCase);
                 break;
         }
