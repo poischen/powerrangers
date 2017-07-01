@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,9 +75,10 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
 
         //find View elements
         userImage = (CircleImageView) getActivity().findViewById(R.id.userimage);
-        openTasks = (TextView) getActivity().findViewById(R.id.numberOpenTasks);
+        openTasks = (TextView) view.findViewById(R.id.numberOpenTasks);
         //TODO: userImage.setOnClickListener(this);
-        //TODO: openTasks.setOnClickListener(this);
+
+        openTasks.setOnClickListener(this);
 
         // call to action buttons
         donateButton = (Button) view.findViewById(R.id.donateButton);
@@ -101,7 +103,6 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         Bundle bundle = getArguments();
         //Log.i("BUNDLE START" , bundle.toString());
         u = (User) bundle.getSerializable("USER");
-
     }
 
     @Override

@@ -1,8 +1,12 @@
 package msp.powerrangers.ui;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -180,6 +184,8 @@ public class ActivityReportCase extends AppCompatActivity {
 
         });
     }
+
+
     /**
      * Get the value of a checkbox
      * @param low

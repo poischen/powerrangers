@@ -1,6 +1,7 @@
 package msp.powerrangers.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -56,8 +57,13 @@ public class FragmentRangerTasks extends Fragment {
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getContext(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
+
                         // TODO: show FragmentDetailRangerTask
-                        Toast.makeText(getContext(),  "A task was clicked!", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(),  "A task was clicked!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getActivity(), ActivityDetailContainer.class);
+                        intent.putExtra(String.valueOf(R.string.activityDetailContainer_targetFr), "FragmentDetailRangerTask");
+                        startActivity(intent);
+
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
