@@ -1,11 +1,15 @@
 package msp.powerrangers.ui;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -22,6 +26,7 @@ public class FragmentDetailRangerTask extends Fragment {
     private ImageView iconRanger;
     private ImageView iconPollution;
     private TextView rangerTaskDescription;
+    private Button buttonJoin;
 
     public FragmentDetailRangerTask() {
         // Required empty public constructor
@@ -82,6 +87,23 @@ public class FragmentDetailRangerTask extends Fragment {
 
         rangerTaskDescription = (TextView) view.findViewById(R.id.detailTaskDescription);
         rangerTaskDescription.setText("Summary of the case in Kathmandu....\nWe need you! ;)");
+
+        buttonJoin = (Button) view.findViewById(R.id.buttonJoinAsRanger);
+        buttonJoin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(v.getContext(), "You have joined the task! \n", Toast.LENGTH_LONG).show();
+                // TODO: Ranger erstellen
+                // TODO: task zuweisen und in die db eintragen (users, tasks)
+                // TODO: Anzeige in FragmentStart andern (openTasks +1 )
+
+                // move to Main Activity (FragmentStart)
+                Intent i = new Intent(getActivity(), MainActivity.class);
+                startActivity(i);
+                ((Activity) getActivity()).overridePendingTransition(0,0);
+
+            }
+        });
 
         return view;
     }

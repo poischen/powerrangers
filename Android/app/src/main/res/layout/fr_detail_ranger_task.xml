@@ -134,7 +134,7 @@
 
             <!-- Button Join as Ranger -->
             <Button
-                android:id="@+id/buttonCompleteTask"
+                android:id="@+id/buttonJoinAsRanger"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
