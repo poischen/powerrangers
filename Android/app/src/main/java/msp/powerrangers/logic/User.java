@@ -19,9 +19,13 @@ public class User extends Role implements Serializable  {
     private List<String> taskIdList;
     private String userName;
     private String email;
+    private String userPic = "";
     private double balance;
     private List<Role> roleList;
 
+    public User(){
+
+    }
 
     public User(String dbId, String userId, String userName, String email){
         this.dbId = dbId;
@@ -41,6 +45,10 @@ public class User extends Role implements Serializable  {
 
     public String getId() {
         return userId;
+    }
+
+    public String getDbId() {
+        return dbId;
     }
 
     public String getEmail() {

@@ -1,5 +1,6 @@
 package msp.powerrangers.ui;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -134,10 +135,13 @@ public class FragmentLogin extends Fragment {
                             String dbId = database.push().getKey();
                             String userId = currentuser.getUid();
 
-
+                            //save users db key in shared preferances
+                            SharedPreferences sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
+                            SharedPreferences.Editor editor = sharedPrefs.edit();
+                            editor.putString(getResources().getString(R.string.sharedPrefs_userDbId), dbId);
+                            editor.commit();
+                            //create new user object
                             user = new User(currentName, dbId, userId, currentMail);
-
-
                             // pushing firebaseUser to 'users' node using the userId
                             database.child(dbId).setValue(user);
                             Log.i("THE USER ID" , user.getId());
@@ -175,6 +179,7 @@ public class FragmentLogin extends Fragment {
      * @param password String
      **/
     public void signIn(String mail, String password){
+        final String givenMail = mail;
         //receiving progress feedback while registering
         progressDialog.setMessage("Sign in...");
         progressDialog.show();
