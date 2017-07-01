@@ -143,7 +143,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
 
             case R.id.reportACaseButton:
 
-                //Log.i("User USERNAME IN START" , u.getId());
+                Log.i("User USERNAME IN START" , u.getId());
                 Intent intentReportCase = new Intent(getActivity(), ActivityReportCase.class);
                 intentReportCase.putExtra("USER", u);
                 Log.i("I AM AFTER PUTEXTRA" , "IN REPORT A CASE");

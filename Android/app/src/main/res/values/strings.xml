@@ -62,6 +62,7 @@
   <string name="reportUploadedPicture">Uploaded pictures: </string>
   <string name="reportCanNotShowUploadedPicture">Sorry can not show the picture you uploaded</string>
   <string name="reportException">Something went wrong!</string>
+  <string name="reportCaseSuccess">Case was reported successfully</string>
 
   <!-- FragmentRangerTasks & DetailRangerTask-->
   <string name="titleRangerTasks">Ranger Tasks</string>

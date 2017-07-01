@@ -172,13 +172,10 @@ public class ActivityReportCase extends AppCompatActivity {
                 // write in database cases
                 dbRefCases.child(dbId).setValue(c);
 
-
                 Detective detective = new Detective(us, caseId);
                 us.addCaseIDtoList(caseId);
 
-                Toast.makeText(getApplicationContext(), "Case was reported successfully", Toast.LENGTH_LONG).show();
-
-               // user.setRole(detective);
+                Toast.makeText(getApplicationContext(), R.string.reportCaseSuccess, Toast.LENGTH_LONG).show();
 
                 finish();
 
