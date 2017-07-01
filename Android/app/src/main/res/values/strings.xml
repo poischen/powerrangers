@@ -7,8 +7,6 @@
   <string name="targetFrDetailConfirmerCase">FragmentDetailConfirmerCase</string>
   <string name="targetFrDetailUsersOpenTask">FragmentDetailUsersOpenTask</string>
 
-
-
   <!-- Tabnames-->
   <string name="start">start</string>
   <string name="confirmTasks">voting</string>
@@ -75,8 +73,11 @@
   <!-- FragmentConfirmerCases-->
   <string name="titleConfirmerCases">Cases to confirm</string>
 
-  <!-- FragmentUsersOpenTasks -->
+  <!-- FragmentUsersOpenTasks & DetailUsersOpenTask-->
   <string name="titleUsersOpenTasks">Open Tasks</string>
+    <string name="buttonUploadImage">Upload image</string>
+    <string name="completeTask">Complete Task</string>
+    <string name="textToUpload">You should upload an image of your job before you complete the task.</string>
 
   <!-- FragmentVotingTasks-->
   <string name="titleVotingTasks">Voting Tasks</string>

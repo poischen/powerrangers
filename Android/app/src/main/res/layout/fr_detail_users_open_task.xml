@@ -1,50 +1,102 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="msp.powerrangers.ui.FragmentDetailUsersOpenTask">
-    <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-        <item
-            android:id="@+id/edit_item"
-            android:showAsAction="ifRoom"
-            android:orderInCategory="10"
-            android:title="Edit">
-        </item>
-    </menu>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
+
+    <RelativeLayout
+        android:id="@+id/relLayoutDetailOUT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <!-- Task name -->
+        <TextView
+            android:id="@+id/taskNameUOT"
             android:layout_width="match_parent"
-            android:layout_height="514dp"
-            android:orientation="vertical"
-            android:weightSum="1">
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop = "true"
+            android:layout_marginTop="20dp"
+            android:textSize="13pt"
+            android:textColor="@color/colorPrimaryDark"
+            android:gravity="center" />
+
+        <!-- Task image (before) -->
+        <ImageView
+            android:id="@+id/taskImageUOT"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/taskNameUOT"
+            android:layout_marginTop="20dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/polluted_beach1"/>
+
+
+        <!--Task description -->
+        <TextView
+            android:id="@+id/taskDescUOT"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_below="@+id/taskImageUOT"
+            android:layout_marginTop="20dp"
+            />
+
+
+        <LinearLayout
+            android:id="@+id/linLayoutOUT"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/taskDescUOT">
+
+            <!-- text hint -->
+            <TextView
+                android:id="@+id/textImagesToUpload"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".60"
+                android:text="@string/textToUpload"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="20dp"
+                android:visibility="visible"/>
+
+            <!-- thumbnail of the task image-->
             <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="290dp"
-                app:srcCompat="@drawable/gruenerranger" />
-            <EditText
-                android:id="@+id/detailTaskDescription"
-                android:layout_width="match_parent"
-                android:layout_height="54dp"
-                android:ems="10"
-                android:gravity="center"
-                android:inputType="textMultiLine"
-                android:text="Open Task Description" />
-            <!-- Image Upload -->
-            <ImageView
-                android:id="@+id/imageUpload"
-                android:layout_width="match_parent"
-                android:layout_height="114dp"
-                app:srcCompat="@drawable/imageupload" />
-            <!-- Button Complete Task -->
+                android:id="@+id/taskUploadedImageRanger"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".60"
+                android:layout_marginTop="20dp"
+                android:visibility="gone"
+                />
+            <!-- button upload image -->
             <Button
-                android:id="@+id/buttonCompleteTask"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:text="Complete Task" />
+                android:id="@+id/buttonUploadImageUOT"
+                android:layout_width="60dp"
+                android:layout_height="50dp"
+                android:text="@string/buttonUploadImage"
+                android:gravity="center_horizontal|center_vertical"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_weight="0.4"
+                />
+
+
         </LinearLayout>
-    </ScrollView>
-</FrameLayout>
+
+        <!-- Button Complete Task -->
+        <Button
+            android:id="@+id/buttonCompleteTask"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linLayoutOUT"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:text="@string/completeTask"
+            android:layout_marginTop="20dp"/>
+    </RelativeLayout>
+
+</ScrollView>
