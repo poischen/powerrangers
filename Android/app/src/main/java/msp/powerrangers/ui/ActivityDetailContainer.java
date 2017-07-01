@@ -25,9 +25,6 @@ public class ActivityDetailContainer extends AppCompatActivity {
 
         // open details about RangerTask
         if (target.equals(getString(R.string.targetFrDetailRangerTask))) {
-
-            Toast.makeText(this, "Strings match!", Toast.LENGTH_SHORT).show();
-
             FragmentDetailRangerTask f = new FragmentDetailRangerTask();
             f.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction().add(R.id.activity_detail_container, f).commit();

@@ -58,12 +58,10 @@ public class FragmentRangerTasks extends Fragment {
                 new RecyclerItemClickListener(getContext(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
 
-                        // TODO: show FragmentDetailRangerTask
-                        //Toast.makeText(getContext(),  "A task was clicked!", Toast.LENGTH_SHORT).show();
+                        //  show FragmentDetailRangerTask
                         Intent intent = new Intent(getActivity(), ActivityDetailContainer.class);
                         intent.putExtra(String.valueOf(R.string.activityDetailContainer_targetFr), "FragmentDetailRangerTask");
                         startActivity(intent);
-
                     }
 
                     @Override public void onLongItemClick(View view, int position) {

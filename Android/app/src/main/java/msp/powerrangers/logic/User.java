@@ -7,6 +7,7 @@ import android.util.Log;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("serial")
@@ -98,7 +99,9 @@ public class User extends Role implements Serializable  {
 
     public void addCaseIDtoList(String caseID){
         caseIdList.add(caseID);
-       // Log.i("CASE ID IS ADDED TO LIST" , caseIdList.toString());
+        Object [] totest;
+        totest = caseIdList.toArray();
+        Log.i("CASE ID ADDED TO LIST" , Arrays.toString(totest));
     }
 
     public void addTaskIDtoList(String taskID){

@@ -83,6 +83,7 @@ public class ActivityReportCase extends AppCompatActivity {
     private DatabaseReference dbRefCases;
     private DatabaseReference dbRefUsers;
 
+
     // current firebaseUser
     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -98,6 +99,7 @@ public class ActivityReportCase extends AppCompatActivity {
         storageRef = FirebaseStorage.getInstance().getReference();
         dbRefCases =  FirebaseDatabase.getInstance().getReference("cases");
         dbRefUsers =  FirebaseDatabase.getInstance().getReference("users");
+
 
         //get current User Object from Intent
 
@@ -167,17 +169,19 @@ public class ActivityReportCase extends AppCompatActivity {
                         areaY,
                         editTextCaseInformation.getText().toString());
 
+             //   Toast.makeText(getApplicationContext(), "Created dat case", Toast.LENGTH_LONG).show();
+
                 // write in database cases
                 dbRefCases.child(dbId).setValue(c);
-
 
                 Detective detective = new Detective(us, caseId);
                 us.addCaseIDtoList(caseId);
 
+                dbRefUsers.child(us.getId()).child("cases").child("caseId").setValue(c.getId());
 
-                Toast.makeText(getApplicationContext(), "Case was reported successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.reportCaseSuccess, Toast.LENGTH_LONG).show();
 
-               // user.setRole(detective);
+                finish();
 
 
             }

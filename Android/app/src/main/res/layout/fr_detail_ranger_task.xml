@@ -60,7 +60,7 @@
                         android:id="@+id/textRangerReward"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="20sp"
-                        android:layout_marginLeft="7dp"
+                        android:layout_marginStart="7dp"
                         android:gravity="center_vertical|center_horizontal"
                          />
                 </LinearLayout>
@@ -134,7 +134,7 @@
 
             <!-- Button Join as Ranger -->
             <Button
-                android:id="@+id/buttonCompleteTask"
+                android:id="@+id/buttonJoinAsRanger"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"

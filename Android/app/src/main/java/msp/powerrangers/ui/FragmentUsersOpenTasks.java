@@ -56,6 +56,23 @@ public class FragmentUsersOpenTasks extends Fragment {
         // 1. Get a reference to recyclerView & set the onClickListener
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewUOT);
 
+        mRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getContext(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+
+                        // show FragmentDetailUsersOpenTask
+                        Intent intent = new Intent(getActivity(), ActivityDetailContainer.class);
+                        intent.putExtra(String.valueOf(R.string.activityDetailContainer_targetFr), "FragmentDetailUsersOpenTask");
+                        startActivity(intent);
+
+                    }
+
+                    @Override public void onLongItemClick(View view, int position) {
+                        // TODO: do whatever
+                    }
+                })
+        );
+
         // 2. Set layoutManager (defines how the elements are laid out)
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);

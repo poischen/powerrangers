@@ -65,6 +65,7 @@
   <string name="reportUploadedPicture">Uploaded pictures: </string>
   <string name="reportCanNotShowUploadedPicture">Sorry can not show the picture you uploaded</string>
   <string name="reportException">Something went wrong!</string>
+  <string name="reportCaseSuccess">Case was reported successfully</string>
 
   <!-- FragmentRangerTasks & DetailRangerTask-->
   <string name="titleRangerTasks">Ranger Tasks</string>
@@ -77,8 +78,11 @@
   <!-- FragmentConfirmerCases-->
   <string name="titleConfirmerCases">Cases to confirm</string>
 
-  <!-- FragmentUsersOpenTasks -->
+  <!-- FragmentUsersOpenTasks & DetailUsersOpenTask-->
   <string name="titleUsersOpenTasks">Open Tasks</string>
+    <string name="buttonUploadImage">Upload image</string>
+    <string name="completeTask">Complete Task</string>
+    <string name="textToUpload">You should upload an image of your job before you complete the task.</string>
 
   <!-- FragmentVotingTasks-->
   <string name="titleVotingTasks">Voting Tasks</string>
