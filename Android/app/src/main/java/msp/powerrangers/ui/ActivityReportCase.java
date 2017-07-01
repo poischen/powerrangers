@@ -83,6 +83,7 @@ public class ActivityReportCase extends AppCompatActivity {
     private DatabaseReference dbRefCases;
     private DatabaseReference dbRefUsers;
 
+
     // current firebaseUser
     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -98,6 +99,7 @@ public class ActivityReportCase extends AppCompatActivity {
         storageRef = FirebaseStorage.getInstance().getReference();
         dbRefCases =  FirebaseDatabase.getInstance().getReference("cases");
         dbRefUsers =  FirebaseDatabase.getInstance().getReference("users");
+
 
         //get current User Object from Intent
 
@@ -174,6 +176,8 @@ public class ActivityReportCase extends AppCompatActivity {
 
                 Detective detective = new Detective(us, caseId);
                 us.addCaseIDtoList(caseId);
+
+                dbRefUsers.child(us.getId()).child("cases").child("caseId").setValue(c.getId());
 
                 Toast.makeText(getApplicationContext(), R.string.reportCaseSuccess, Toast.LENGTH_LONG).show();
 
