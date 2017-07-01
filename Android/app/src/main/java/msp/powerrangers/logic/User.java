@@ -12,6 +12,7 @@ public class User extends Role {
     private String userId;
     private String userName;
     private String email;
+    private String userPic = "";
     private double balance;
     private List<Role> roleList;
 

@@ -3,13 +3,16 @@ package msp.powerrangers.ui;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,8 +27,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -36,6 +42,7 @@ import java.io.File;
 import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import android.Manifest;
 import msp.powerrangers.R;
 
 import static android.app.Activity.RESULT_OK;
@@ -67,20 +74,18 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_start, container, false);
 
+        //find View elements
         // display user name
         tvUserName = (TextView) view.findViewById(R.id.textViewUserName);
         tvUserName.setText(firebaseUser.getDisplayName());
-
-        //find View elements
-        userImage = (CircleImageView) getActivity().findViewById(R.id.userimage);
-        openTasks = (TextView) getActivity().findViewById(R.id.numberOpenTasks);
-        //TODO: userImage.setOnClickListener(this);
-        //TODO: openTasks.setOnClickListener(this);
-
+        //interactive elements
+        userImage = (CircleImageView) view.findViewById(R.id.userimage);
+        openTasks = (TextView) view.findViewById(R.id.numberOpenTasks);
+        userImage.setOnClickListener(this);
+        openTasks.setOnClickListener(this);
         // call to action buttons
         donateButton = (Button) view.findViewById(R.id.donateButton);
         reportACaseButton = (Button) view.findViewById(R.id.reportACaseButton);
-
         donateButton.setOnClickListener(this);
         reportACaseButton.setOnClickListener(this);
 
@@ -111,20 +116,21 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.userimage:
+                if (ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                        Log.v(this.getClass().getName(), "request permission");
+                        ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},STORAGE_PERMISSION_REQUEST);
 
-                if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{
-                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    }, STORAGE_PERMISSION_REQUEST);}
-                else {
+                    } else
+                    {
+                        Log.v(this.getClass().getName(), "request permission");
+                        ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},STORAGE_PERMISSION_REQUEST);
+                    }
+                } else {
+                    Log.v(this.getClass().getName(), "show file chooser");
                     showFileChooser();
                 }
 
-                /* (storagePermission != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_REQUEST);
-                } else {
-                    showFileChooser();
-                }*/
                 break;
             case R.id.numberOpenTasks:
                 android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -184,13 +190,28 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
             progressDialog.setTitle(getString(R.string.uploadPicture));
             progressDialog.show();
 
-            StorageReference riversRef = storageRef.child("images/" + uid + "/profilepic.jpg");
+            //get filename to write url into database later
+            String pictureName = getFileName(filePath);
+
+            //create Path in Storage
+            final String storageAndDBPath = "images/" + uid + "/" + pictureName;
+            Log.v("storageAndDBPath", storageAndDBPath);
+
+            //upload to Firebase Storage
+            StorageReference riversRef = storageRef.child(storageAndDBPath);
             riversRef.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            //upload succesfull, update view
+                            //upload succesfull, update view and write url into database
                             progressDialog.dismiss();
+
+                            DatabaseReference db = FirebaseDatabase.getInstance().getReference("users");
+                            //TODO: hole user id vom übergebenen user object (siehe viki)
+                            //TODO: download url nicht hard coden
+                            db.child("-Knu17OTDLvDO4HcuajE").child("userPic").setValue(storageAndDBPath);
+
+                            //show pic in app after upload was successful
                             showUserPic();
                         }
                     })
@@ -207,7 +228,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                             double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                            progressDialog.setMessage(((int) progress) + getString(R.string.uploaded));
+                            //TODO: give feedback - progressDialog.setMessage(((int) progress) + getString(R.string.uploaded));
                         }
                     });
         } else {
@@ -217,43 +238,99 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
 
     }
 
+    //https://stackoverflow.com/questions/38017765/retrieving-child-value-firebase
     /**
-     * method gets current firebaseUser profiel picture fromk Firebase and shows it
+     * method gets current firebaseUser profile picture fromk Firebase and shows it
      */
     //TODO: store profile picture as local file, so it does not have to be downlaoded all the time, and check first, if it is available on the device: "You can also download to device memory using getBytes()"
     private void showUserPic() {
      //   FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        File localFile = null;
         if (firebaseUser != null) {
             String uid = null;
             //get UID to identify firebaseUser
             for (UserInfo profile : firebaseUser.getProviderData()) {
                 uid = profile.getUid();
             };
-            try {
-                localFile = File.createTempFile("images", "jpg");
-                final Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                StorageReference riversRef = storageRef.child("images/" + uid + "/profilepic.jpg");
-                riversRef.getFile(localFile)
-                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                userImage.setImageBitmap(bitmap);
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
+
+                DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+                //TODO: hole user id vom übergebenen user object (siehe viki)
+                DatabaseReference refPath = db.child("users").child("-Knu17OTDLvDO4HcuajE").child("userPic");
+
+                refPath.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Log.d("FragmentStart", exception.getMessage());
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        try {
+                            final File localFile = File.createTempFile("images", "jpg");
+                            String picUrlFromDB = dataSnapshot.getValue(String.class);
+                            StorageReference riversRef = storageRef.child(picUrlFromDB);
+                            riversRef.getFile(localFile)
+                                    .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                            Log.v("Download", "download erfolgreich");
+                                            Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                            userImage.setImageBitmap(bitmap);
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    Log.d("FragmentStart", exception.getMessage());
+                                }
+                            });
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
                     }
                 });
-
-            } catch (IOException e) {
-                Log.d("FragmentStart", e.getMessage());
             }
-
         }
 
 
+
+    /*
+    Callback method after requesting storage permission. Try to upload user pic, when user gave permission or give feedback, if he did not.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.v(this.getClass().getName(), "show file chooser after giving permission");
+                    showFileChooser();
+                } else {
+                    Toast.makeText(getContext(), R.string.frStart_permissionNeeded, Toast.LENGTH_SHORT).show();
+                }
+    }
+
+    /*
+    Method to get the picturename of the file from the filechooser
+    https://developer.android.com/guide/topics/providers/document-provider.html
+     */
+    public String getFileName(Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
     }
 
 }
