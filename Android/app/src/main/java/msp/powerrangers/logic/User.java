@@ -1,15 +1,23 @@
 package msp.powerrangers.logic;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.provider.ContactsContract;
+import android.util.Log;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("serial")
 // in pattern RoleCore
-public class User extends Role {
+public class User extends Role implements Serializable  {
 
     private String dbId;
     private String userId;
+    private List<String> caseIdList;
+    private List<String> taskIdList;
     private String userName;
     private String email;
     private double balance;
@@ -22,7 +30,10 @@ public class User extends Role {
         this.userName = userName;
         this.email = email;
         roleList = new ArrayList<Role>();
+        caseIdList = new ArrayList<String>();
+        taskIdList = new ArrayList<String>();
     }
+
 
     // getter
     public String getName() {
@@ -40,6 +51,7 @@ public class User extends Role {
     public double getBalance() {
         return balance;
     }
+
 
     // setter
     public void setName(String userName) {
@@ -77,6 +89,17 @@ public class User extends Role {
 
     }
 
+    public void addCaseIDtoList(String caseID){
+        caseIdList.add(caseID);
+        Object [] totest;
+        totest = caseIdList.toArray();
+        Log.i("CASE ID ADDED TO LIST" , Arrays.toString(totest));
+    }
+
+    public void addTaskIDtoList(String taskID){
+        taskIdList.add(taskID);
+
+    }
 
     public  void login(){
         System.out.println("User Login");
@@ -105,5 +128,6 @@ public class User extends Role {
     public void voteForTask(){
 
     }
+
 
 }
