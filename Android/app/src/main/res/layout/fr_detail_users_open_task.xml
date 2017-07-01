@@ -26,7 +26,7 @@
                 android:layout_height="290dp"
                 app:srcCompat="@drawable/gruenerranger" />
             <EditText
-                android:id="@+id/userTaskDescription"
+                android:id="@+id/detailTaskDescription"
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
                 android:ems="10"

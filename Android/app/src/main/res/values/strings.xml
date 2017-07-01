@@ -60,9 +60,13 @@
   <string name="reportCanNotShowUploadedPicture">Sorry can not show the picture you uploaded</string>
   <string name="reportException">Something went wrong!</string>
 
-  <!-- FragmentRangerTasks-->
+  <!-- FragmentRangerTasks & DetailRangerTask-->
   <string name="titleRangerTasks">Ranger Tasks</string>
   <string name="searchView">Search...</string>
+  <string name="taskDescriptionDetail">Here comes the task description</string>
+  <string name="pollutionDetail">Pollution</string>
+  <string name="buttonJoinAsRanger">Join as Ranger</string>
+
 
   <!-- FragmentConfirmerCases-->
   <string name="titleConfirmerCases">Cases to confirm</string>
