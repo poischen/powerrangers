@@ -60,7 +60,7 @@
                         android:id="@+id/textRangerReward"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="20sp"
-                        android:layout_marginLeft="7dp"
+                        android:layout_marginStart="7dp"
                         android:gravity="center_vertical|center_horizontal"
                          />
                 </LinearLayout>
