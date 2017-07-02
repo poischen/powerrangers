@@ -1,8 +1,10 @@
 package msp.powerrangers.ui;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -56,8 +58,15 @@ public class FragmentConfirmerCases extends Fragment {
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getContext(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
-                        // TODO: show FragmentDetailConfirmerCase
-                        Toast.makeText(getContext(),  "A case was clicked!", Toast.LENGTH_SHORT).show();
+                        // switch to FragmentDetailConfirmerCase
+                        FragmentDetailConfirmerCase confirmCaseFragment = new FragmentDetailConfirmerCase();
+                        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                        ft.replace(R.id.activity_main_fragment_container, confirmCaseFragment);
+                        ft.addToBackStack(null);
+                        ft.commit();
+
+
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
