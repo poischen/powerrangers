@@ -1,21 +1,25 @@
 package msp.powerrangers.ui;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 import msp.powerrangers.R;
+
 
 
 public class FragmentDetailConfirmerCase extends Fragment {
@@ -47,6 +51,13 @@ public class FragmentDetailConfirmerCase extends Fragment {
     // buttons
     private Button buttonConfirmCaseReport;
     private ImageView imageViewConfirmUploadedPicture;
+
+
+    // firebase storage Ref
+    private StorageReference storageRef;
+
+    // firebase db instances
+    private DatabaseReference dbRefCases;
 
     public FragmentDetailConfirmerCase() {
         // Required empty public constructor
@@ -96,7 +107,50 @@ public class FragmentDetailConfirmerCase extends Fragment {
         buttonConfirmCaseReport = (Button) view.findViewById(R.id.buttonConfirmCaseReport);
         imageViewConfirmUploadedPicture = (ImageView) view.findViewById(R.id.imageViewConfirmUploadedPicture);
 
+        // eventuell todo ActionBar
 
+
+        // fill in information from detective case in EditTexts TODO
+        dbRefCases = FirebaseDatabase.getInstance().getReference("cases");
+
+        // get attributes from a case
+        final String dbId = dbRefCases.push().getKey();
+
+        dbRefCases.addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                            String caseTitle = (String) singleSnapshot.child(dbId).child("name").getValue();
+
+                            // TODO
+                            //editTextConfirmCaseTitle.setText(caseTitle);
+                            //Toast.makeText(getContext(), caseTitle, Toast.LENGTH_LONG).show();
+
+                            editTextConfirmCaseTitle.setText("Dummy Text");
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+
+        buttonConfirmCaseReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "to be implemented ;-)", Toast.LENGTH_LONG).show();
+                // rewrite data in database for this case
+                // update Confirmed Cases Bubble on Start
+                // go back to start or confrim cases
+            }
+        });
 
         // Inflate the layout for this fragment
         return view;
