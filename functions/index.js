@@ -117,3 +117,41 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
     return admin.database().ref('images').push({path: fileUrl, thumbnail: thumbFileUrl});
   });
 });
+
+
+/*
+* Listens for cases being confirmed, 
+* calculates number of tasks and the total reward,
+* and writes both to the Firebase Database
+*/
+exports.createCaseInfos = functions.database.ref('/cases/{caseId}/confirmed')
+    .onWrite(event => {
+     const isConfirmed = event.data.val();
+      // First check if 'confirmed' value is true
+      if(isConfirmed) {
+		// Get the current values of areaX and areaY from the database
+	    const areaX = event.data.adminRef.parent.child('areaX').once('value');
+	    const areaY = event.data.adminRef.parent.child('areaY').once('value');
+
+	    return Promise.all([areaX, areaY]).then(results => {
+	        // Calculate the size of case area
+		   	const size = results[0].val() * results[1].val();
+	     	console.log("Size: ", size);
+	      	// If case size is bigger than 10 cut it in smaller tasks otherwise just one ranger is needed
+		    if(size <= 10) {
+		      	return event.data.adminRef.parent.child('caseInfos').set({numberRangers: 1, reward: 2});
+		    }
+		    else {
+			   	// calculate number of rangers and reward based on case size and write it to the database
+			    const number_rangers = Math.round(size/10);
+			    console.log("Number Rangers: ", number_rangers);
+			    const total_reward = Math.round(size/5);
+			    console.log("Total reward: ", total_reward);
+			    return event.data.ref.parent.child('caseInfos').set({numberRangers: number_rangers, reward: total_reward});
+		    }
+	    });   
+	  }
+	  else {
+	  	console.log("Confirmed not true");
+	  }
+});

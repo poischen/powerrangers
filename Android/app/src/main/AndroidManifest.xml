@@ -30,7 +30,8 @@
         <activity
             android:name=".ui.ActivityDetailContainer"
             android:label="@string/title_activity_detail_container"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>
