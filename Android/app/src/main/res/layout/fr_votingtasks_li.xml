@@ -94,18 +94,36 @@
             android:layout_marginTop="8dp"
             android:orientation="horizontal" >
 
+            <!-- Up -->
             <ImageView
                 android:id="@+id/ivVotingUp"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginEnd="20dp"
                 app:srcCompat="@drawable/up"/>
 
+            <TextView
+                android:id="@+id/tvVotingUp"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginStart="10dp"
+                android:paddingTop="6dp"
+               />
+
+            <!-- Down -->
             <ImageView
                 android:id="@+id/ivVotingDown"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                app:srcCompat="@drawable/down" />
+                android:layout_marginStart="30dp"
+                app:srcCompat="@drawable/down"
+                />
+
+             <TextView
+                android:id="@+id/tvVotingDown"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginStart="10dp"
+                 android:paddingTop="6dp" />
 
         </LinearLayout>
 

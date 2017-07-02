@@ -22,6 +22,7 @@ public class VotingTasksListItem {
         this.location = location;
         this.imageID1 = imageID1;
         this.imageID2 = imageID2;
+
     }
 
     /**
