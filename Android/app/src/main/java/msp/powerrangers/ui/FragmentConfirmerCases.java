@@ -125,7 +125,7 @@ public class FragmentConfirmerCases extends Fragment {
             //Use the provided View Holder on the onCreateViewHolder method to populate the current row on the RecyclerView
             holder.title.setText(listItem.get(position).title);
             holder.description.setText(listItem.get(position).desc);
-            holder.imageView.setImageResource(listItem.get(position).imageID);
+            //holder.imageView.setImageResource(listItem.get(position).imageID);
         }
 
         @Override

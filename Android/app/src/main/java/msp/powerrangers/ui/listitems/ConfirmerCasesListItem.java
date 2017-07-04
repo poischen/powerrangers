@@ -1,5 +1,7 @@
 package msp.powerrangers.ui.listitems;
 
+import android.util.Log;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,15 +22,18 @@ public class ConfirmerCasesListItem {
 
     public String title;
     public String desc;
-    public int imageID;
+    //public int imageID;
+
+    String name;
+    String comment;
 
     List<ConfirmerCasesListItem> data;
     private DatabaseReference  dbRefCases;
 
-    private ConfirmerCasesListItem(String title, String desc, int imageID) {
+    private ConfirmerCasesListItem(String title, String desc){ //,int imageID) {
         this.title = title;
         this.desc = desc;
-        this.imageID = imageID;
+        //this.imageID = imageID;
     }
 
     /**
@@ -46,14 +51,22 @@ public class ConfirmerCasesListItem {
                     data = new ArrayList<>();
                     for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
 
-                        title = (String) singleSnapshot.child(dbId).child("name").getValue();
-                        // TODO: build desc from all case informations
-                        desc = (String) singleSnapshot.child(dbId).child("comment").getValue();
-                        imageID = R.drawable.placeholder_case;
+                       name = (String) singleSnapshot.child(dbId).child("name").getValue();
+                        Log.i("Name: ", name);
 
+                        // TODO: build desc from all case informations
+                        comment  = (String) singleSnapshot.child(dbId).child("comment").getValue();
+                        Log.i("Comment: ", comment);
+
+
+/*
+                        note.setUid(database.child("notes").push().getKey());
+                        note.setTitle(titleTextView.getText().toString());
+                        note.setDescription(descriptionTextView.getText().toString());
+                        database.child("notes").child(note.getUid()).setValue(note);*/
 
                     }
-                    data.add(new ConfirmerCasesListItem(title, desc, imageID));
+                    data.add(new ConfirmerCasesListItem(name, comment));
 
                 }
 
