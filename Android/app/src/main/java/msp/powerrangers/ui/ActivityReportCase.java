@@ -1,5 +1,6 @@
 package msp.powerrangers.ui;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -206,6 +207,7 @@ public class ActivityReportCase extends AppCompatActivity {
     private void showFileChooser() {
         Intent getimageintent = new Intent();
         getimageintent.setType("image/*");
+        getimageintent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         getimageintent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(getimageintent, getResources().getString(R.string.chooseProfilePicture)), CHOOSE_IMAGE_REQUEST);
     }
@@ -220,6 +222,19 @@ public class ActivityReportCase extends AppCompatActivity {
             Uri filePath = data.getData();
             uploadFile(filePath);
         }
+
+        if (requestCode == CHOOSE_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getClipData() != null) {
+            ClipData clipData = data.getClipData();
+            if (clipData != null) {
+                for (int i = 0; i < clipData.getItemCount(); i++) {
+                    ClipData.Item item = clipData.getItemAt(i);
+                    Uri uri = item.getUri();
+                    // Call upload method
+                    uploadFile(uri);
+                }
+            }
+        }
+
     }
     /**
      * method to upload case pictures via firebase
@@ -233,13 +248,16 @@ public class ActivityReportCase extends AppCompatActivity {
             for (UserInfo profile : firebaseUser.getProviderData()) {
                 uid = profile.getUid();
             };
-            StorageReference riversRef = storageRef.child("images/" + uid + "/cases/case1/casepicture.jpg");
+
+            String imageID = UUID.randomUUID().toString();
+            StorageReference riversRef = storageRef.child("images/" + uid + "/cases/" + imageID + ".jpg");
+
             Toast.makeText(getApplicationContext(), R.string.uploadPicture, Toast.LENGTH_LONG).show();
             riversRef.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            //upload succesfull, give information
+                            //upload succesful, give information
                             // Toast.makeText(getApplicationContext(), R.string.uploaded, Toast.LENGTH_LONG).show();
                             showUploadedPic();
                         }
@@ -247,7 +265,7 @@ public class ActivityReportCase extends AppCompatActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(Exception exception) {
-                            //upload not successfull
+                            //upload not successful
                             Toast.makeText(getApplicationContext(), R.string.errorUpload, Toast.LENGTH_LONG).show();
                         }
                     })
@@ -271,7 +289,7 @@ public class ActivityReportCase extends AppCompatActivity {
             };
             try {
                 localFile = File.createTempFile("images", "jpg");
-                StorageReference riversRef = storageRef.child("images/" + uid + "/cases/case1/casepicture.jpg");
+                StorageReference riversRef = storageRef.child("images/" + uid + "/cases/");
                 riversRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                     @Override
                     public void onSuccess(byte[] bytes) {
