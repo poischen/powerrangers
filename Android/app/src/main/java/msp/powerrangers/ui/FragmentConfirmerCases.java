@@ -55,27 +55,6 @@ public class FragmentConfirmerCases extends Fragment {
         View rootView = inflater.inflate(R.layout.fr_confirmercases, container, false);
         rootView.setTag(TAG);
 
-        // 1. Get a reference to recyclerView & set the onClickListener
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewCC);
-        mRecyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getContext(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
-                        // switch to FragmentDetailConfirmerCase
-                        FragmentDetailConfirmerCase confirmCaseFragment = new FragmentDetailConfirmerCase();
-                        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        ft.replace(R.id.activity_main_fragment_container, confirmCaseFragment);
-                        ft.addToBackStack(null);
-                        ft.commit();
-
-
-                    }
-
-                    @Override public void onLongItemClick(View view, int position) {
-                        // TODO: do whatever
-                    }
-                })
-        );
 
         // 2. Set layoutManager (defines how the elements are laid out)
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -96,6 +75,34 @@ public class FragmentConfirmerCases extends Fragment {
 
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);
+
+
+        // 1. Get a reference to recyclerView & set the onClickListener
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewCC);
+        mRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getContext(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        // switch to FragmentDetailConfirmerCase
+                        FragmentDetailConfirmerCase confirmCaseFragment = new FragmentDetailConfirmerCase();
+                        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                        Bundle bundles = new Bundle();
+                       // bundles.putInt("position");
+
+                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                        ft.replace(R.id.activity_main_fragment_container, confirmCaseFragment);
+                        ft.addToBackStack(null);
+                        ft.commit();
+
+
+                    }
+
+                    @Override public void onLongItemClick(View view, int position) {
+                        // TODO: do whatever
+                    }
+                })
+        );
+
+
 
         return rootView;
     }
