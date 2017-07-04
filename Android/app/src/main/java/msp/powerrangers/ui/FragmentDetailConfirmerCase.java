@@ -174,7 +174,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
                                 case "3":
                                     radioButtonConfirmCaseHigh.setChecked(true);
                                     break;
-                                
+
                             }
 
                     }
