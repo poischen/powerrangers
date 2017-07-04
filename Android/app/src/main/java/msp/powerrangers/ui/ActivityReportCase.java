@@ -183,7 +183,7 @@ public class ActivityReportCase extends AppCompatActivity {
 
                 Toast.makeText(getApplicationContext(), R.string.reportCaseSuccess, Toast.LENGTH_LONG).show();
 
-                finish();
+                //finish();
 
 
             }
@@ -247,11 +247,11 @@ public class ActivityReportCase extends AppCompatActivity {
     private void uploadFile(Uri filePath) {
 
         if (firebaseUser != null) {
-            String uid = null;
+            /*String uid = null;
             //get UID to identify firebaseUser
             for (UserInfo profile : firebaseUser.getProviderData()) {
                 uid = profile.getUid();
-            };
+            };*/
 
             //get filename to write url into database later
             //String pictureName = getFileName(filePath);

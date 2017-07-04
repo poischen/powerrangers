@@ -28,6 +28,7 @@
   <string name="uploaded">% uploaded...</string>
   <string name="title_activity_detail_container">ActivityDetailContainer</string>
   <string name="fStart_closeAppError">Sorry, an error occured.</string>
+  <string name="frStart_logout">Logout</string>
 
     <!-- Intent Strings-->
     <string name="intent_current_user">Current User</string>
