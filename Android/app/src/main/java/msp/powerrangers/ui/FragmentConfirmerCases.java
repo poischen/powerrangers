@@ -82,7 +82,7 @@ public class FragmentConfirmerCases extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        // test data
+        // will be filled with data
         casesListItem = new ConfirmerCasesListItem();
 
         // 3. Create an adapter and fill
@@ -90,11 +90,6 @@ public class FragmentConfirmerCases extends Fragment {
 
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);
-
-
-
-
-
 
         return rootView;
     }

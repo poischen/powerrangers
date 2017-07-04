@@ -68,7 +68,6 @@
   <string name="reportCaseSuccess">Case was reported successfully</string>
 
   <!-- FragmentDetailConfirmerCase-->
-
     <string name="detailConfirmerCaseFragmentTitle">Confirm case</string>
     <string name="detailConfirmerCaseCaseTitle">Confirm a case</string>
     <string name="detailConfirmerCaseConfirmButton">Confirm this case</string>
@@ -98,7 +97,6 @@
   <string name="placeholderTitle">Title Placeholder</string>
   <string name="placeholderDesc">Description Placeholder</string>
   <string name="placeholderLocation">Location Placeholder</string>
-
 
   <!-- TODO: Remove or change this placeholder text -->
   <string name="hello_blank_fragment">Hello blank fragment</string>
