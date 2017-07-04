@@ -44,6 +44,10 @@ public class Case {
         return caseId;
     }
 
+    public String getDbId() {
+        return dbId;
+    }
+
     public String getUserID () { return userID; }
 
     public String getName() {
