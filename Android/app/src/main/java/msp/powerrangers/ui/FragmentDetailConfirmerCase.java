@@ -1,5 +1,7 @@
 package msp.powerrangers.ui;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -84,7 +86,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fr_detail_confirmer_case, container, false);
+        final View view = inflater.inflate(R.layout.fr_detail_confirmer_case, container, false);
 
         // find UI elements
         // text Views
@@ -239,7 +241,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
                                 singleSnapshot.child("areaX").getRef().setValue(editTextConfirmCaseXCoordinate.getText().toString());
                                 singleSnapshot.child("areaY").getRef().setValue(editTextConfirmCaseYCoordinate.getText().toString());
                                 singleSnapshot.child("scale").getRef().setValue(getScaleValue(radioButtonConfirmCaseLow, radioButtonConfirmCaseMiddle, radioButtonConfirmCaseHigh));
-
+                                singleSnapshot.child("confirmed").getRef().setValue(true);
 
                             }
 
@@ -249,10 +251,22 @@ public class FragmentDetailConfirmerCase extends Fragment {
                             }
                         });
 
-                // rewrite data in database for this case
-                // update Confirmed Cases Bubble on Start
-                // go back to start or confrim cases
+                // TODO: update Confirmed Cases Bubble on Start
+                // TextView confirmedCases = (TextView) view.findViewById(R.id.numberConfirmedCases);
+
+                //int n = Integer.parseInt(confirmedCases.getText().toString());
+                // Toast.makeText(getActivity(), "cases: "+confirmedCases.getText(), Toast.LENGTH_SHORT).show();
+                //n++;
+
+               // confirmedCases.setText("bla");
+
+                // TODO: go back to FragmentStart
+               /* Intent i  = new Intent(getActivity(), MainActivity.class);
+                startActivity(i);
+                ((Activity) getActivity()).overridePendingTransition(0,0);*/
             }
+
+
         });
 
         // Inflate the layout for this fragment
