@@ -31,6 +31,7 @@ public class FragmentConfirmerCases extends Fragment {
     protected RecyclerView mRecyclerView;
     protected RecyclerView.LayoutManager mLayoutManager;
     protected Recycler_View_Adapter mAdapter;
+    private ConfirmerCasesListItem  casesListItem;
 
 
     /**
@@ -80,7 +81,7 @@ public class FragmentConfirmerCases extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // test data
-        List<ConfirmerCasesListItem> data = ConfirmerCasesListItem.fill_with_data();
+        List<ConfirmerCasesListItem> data = casesListItem.fill_with_data();
 
         // 3. Create an adapter
         mAdapter = new Recycler_View_Adapter(data, getContext());
