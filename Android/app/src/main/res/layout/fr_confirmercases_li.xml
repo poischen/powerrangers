@@ -26,7 +26,7 @@
             android:layout_height="80dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginEnd="8dp" />
+            android:layout_marginEnd="16dp" />
 
         <!-- Title  -->
         <TextView
@@ -34,22 +34,33 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_margin="@dimen/text_margin"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
             android:layout_toEndOf="@+id/ivCC"
             android:text="@string/placeholderTitle"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textColor="@color/colorPrimaryDark"
             android:textStyle="bold" />
 
-
-        <!-- Description (some details of the case)
-        [PLACEHOLDER FOR SOMETHING]  -->
+        <!-- Location  -->
         <TextView
-            android:id="@+id/descriptionCC"
+            android:id="@+id/locationCC"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/titleCC"
             android:layout_toEndOf="@+id/ivCC"
+            android:layout_marginBottom="16dp"
+            android:text="@string/placeholderLocation"
+            android:textColor="@color/colorPrimaryDark" />
+
+        <!-- Comment -->
+        <TextView
+            android:id="@+id/descriptionCC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/locationCC"
+            android:layout_toEndOf="@+id/ivCC"
+            android:layout_marginBottom="16dp"
             android:text="@string/placeholderDesc" />
 
     </RelativeLayout>

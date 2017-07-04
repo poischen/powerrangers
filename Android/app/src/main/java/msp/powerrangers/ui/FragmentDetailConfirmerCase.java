@@ -2,6 +2,7 @@ package msp.powerrangers.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
+
+import java.util.Iterator;
+
 import msp.powerrangers.R;
 
 
@@ -52,6 +56,8 @@ public class FragmentDetailConfirmerCase extends Fragment {
     private Button buttonConfirmCaseReport;
     private ImageView imageViewConfirmUploadedPicture;
 
+    private int position;
+
 
     // firebase storage Ref
     private StorageReference storageRef;
@@ -67,6 +73,9 @@ public class FragmentDetailConfirmerCase extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle bund = getArguments();
+        position = bund.getInt("Position");
+      //  Log.i("DIE POSITION !!!!!!!!!!" , String.valueOf(position));
 
     }
 
@@ -121,15 +130,52 @@ public class FragmentDetailConfirmerCase extends Fragment {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-                            String caseTitle = (String) singleSnapshot.child(dbId).child("name").getValue();
+
+                            Iterator iter = dataSnapshot.getChildren().iterator();
+
+                            for(int i = 0; i < position; i++) {
+                                iter.next();
+                            }
+
+                            DataSnapshot singleSnapshot = (DataSnapshot) iter.next();
+
+                            String caseTitle = (String) singleSnapshot.child("name").getValue();
+                            String caseCity = (String) singleSnapshot.child("city").getValue();
+                            String caseCountry = (String) singleSnapshot.child("country").getValue();
+                            String caseComment = (String) singleSnapshot.child("comment").getValue();
+                            String caseXCoord =  String.valueOf(singleSnapshot.child("areaX").getValue());
+                            String caseYCoord =  String.valueOf(singleSnapshot.child("areaY").getValue());
+                            String caseScale =  String.valueOf(singleSnapshot.child("scale").getValue());
+
+                                 //   (Integer) singleSnapshot.child("areaX");
+                            //String caseTitle = (String) singleSnapshot.child("name").getValue();
 
                             // TODO
                             //editTextConfirmCaseTitle.setText(caseTitle);
                             //Toast.makeText(getContext(), caseTitle, Toast.LENGTH_LONG).show();
 
-                            editTextConfirmCaseTitle.setText("Dummy Text");
-                        }
+                            editTextConfirmCaseTitle.setText(caseTitle);
+                            editTextConfirmCaseCity.setText(caseCity);
+                            editTextConfirmCaseCountry.setText(caseCountry);
+                            editTextConfirmCaseInformation.setText(caseComment);
+                            editTextConfirmCaseXCoordinate.setText(caseXCoord);
+                            editTextConfirmCaseYCoordinate.setText(caseYCoord);
+
+                            switch(caseScale){
+
+                                case "1":
+                                    radioButtonConfirmCaseLow.setChecked(true);
+                                    break;
+
+                                case "2":
+                                    radioButtonConfirmCaseMiddle.setChecked(true);
+                                    break;
+
+                                case "3":
+                                    radioButtonConfirmCaseHigh.setChecked(true);
+                                    break;
+
+                            }
 
                     }
 
