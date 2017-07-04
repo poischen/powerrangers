@@ -193,6 +193,24 @@ public class FragmentDetailConfirmerCase extends Fragment {
         });
 
 
+        radioButtonConfirmCaseMiddle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                radioButtonConfirmCaseLow.setChecked(false);
+                radioButtonConfirmCaseHigh.setChecked(false);
+                radioButtonConfirmCaseMiddle.setChecked(true);
+            }
+        });
+
+
+        radioButtonConfirmCaseHigh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                radioButtonConfirmCaseLow.setChecked(false);
+                radioButtonConfirmCaseMiddle.setChecked(false);
+                radioButtonConfirmCaseHigh.setChecked(true);
+            }
+        });
 
         buttonConfirmCaseReport.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -220,7 +238,6 @@ public class FragmentDetailConfirmerCase extends Fragment {
                                 singleSnapshot.child("comment").getRef().setValue(editTextConfirmCaseInformation.getText().toString());
                                 singleSnapshot.child("areaX").getRef().setValue(editTextConfirmCaseXCoordinate.getText().toString());
                                 singleSnapshot.child("areaY").getRef().setValue(editTextConfirmCaseYCoordinate.getText().toString());
-                                String theScaleValue;
                                 singleSnapshot.child("scale").getRef().setValue(getScaleValue(radioButtonConfirmCaseLow, radioButtonConfirmCaseMiddle, radioButtonConfirmCaseHigh));
 
 
