@@ -23,23 +23,25 @@
             android:textColor="@color/colorPrimaryDark"
             android:gravity="center"
             android:text="@string/titleConfirmerCases" />
+        <!--
+           <SearchView
+               android:id="@+id/searchView"
+               android:layout_width="wrap_content"
+               android:layout_height="match_parent"
+               android:layout_below="@+id/titleConfirmerCases"
+               android:layout_marginTop="10dp"
+               android:gravity="end"
+               android:orientation="horizontal"
+               android:visibility="visible"
+               app:defaultQueryHint="@string/searchView" />
 
-        <SearchView
-            android:id="@+id/searchView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/titleConfirmerCases"
-            android:layout_marginTop="10dp"
-            android:gravity="end"
-            android:orientation="horizontal"
-            android:visibility="visible"
-            app:defaultQueryHint="@string/searchView" />
+                -->
 
-        <!-- Recycler View -->
+           <!-- Recycler View -->
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewCC"
             android:name="msp.powerrangers.ui.FragmentConfirmerCases"
-            android:layout_below="@+id/searchView"
+            android:layout_below="@+id/titleConfirmerCases"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="LinearLayoutManager"

@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,10 +82,17 @@ public class FragmentConfirmerCases extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // test data
-        List<ConfirmerCasesListItem> data = casesListItem.fill_with_data();
+
+        casesListItem = new ConfirmerCasesListItem();
+       // casesListItem.fill_with_data();
+
+       // List<ConfirmerCasesListItem> data = casesListItem.fill_with_data();
+
+
+      //  Log.i("CONFIRMER CASES" , casesListItem.toString());
 
         // 3. Create an adapter
-        mAdapter = new Recycler_View_Adapter(data, getContext());
+        mAdapter = new Recycler_View_Adapter(casesListItem.fill_with_data(), getContext());
 
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);

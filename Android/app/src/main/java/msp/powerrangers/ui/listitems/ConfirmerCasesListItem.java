@@ -27,36 +27,45 @@ public class ConfirmerCasesListItem {
     String name;
     String comment;
 
-    List<ConfirmerCasesListItem> data;
+    List<ConfirmerCasesListItem> data = new ArrayList<>();
     private DatabaseReference  dbRefCases;
 
-    private ConfirmerCasesListItem(String title, String desc){ //,int imageID) {
+    public ConfirmerCasesListItem(String title, String desc){
         this.title = title;
         this.desc = desc;
         //this.imageID = imageID;
     }
 
+    public ConfirmerCasesListItem(){
+
+    }
+
     /**
      * Generates RT-Objects for RecyclerView's adapter.
      */
-    public  List<ConfirmerCasesListItem> fill_with_data() {
+    public List<ConfirmerCasesListItem> fill_with_data() {
 
         dbRefCases  = FirebaseDatabase.getInstance().getReference("cases");
-        final String dbId = dbRefCases.push().getKey();
 
         dbRefCases.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    data = new ArrayList<>();
+                    //data = new ArrayList<>();;
+
                     for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
 
-                       name = (String) singleSnapshot.child(dbId).child("name").getValue();
+                       name = (String) singleSnapshot.child("name").getValue();
                         Log.i("Name: ", name);
 
                         // TODO: build desc from all case informations
-                        comment  = (String) singleSnapshot.child(dbId).child("comment").getValue();
+                        comment  = (String) singleSnapshot.child("comment").getValue();
                         Log.i("Comment: ", comment);
+
+
+                        data.add(new ConfirmerCasesListItem(name, comment));
+
+                        Log.i("DIE LISTE: " , data.toString());
 
 
 /*
@@ -66,7 +75,7 @@ public class ConfirmerCasesListItem {
                         database.child("notes").child(note.getUid()).setValue(note);*/
 
                     }
-                    data.add(new ConfirmerCasesListItem(name, comment));
+
 
                 }
 
