@@ -56,16 +56,16 @@ public class ConfirmerCasesListItem {
                     for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
 
                        name = (String) singleSnapshot.child("name").getValue();
-                        Log.i("Name: ", name);
+                     //   Log.i("Name: ", name);
 
                         // TODO: build desc from all case informations
                         comment  = (String) singleSnapshot.child("comment").getValue();
-                        Log.i("Comment: ", comment);
+                    //    Log.i("Comment: ", comment);
 
 
                         data.add(new ConfirmerCasesListItem(name, comment));
 
-                        Log.i("DIE LISTE: " , data.toString());
+                    //    Log.i("DIE LISTE: " , data.toString());
 
 
 /*
