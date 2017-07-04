@@ -176,11 +176,6 @@ public class ActivityReportCase extends AppCompatActivity {
                 Detective detective = new Detective(us, caseId);
                 us.addCaseIDtoList(caseId);
 
-
-                dbRefUsers.child(us.getId()).child("cases").setValue(0);
-
-                dbRefUsers.child(us.getId()).child("cases").push().child("caseId").setValue(c.getId());
-
                 Toast.makeText(getApplicationContext(), R.string.reportCaseSuccess, Toast.LENGTH_LONG).show();
 
                 finish();
