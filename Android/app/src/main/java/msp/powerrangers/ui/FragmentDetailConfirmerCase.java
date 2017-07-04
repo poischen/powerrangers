@@ -1,5 +1,7 @@
 package msp.powerrangers.ui;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -84,7 +86,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fr_detail_confirmer_case, container, false);
+        final View view = inflater.inflate(R.layout.fr_detail_confirmer_case, container, false);
 
         // find UI elements
         // text Views
@@ -123,13 +125,12 @@ public class FragmentDetailConfirmerCase extends Fragment {
         dbRefCases = FirebaseDatabase.getInstance().getReference("cases");
 
         // get attributes from a case
-        final String dbId = dbRefCases.push().getKey();
+       // final String dbId = dbRefCases.push().getKey();
 
         dbRefCases.addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-
 
                             Iterator iter = dataSnapshot.getChildren().iterator();
 
@@ -139,6 +140,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
 
                             DataSnapshot singleSnapshot = (DataSnapshot) iter.next();
 
+                            // Fetch the data from the DB
                             String caseTitle = (String) singleSnapshot.child("name").getValue();
                             String caseCity = (String) singleSnapshot.child("city").getValue();
                             String caseCountry = (String) singleSnapshot.child("country").getValue();
@@ -147,13 +149,9 @@ public class FragmentDetailConfirmerCase extends Fragment {
                             String caseYCoord =  String.valueOf(singleSnapshot.child("areaY").getValue());
                             String caseScale =  String.valueOf(singleSnapshot.child("scale").getValue());
 
-                                 //   (Integer) singleSnapshot.child("areaX");
-                            //String caseTitle = (String) singleSnapshot.child("name").getValue();
-
-                            // TODO
-                            //editTextConfirmCaseTitle.setText(caseTitle);
                             //Toast.makeText(getContext(), caseTitle, Toast.LENGTH_LONG).show();
 
+                            // set the data in the Detail View
                             editTextConfirmCaseTitle.setText(caseTitle);
                             editTextConfirmCaseCity.setText(caseCity);
                             editTextConfirmCaseCountry.setText(caseCountry);
@@ -187,19 +185,107 @@ public class FragmentDetailConfirmerCase extends Fragment {
 
 
 
+        radioButtonConfirmCaseLow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                radioButtonConfirmCaseHigh.setChecked(false);
+                radioButtonConfirmCaseMiddle.setChecked(false);
+                radioButtonConfirmCaseLow.setChecked(true);
+            }
+        });
+
+
+        radioButtonConfirmCaseMiddle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                radioButtonConfirmCaseLow.setChecked(false);
+                radioButtonConfirmCaseHigh.setChecked(false);
+                radioButtonConfirmCaseMiddle.setChecked(true);
+            }
+        });
+
+
+        radioButtonConfirmCaseHigh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                radioButtonConfirmCaseLow.setChecked(false);
+                radioButtonConfirmCaseMiddle.setChecked(false);
+                radioButtonConfirmCaseHigh.setChecked(true);
+            }
+        });
 
         buttonConfirmCaseReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "to be implemented ;-)", Toast.LENGTH_LONG).show();
-                // rewrite data in database for this case
-                // update Confirmed Cases Bubble on Start
-                // go back to start or confrim cases
+
+                dbRefCases.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                Iterator iter = dataSnapshot.getChildren().iterator();
+
+                                for (int i = 0; i < position; i++) {
+                                    iter.next();
+                                }
+
+                                DataSnapshot singleSnapshot = (DataSnapshot) iter.next();
+
+
+                                // fill in new values
+                                singleSnapshot.child("name").getRef().setValue(editTextConfirmCaseTitle.getText().toString());
+                                singleSnapshot.child("city").getRef().setValue(editTextConfirmCaseCity.getText().toString());
+                                singleSnapshot.child("country").getRef().setValue(editTextConfirmCaseCountry.getText().toString());
+                                singleSnapshot.child("comment").getRef().setValue(editTextConfirmCaseInformation.getText().toString());
+                                singleSnapshot.child("areaX").getRef().setValue(editTextConfirmCaseXCoordinate.getText().toString());
+                                singleSnapshot.child("areaY").getRef().setValue(editTextConfirmCaseYCoordinate.getText().toString());
+                                singleSnapshot.child("scale").getRef().setValue(getScaleValue(radioButtonConfirmCaseLow, radioButtonConfirmCaseMiddle, radioButtonConfirmCaseHigh));
+                                singleSnapshot.child("confirmed").getRef().setValue(true);
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+                // TODO: update Confirmed Cases Bubble on Start
+                // TextView confirmedCases = (TextView) view.findViewById(R.id.numberConfirmedCases);
+
+                //int n = Integer.parseInt(confirmedCases.getText().toString());
+                // Toast.makeText(getActivity(), "cases: "+confirmedCases.getText(), Toast.LENGTH_SHORT).show();
+                //n++;
+
+               // confirmedCases.setText("bla");
+
+                // TODO: go back to FragmentStart
+               /* Intent i  = new Intent(getActivity(), MainActivity.class);
+                startActivity(i);
+                ((Activity) getActivity()).overridePendingTransition(0,0);*/
             }
+
+
         });
 
         // Inflate the layout for this fragment
         return view;
+    }
+
+
+    /**
+     * Get the value of a checkbox
+     * @param low
+     * @param medium
+     * @param high
+     * @return
+     */
+    public int getScaleValue(RadioButton low, RadioButton medium, RadioButton high) {
+        if(low.isChecked()) return 1;
+        if(medium.isChecked()) return 2;
+        if(high.isChecked()) return 3;
+        else return -1;
     }
 
 

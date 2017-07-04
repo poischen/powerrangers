@@ -46,7 +46,7 @@ public class ConfirmerCasesListItem {
     }
 
     /**
-     * Generates RT-Objects for RecyclerView's adapter.
+     * Generates Confirmer Cases Objects for RecyclerView's adapter.
      */
     public List<ConfirmerCasesListItem> fill_with_data() {
 

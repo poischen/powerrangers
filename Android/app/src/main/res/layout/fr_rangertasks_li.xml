@@ -26,7 +26,7 @@
             android:layout_height="80dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginEnd="8dp" />
+            android:layout_marginEnd="16dp"/>
 
         <!-- Title  -->
         <TextView
@@ -34,22 +34,34 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_margin="@dimen/text_margin"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
             android:layout_toEndOf="@+id/ivRT"
             android:text="@string/placeholderTitle"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textColor="@color/colorPrimaryDark"
             android:textStyle="bold" />
 
-
-        <!-- Description (some details of the task)
-        [PLACEHOLDER FOR SOMETHING]  -->
+        <!-- Location  -->
         <TextView
-            android:id="@+id/descriptionRT"
+            android:id="@+id/locationRT"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/titleRT"
             android:layout_toEndOf="@+id/ivRT"
+            android:layout_marginBottom="16dp"
+            android:text="@string/placeholderLocation"
+            android:textColor="@color/colorPrimaryDark" />
+
+
+        <!-- Comment -->
+        <TextView
+            android:id="@+id/descriptionRT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/locationRT"
+            android:layout_toEndOf="@+id/ivRT"
+            android:layout_marginBottom="16dp"
             android:text="@string/placeholderDesc" />
 
     </RelativeLayout>
