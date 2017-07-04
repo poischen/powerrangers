@@ -1,5 +1,7 @@
 package msp.powerrangers.logic;
 
+import java.security.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 public class Case {
@@ -17,6 +19,7 @@ public class Case {
     private boolean isConfirmed;
     List<Task> relatedTasks;
     private String userID;
+
 
     public Case(String dbId, String userID, String caseId, String name, String city, String country,
                 int scale, int areaX, int areaY, //String pictureURL,

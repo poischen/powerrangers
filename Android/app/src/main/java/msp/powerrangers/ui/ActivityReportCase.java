@@ -159,7 +159,6 @@ public class ActivityReportCase extends AppCompatActivity {
                 int areaX = Integer.valueOf(editTextCaseXCoordinate.getText().toString());
                 int areaY = Integer.valueOf(editTextCaseYCoordinate.getText().toString());
 
-
                 Case c = new Case(dbId, us.getId(), caseId,
                         editTextCaseTitle.getText().toString(),
                         editTextCaseCity.getText().toString(),
@@ -177,7 +176,10 @@ public class ActivityReportCase extends AppCompatActivity {
                 Detective detective = new Detective(us, caseId);
                 us.addCaseIDtoList(caseId);
 
-                dbRefUsers.child(us.getId()).child("cases").child("caseId").setValue(c.getId());
+
+                dbRefUsers.child(us.getId()).child("cases").setValue(0);
+
+                dbRefUsers.child(us.getId()).child("cases").push().child("caseId").setValue(c.getId());
 
                 Toast.makeText(getApplicationContext(), R.string.reportCaseSuccess, Toast.LENGTH_LONG).show();
 
