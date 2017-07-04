@@ -125,7 +125,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                         String dbId = userInfo.getDbId();
                         String userId = userInfo.getId();
                         String mail = userInfo.getEmail();
-                        u = new User(name, dbId, userId, mail);
+                        u = new User(dbId,userId, name, mail);
                         //get and show profile pic
                         showUserPic();
                     }
