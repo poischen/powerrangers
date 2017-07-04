@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import msp.powerrangers.R;
+<<<<<<< HEAD
 import msp.powerrangers.ui.listitems.FragmentConfirmerCasesListItem;
 import msp.powerrangers.ui.listitems.FragmentRangerTasksListItem;
 import msp.powerrangers.ui.listitems.FragmentUsersOpenTasksListItem;
@@ -16,6 +17,12 @@ import msp.powerrangers.ui.listitems.FragmentVotingTasksListItem;
 
 
 public class MainActivity extends FragmentActivity implements FragmentConfirmerCases.OnListFragmentInteractionListener, FragmentRangerTasks.OnListFragmentInteractionListener, FragmentUsersOpenTasks.OnListFragmentInteractionListener, FragmentVotingTasks.OnListFragmentInteractionListener{
+=======
+import msp.powerrangers.ui.listitems.UsersOpenTasksListItem;
+
+
+public class MainActivity extends FragmentActivity {
+>>>>>>> ui
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authListener;
@@ -68,6 +75,7 @@ public class MainActivity extends FragmentActivity implements FragmentConfirmerC
         }
     }
 
+<<<<<<< HEAD
     @Override
     public void onListFragmentInteraction(FragmentConfirmerCasesListItem.DummyItem item) {
 
@@ -80,7 +88,13 @@ public class MainActivity extends FragmentActivity implements FragmentConfirmerC
 
     @Override
     public void onListFragmentInteraction(FragmentUsersOpenTasksListItem.DummyItem item) {
+=======
+>>>>>>> ui
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString("WORKAROUND_FOR_BUG_19917_KEY", "WORKAROUND_FOR_BUG_19917_VALUE");
+        super.onSaveInstanceState(outState);
     }
 
     @Override

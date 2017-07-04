@@ -1,6 +1,7 @@
 package msp.powerrangers.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -60,6 +61,7 @@ public class FragmentRangerTasks extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+<<<<<<< HEAD
         View view = inflater.inflate(R.layout.fragment_fragmentrangertasklistitem_list, container, false);
 
         // Set the adapter
@@ -75,6 +77,38 @@ public class FragmentRangerTasks extends Fragment {
         }
         return view;
     }
+=======
+        View rootView = inflater.inflate(R.layout.fr_rangertasks, container, false);
+        rootView.setTag(TAG);
+
+        // 1. Get a reference to recyclerView & set the onClickListener
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewRT);
+        mRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getContext(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+
+                        //  show FragmentDetailRangerTask
+                        Intent intent = new Intent(getActivity(), ActivityDetailContainer.class);
+                        intent.putExtra(String.valueOf(R.string.activityDetailContainer_targetFr), "FragmentDetailRangerTask");
+                        startActivity(intent);
+                    }
+
+                    @Override public void onLongItemClick(View view, int position) {
+                        // TODO: do whatever
+                    }
+                })
+        );
+
+        // 2. Set layoutManager (defines how the elements are laid out)
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        // test data
+        List<RangerTasksListItem> data = RangerTasksListItem.fill_with_data();
+
+        // 3. Create an adapter
+        mAdapter = new Recycler_View_Adapter(data, getContext());
+>>>>>>> ui
 
 
     @Override

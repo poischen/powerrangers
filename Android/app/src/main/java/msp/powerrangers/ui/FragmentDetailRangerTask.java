@@ -1,36 +1,37 @@
 package msp.powerrangers.ui;
-
-import android.content.Context;
-import android.net.Uri;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+<<<<<<< HEAD
 import android.widget.ImageView;
 import android.widget.TextView;
+=======
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.w3c.dom.Text;
+>>>>>>> ui
 
 import msp.powerrangers.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FragmentDetailRangerTask.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FragmentDetailRangerTask#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FragmentDetailRangerTask extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
+    private TextView rangerTaskName;
+    private ImageView rangerTaskDetailImage;
+    private TextView textRangerReward;
+    private TextView textNumberRangers;
+    private TextView textPollutionLevel;
+    private ImageView iconMoney;
+    private ImageView iconRanger;
+    private ImageView iconPollution;
+    private TextView rangerTaskDescription;
+    private Button buttonJoin;
 
     private ImageView rangerImage;
     private TextView textRangerReward;
@@ -41,37 +42,17 @@ public class FragmentDetailRangerTask extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentDetailRangerTask.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FragmentDetailRangerTask newInstance(String param1, String param2) {
-        FragmentDetailRangerTask fragment = new FragmentDetailRangerTask();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
+<<<<<<< HEAD
         View view = inflater.inflate(R.layout.fragment_fragment_detail_ranger_task, container, false);
         // Get all layout elements
         rangerImage = (ImageView) view.findViewById(R.id.rangerImage);
@@ -81,43 +62,72 @@ public class FragmentDetailRangerTask extends Fragment {
 
         return view;
     }
+=======
+        View view = inflater.inflate(R.layout.fr_detail_ranger_task, container, false);
+>>>>>>> ui
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+        // TODO: get & set task name (location?) from db
+        rangerTaskName = (TextView) view.findViewById(R.id.taskDetailName);
+        rangerTaskName.setText("Kathmandu, Nepal");
+
+        // TODO: get & set image for this task from the db
+        rangerTaskDetailImage = (ImageView) view.findViewById(R.id.rangerTaskDetailImage);
+        int imageId = R.drawable.polluted_beach1;
+        rangerTaskDetailImage.setImageResource(imageId);
+
+        textRangerReward = (TextView) view.findViewById(R.id.textRangerReward);
+        textNumberRangers = (TextView) view.findViewById(R.id.textNumberRangers);
+        textPollutionLevel = (TextView) view.findViewById(R.id.textScalePollution);
+
+        // TODO: get & set the reward, #rangers & pollution level for this task from the db
+        String rangerReward = "10";
+        String nRangers = "5";
+        String pollutionLevel = "high";
+        textRangerReward.setText(rangerReward);
+        textNumberRangers.setText(nRangers);
+        textPollutionLevel.setText(pollutionLevel);
+
+        // set some fancy icons
+        // TODO: bitcoin icon :)
+        iconMoney = (ImageView) view.findViewById(R.id.rangerReward);
+        iconMoney.setImageResource(R.drawable.iconrewardsmall);
+
+        iconRanger = (ImageView) view.findViewById(R.id.imageNumberRangers);
+        iconRanger.setImageResource(R.drawable.iconranger);
+
+        iconPollution = (ImageView) view.findViewById(R.id.imagePollutionLevel);
+        // set appropriate icon
+        if (pollutionLevel.equals("medium")) {
+            iconPollution.setImageResource(R.drawable.icon_pollution_medium);
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+        else if (pollutionLevel.equals("low")) {
+            iconPollution.setImageResource(R.drawable.icon_pollution_low);
         }
+        else if (pollutionLevel.equals("high")) {
+            iconPollution.setImageResource(R.drawable.icon_pollution_high);
+        }
+
+        rangerTaskDescription = (TextView) view.findViewById(R.id.detailTaskDescription);
+        rangerTaskDescription.setText("Summary of the case in Kathmandu....\nWe need you! ;)");
+
+        buttonJoin = (Button) view.findViewById(R.id.buttonJoinAsRanger);
+        buttonJoin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(v.getContext(), "You have joined the task! \n", Toast.LENGTH_LONG).show();
+                // TODO: Ranger erstellen
+                // TODO: task zuweisen und in die db eintragen (users, tasks)
+                // TODO: Anzeige in FragmentStart andern (openTasks +1 )
+
+                // move to Main Activity (FragmentStart)
+                Intent i = new Intent(getActivity(), MainActivity.class);
+                startActivity(i);
+                ((Activity) getActivity()).overridePendingTransition(0,0);
+
+            }
+        });
+
+        return view;
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }

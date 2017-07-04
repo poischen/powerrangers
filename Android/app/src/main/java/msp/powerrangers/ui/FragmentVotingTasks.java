@@ -72,6 +72,7 @@ public class FragmentVotingTasks extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+<<<<<<< HEAD
         View view = inflater.inflate(R.layout.fragment_fragmentitemvotingtasks_list, container, false);
 
         // Set the adapter
@@ -87,6 +88,25 @@ public class FragmentVotingTasks extends Fragment {
         }
         return view;
     }
+=======
+        View rootView = inflater.inflate(R.layout.fr_votingtasks, container, false);
+        rootView.setTag(TAG);
+
+        // 1. Get a reference to recyclerView & set the onClickListener
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewVT);
+
+
+
+        // 2. Set layoutManager (defines how the elements are laid out)
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        // test data
+        List<VotingTasksListItem> data = VotingTasksListItem.fill_with_data();
+
+        // 3. Create an adapter
+        mAdapter = new Recycler_View_Adapter(data, getContext());
+>>>>>>> ui
 
 
     @Override
@@ -121,7 +141,15 @@ public class FragmentVotingTasks extends Fragment {
         void onListFragmentInteraction(DummyItem item);
     }
 
+<<<<<<< HEAD
 
+=======
+        List<VotingTasksListItem> listItem = Collections.emptyList();
+        Context context;
+        int positive;
+        int negative;
+        int votingThreshold;
+>>>>>>> ui
 
     public class MyFragmentItemVotingTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyFragmentItemVotingTaskRecyclerViewAdapter.ViewHolder> {
 
@@ -134,10 +162,100 @@ public class FragmentVotingTasks extends Fragment {
         }
 
         @Override
+<<<<<<< HEAD
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.fragment_fragmentitemvotingtasks, parent, false);
             return new ViewHolder(view);
+=======
+        public void onBindViewHolder(final View_Holder holder, final int position) {
+
+            // TODO: set real values from db tasks
+            // title and location
+            holder.title.setText(listItem.get(position).title);
+            holder.location.setText(listItem.get(position).location);
+            holder.locationIcon.setImageResource(R.drawable.location);
+
+            // before/after images
+            holder.imageView1.setImageResource(listItem.get(position).imageID1);
+            holder.imageView2.setImageResource(listItem.get(position).imageID2);
+
+            //  thumbs up/down
+            holder.up.setImageResource(R.drawable.up);
+            holder.down.setImageResource(R.drawable.down);
+            holder.nLikes.setText("4");           // dummy values
+            holder.nDislikes.setText("0");
+
+            positive = Integer.parseInt(holder.nLikes.getText().toString());
+            negative = Integer.parseInt(holder.nDislikes.getText().toString());
+            votingThreshold = 5;
+
+            // set onClickListener for before image
+            holder.imageView1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // TODO: should open the image in full size
+                    Toast.makeText(getContext(), "Here opens the disgusting before image..", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            // set onClickListener for after image
+            holder.imageView2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // TODO: should open the image in full size
+                    Toast.makeText(getContext(), "Here opens the most beautiful after image..", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            // set onClickListener for up votes
+            holder.up.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    // prevent downvoting if already upvoted
+                    holder.down.setEnabled(false);
+
+                    // remove the item if the threshold was reached
+                    if (positive + 1 >= votingThreshold) {
+                        remove(listItem.get(position));
+                        Toast.makeText(getContext(), "Thanks! \nThe ranger will get his reward!", Toast.LENGTH_LONG).show();
+                        // TODO: set the isConfirmed for the task in db to true. Ranger should get his reward.
+                    } else {
+                        // TODO: on data update write in db
+                        holder.nLikes.setText(String.valueOf(positive + 1));
+                        //prevent clicking multiple times
+                        holder.up.setEnabled(false);
+                    }
+                }
+            });
+
+            // set onClickListener for down votes
+            holder.down.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    // prevent upvoting if already downvoted
+                    holder.up.setEnabled(false);
+
+                    // remove the item if the threshold was reached
+                    if (negative + 1 >= votingThreshold) {
+                        remove(listItem.get(position));
+                        Toast.makeText(getContext(), "The ranger won't get his reward...", Toast.LENGTH_LONG).show();
+                        // TODO: set the isConfirmed to false. Ranger fucked up, he wont get his reward :)
+                    }
+
+                    else {
+                        // TODO: on data update write in db
+                        holder.nDislikes.setText(String.valueOf(negative + 1));
+                        //prevent clicking multiple times
+                        holder.down.setEnabled(false);
+                    }
+                }
+            });
+
+
+>>>>>>> ui
         }
 
         @Override
@@ -183,6 +301,56 @@ public class FragmentVotingTasks extends Fragment {
         }
     }
 
+<<<<<<< HEAD
+=======
+    /**
+     * ##################################################################################################################
+     * ###################################        VIEW HOLDER         ###################################################
+     * ##################################################################################################################
+     *
+     * The RecyclerView uses a ViewHolder to store the references to the relevant views for one entry in the RecyclerView.
+     * This solution avoids all the findViewById() method calls in the adapter to find the views to be filled with data.
+     *
+     * ##################################################################################################################
+     * ##################################################################################################################
+     *
+     */
+    private class View_Holder extends RecyclerView.ViewHolder {
+
+        CardView cv;
+        TextView title;
+        TextView location;
+        ImageView locationIcon;
+        ImageView imageView1;
+        ImageView imageView2;
+        ImageView up;
+        ImageView down;
+        TextView nLikes;
+        TextView nDislikes;
+
+        View_Holder(View itemView) {
+            super(itemView);
+
+            cv = (CardView) itemView.findViewById(R.id.cvVT);
+            title = (TextView) itemView.findViewById(R.id.titleVT);
+            location = (TextView) itemView.findViewById(R.id.locationVT);
+            locationIcon = (ImageView) itemView.findViewById(R.id.ivLocationIcon);
+
+            // before/after images
+            imageView1 = (ImageView) itemView.findViewById(R.id.ivVotingPic1);
+            imageView2 = (ImageView) itemView.findViewById(R.id.ivVotingPic2);
+
+            // vote thumbs up/down
+            up = (ImageView) itemView.findViewById(R.id.ivVotingUp);
+            down = (ImageView) itemView.findViewById(R.id.ivVotingDown);
+            nLikes = (TextView) itemView.findViewById(R.id.tvVotingUp);
+            nDislikes = (TextView) itemView.findViewById(R.id.tvVotingDown);
+        }
+    }
+
+
+
+>>>>>>> ui
 }
 
 

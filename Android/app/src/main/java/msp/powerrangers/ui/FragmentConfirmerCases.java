@@ -1,11 +1,18 @@
 package msp.powerrangers.ui;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+<<<<<<< HEAD
 import android.support.v7.widget.GridLayoutManager;
+=======
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
+>>>>>>> ui
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +32,20 @@ import java.util.List;
  */
 public class FragmentConfirmerCases extends Fragment {
 
+<<<<<<< HEAD
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+=======
+    private static final String TAG = "ConfirmerCasesFragment";
+    protected RecyclerView mRecyclerView;
+    protected RecyclerView.LayoutManager mLayoutManager;
+    protected Recycler_View_Adapter mAdapter;
+    private ConfirmerCasesListItem  casesListItem;
+
+>>>>>>> ui
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -60,6 +76,7 @@ public class FragmentConfirmerCases extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+<<<<<<< HEAD
         View view = inflater.inflate(R.layout.fragment_fragmentconfirmercaseslistitem_list, container, false);
 
         // Set the adapter
@@ -75,6 +92,58 @@ public class FragmentConfirmerCases extends Fragment {
         }
         return view;
     }
+=======
+        View rootView = inflater.inflate(R.layout.fr_confirmercases, container, false);
+        rootView.setTag(TAG);
+
+
+        // 2. Set layoutManager (defines how the elements are laid out)
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        // test data
+
+        casesListItem = new ConfirmerCasesListItem();
+       // casesListItem.fill_with_data();
+
+       // List<ConfirmerCasesListItem> data = casesListItem.fill_with_data();
+
+
+      //  Log.i("CONFIRMER CASES" , casesListItem.toString());
+
+        // 3. Create an adapter
+        mAdapter = new Recycler_View_Adapter(casesListItem.fill_with_data(), getContext());
+
+        // 4. set adapter
+        mRecyclerView.setAdapter(mAdapter);
+
+
+        // 1. Get a reference to recyclerView & set the onClickListener
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewCC);
+        mRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getContext(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        // switch to FragmentDetailConfirmerCase
+                        FragmentDetailConfirmerCase confirmCaseFragment = new FragmentDetailConfirmerCase();
+                        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                        Bundle bundles = new Bundle();
+                       // bundles.putInt("position");
+
+                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                        ft.replace(R.id.activity_main_fragment_container, confirmCaseFragment);
+                        ft.addToBackStack(null);
+                        ft.commit();
+
+
+                    }
+
+                    @Override public void onLongItemClick(View view, int position) {
+                        // TODO: do whatever
+                    }
+                })
+        );
+
+>>>>>>> ui
 
 
     @Override
@@ -128,6 +197,7 @@ public class FragmentConfirmerCases extends Fragment {
         }
 
         @Override
+<<<<<<< HEAD
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
             holder.mIdView.setText(mValues.get(position).id);
@@ -143,6 +213,13 @@ public class FragmentConfirmerCases extends Fragment {
                     }
                 }
             });
+=======
+        public void onBindViewHolder(final View_Holder holder, int position) {
+            //Use the provided View Holder on the onCreateViewHolder method to populate the current row on the RecyclerView
+            holder.title.setText(listItem.get(position).title);
+            holder.description.setText(listItem.get(position).desc);
+            //holder.imageView.setImageResource(listItem.get(position).imageID);
+>>>>>>> ui
         }
 
         @Override

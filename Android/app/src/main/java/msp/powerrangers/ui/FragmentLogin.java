@@ -1,10 +1,15 @@
 package msp.powerrangers.ui;
 import android.app.ProgressDialog;
+<<<<<<< HEAD
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+=======
+import android.content.SharedPreferences;
+>>>>>>> ui
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +39,10 @@ public class FragmentLogin extends Fragment {
     private ProgressDialog progressDialog;
 
     private FirebaseAuth firebaseAuth;
+<<<<<<< HEAD
+=======
+    private User user;
+>>>>>>> ui
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -114,11 +123,69 @@ public class FragmentLogin extends Fragment {
                         if (task.isSuccessful()){
                             //user is successfully registered
                             Toast.makeText(getActivity(), "Power registered successfully!", Toast.LENGTH_SHORT).show();
+<<<<<<< HEAD
                             //switch to App
                             //TODO: ask for nickname and set this name before switching View
                             FragmentTabs ft = new FragmentTabs();
                             ft.setArguments(getActivity().getIntent().getExtras());
                             getActivity().getSupportFragmentManager().beginTransaction().add(R.id.activity_main_fragment_container, ft).commit();
+=======
+                            //store name of the firebaseUser in Firebase Auth
+                            FirebaseUser currentuser = firebaseAuth.getCurrentUser();
+                            if (currentuser != null) {
+                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                        .setDisplayName(name)
+                                        .build();
+                                currentuser.updateProfile(profileUpdates)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                }
+                                            }
+                                        });
+                            }
+
+
+                            //write firebaseUser into the database
+                            //Tutorial for database: http://www.androidhive.info/2016/10/android-working-with-firebase-realtime-database/
+                            DatabaseReference database = FirebaseDatabase.getInstance().getReference("users");
+                            String dbId = database.push().getKey();
+                            String userId = currentuser.getUid();
+
+                            //save users db key in shared preferances
+                            SharedPreferences sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
+                            SharedPreferences.Editor editor = sharedPrefs.edit();
+                            editor.putString(getResources().getString(R.string.sharedPrefs_userDbId), dbId);
+                            editor.commit();
+                            //create new user object
+                            user = new User(dbId, userId, currentName, currentMail);
+                            // pushing firebaseUser to 'users' node using the userId
+                            database.child(dbId).setValue(user);
+                            Log.i("THE USER ID" , user.getId());
+
+                            Log.i("The USER" , user.toString());
+
+                            //switch to Start
+
+                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                            FragmentStart fragmentStart = new FragmentStart();
+
+
+                            Bundle bundles = new Bundle();
+
+                            if (user != null){
+                                bundles.putSerializable("USER" , user);
+                                Log.i("USER" , "IS NOT NULL");
+                            } else {
+                                Log.i("USER" , "IS NULL");
+                            }
+
+                            fragmentStart.setArguments(bundles);
+                            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.activity_main_fragment_container, fragmentStart).commit();
+
+>>>>>>> ui
                         } else {
                             Toast.makeText(getActivity(), "Noooooooo! Try again!", Toast.LENGTH_SHORT).show();
                         }
@@ -132,6 +199,7 @@ public class FragmentLogin extends Fragment {
      * @param password String
      **/
     public void signIn(String mail, String password){
+        final String givenMail = mail;
         //receiving progress feedback while registering
         progressDialog.setMessage("Sign in...");
         progressDialog.show();

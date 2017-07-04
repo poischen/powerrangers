@@ -5,6 +5,11 @@
     <color name="colorPrimaryDark">#003d33</color>
     <color name="colorAccent">#439889</color>
     <color name="colorWhite">#FFFFFF</color>
+<<<<<<< HEAD
+=======
+    <!-- from material design (for anita with love) -->
+    <color name="colorCardViewBackground">#E0F2F1</color>
+>>>>>>> ui
 
 
 </resources>
