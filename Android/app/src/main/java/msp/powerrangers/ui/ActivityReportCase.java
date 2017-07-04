@@ -4,9 +4,11 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.provider.OpenableColumns;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -90,6 +92,8 @@ public class ActivityReportCase extends AppCompatActivity {
 
     private User us;
 
+    private Case c;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,7 +164,7 @@ public class ActivityReportCase extends AppCompatActivity {
                 int areaX = Integer.valueOf(editTextCaseXCoordinate.getText().toString());
                 int areaY = Integer.valueOf(editTextCaseYCoordinate.getText().toString());
 
-                Case c = new Case(dbId, us.getId(), caseId,
+                c = new Case(dbId, us.getId(), caseId,
                         editTextCaseTitle.getText().toString(),
                         editTextCaseCity.getText().toString(),
                         editTextCaseCountry.getText().toString(),
@@ -249,17 +253,32 @@ public class ActivityReportCase extends AppCompatActivity {
                 uid = profile.getUid();
             };
 
+            //get filename to write url into database later
+            //String pictureName = getFileName(filePath);
+
+            //create Path in Storage
+            //final String storageAndDBPath = "images/cases/" + c.getId() + "/testimage.jpg";
+
             String imageID = UUID.randomUUID().toString();
-            StorageReference riversRef = storageRef.child("images/" + uid + "/cases/" + imageID + ".jpg");
+            //StorageReference riversRef = storageRef.child("images/" + uid + "/cases/case1/casepicture.jpg");
+            StorageReference riversRef = storageRef.child("images/cases" + c.getId() + "/cases/" + imageID + ".jpg");
 
             Toast.makeText(getApplicationContext(), R.string.uploadPicture, Toast.LENGTH_LONG).show();
+
+            //upload to Firebase Storage
+            //StorageReference riversRef = storageRef.child(storageAndDBPath);
             riversRef.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            //upload succesful, give information
+                            //upload successful, write url in database
+                            DatabaseReference db = FirebaseDatabase.getInstance().getReference("cases");
+                            String caseDbId = c.getId();
+                            //db.child(caseDbId).child("caseImages").setValue(storageAndDBPath);
+
+                            //upload successful, give information
                             // Toast.makeText(getApplicationContext(), R.string.uploaded, Toast.LENGTH_LONG).show();
-                            showUploadedPic();
+                            //showUploadedPic();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -309,4 +328,31 @@ public class ActivityReportCase extends AppCompatActivity {
             }
         }
     }
+
+    /*
+    Method to get the picturename of the file from the filechooser
+    https://developer.android.com/guide/topics/providers/document-provider.html
+    */
+    public String getFileName(Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = ActivityReportCase.this.getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
+    }
+
 }
