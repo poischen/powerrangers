@@ -60,9 +60,13 @@ public class FragmentConfirmerCases extends Fragment {
                         // switch to FragmentDetailConfirmerCase
                         FragmentDetailConfirmerCase confirmCaseFragment = new FragmentDetailConfirmerCase();
                         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                        Bundle bundles = new Bundle();
+                        bundles.putInt("Position", position);
+                        confirmCaseFragment.setArguments(bundles);
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                         ft.replace(R.id.activity_main_fragment_container, confirmCaseFragment);
                         ft.addToBackStack(null);
+
                         ft.commit();
 
                     }
@@ -72,6 +76,7 @@ public class FragmentConfirmerCases extends Fragment {
                     }
                 })
         );
+
 
         // 2. Set layoutManager (defines how the elements are laid out)
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -85,6 +90,11 @@ public class FragmentConfirmerCases extends Fragment {
 
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);
+
+
+
+
+
 
         return rootView;
     }

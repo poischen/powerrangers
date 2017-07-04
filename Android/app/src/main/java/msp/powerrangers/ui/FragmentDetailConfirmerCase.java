@@ -2,6 +2,7 @@ package msp.powerrangers.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,8 @@ public class FragmentDetailConfirmerCase extends Fragment {
     private Button buttonConfirmCaseReport;
     private ImageView imageViewConfirmUploadedPicture;
 
+    private int position;
+
 
     // firebase storage Ref
     private StorageReference storageRef;
@@ -67,6 +70,9 @@ public class FragmentDetailConfirmerCase extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle bund = getArguments();
+        position = bund.getInt("Position");
+        Log.i("DIE POSITION !!!!!!!!!!" , String.valueOf(position));
 
     }
 
