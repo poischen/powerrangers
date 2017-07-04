@@ -1,6 +1,5 @@
 package msp.powerrangers.ui;
 
-import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,13 +7,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Collections;
 import java.util.List;
@@ -68,7 +65,6 @@ public class FragmentConfirmerCases extends Fragment {
                         ft.addToBackStack(null);
                         ft.commit();
 
-
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
@@ -82,16 +78,9 @@ public class FragmentConfirmerCases extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // test data
-
         casesListItem = new ConfirmerCasesListItem();
-       // casesListItem.fill_with_data();
 
-       // List<ConfirmerCasesListItem> data = casesListItem.fill_with_data();
-
-
-      //  Log.i("CONFIRMER CASES" , casesListItem.toString());
-
-        // 3. Create an adapter
+        // 3. Create an adapter and fill
         mAdapter = new Recycler_View_Adapter(casesListItem.fill_with_data(), getContext());
 
         // 4. set adapter
@@ -99,7 +88,6 @@ public class FragmentConfirmerCases extends Fragment {
 
         return rootView;
     }
-
 
 
     /**
@@ -132,8 +120,9 @@ public class FragmentConfirmerCases extends Fragment {
         public void onBindViewHolder(final View_Holder holder, int position) {
             //Use the provided View Holder on the onCreateViewHolder method to populate the current row on the RecyclerView
             holder.title.setText(listItem.get(position).title);
-            holder.description.setText(listItem.get(position).desc);
-            //holder.imageView.setImageResource(listItem.get(position).imageID);
+            holder.location.setText(listItem.get(position).city + ", "+listItem.get(position).country);
+            holder.comment.setText(listItem.get(position).comment);
+            holder.image.setImageResource(listItem.get(position).imageId);
         }
 
         @Override
@@ -175,21 +164,22 @@ public class FragmentConfirmerCases extends Fragment {
      */
     private class View_Holder extends RecyclerView.ViewHolder {
 
+        // from layout
         CardView cv;
         TextView title;
-        TextView description;
-        ImageView imageView;
+        TextView location;
+        TextView comment;
+        ImageView image;
 
         View_Holder(View itemView) {
             super(itemView);
             cv = (CardView) itemView.findViewById(R.id.cvCC);
             title = (TextView) itemView.findViewById(R.id.titleCC);
-            description = (TextView) itemView.findViewById(R.id.descriptionCC);
-            imageView = (ImageView) itemView.findViewById(R.id.ivCC);
+            location = (TextView) itemView.findViewById(R.id.locationCC);
+            comment = (TextView) itemView.findViewById(R.id.descriptionCC);
+            image = (ImageView) itemView.findViewById(R.id.ivCC);
         }
     }
-
-
 
 }
 

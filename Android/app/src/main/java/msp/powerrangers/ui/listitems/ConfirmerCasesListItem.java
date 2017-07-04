@@ -1,7 +1,5 @@
 package msp.powerrangers.ui.listitems;
 
-import android.util.Log;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,19 +19,26 @@ import msp.powerrangers.R;
 public class ConfirmerCasesListItem {
 
     public String title;
-    public String desc;
-    //public int imageID;
+    public String city;
+    public  String country;
+    public String comment;
+    public int imageId;
 
-    String name;
-    String comment;
+    String titleDB;
+    String cityDB;
+    String countryDB;
+    String commentDB;
+    int imageIdDB;
 
     List<ConfirmerCasesListItem> data = new ArrayList<>();
     private DatabaseReference  dbRefCases;
 
-    public ConfirmerCasesListItem(String title, String desc){
+    public ConfirmerCasesListItem(String title, String city, String country, String comment, int imageId){
         this.title = title;
-        this.desc = desc;
-        //this.imageID = imageID;
+        this.city = city;
+        this.country = country;
+        this.comment = comment;
+        this.imageId = imageId;
     }
 
     public ConfirmerCasesListItem(){
@@ -45,37 +50,24 @@ public class ConfirmerCasesListItem {
      */
     public List<ConfirmerCasesListItem> fill_with_data() {
 
+        // get the reference to the db cases
         dbRefCases  = FirebaseDatabase.getInstance().getReference("cases");
 
         dbRefCases.addListenerForSingleValueEvent(new ValueEventListener() {
+
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    //data = new ArrayList<>();;
-
+                    // get data for each case from the db
                     for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-
-                       name = (String) singleSnapshot.child("name").getValue();
-                        Log.i("Name: ", name);
-
-                        // TODO: build desc from all case informations
-                        comment  = (String) singleSnapshot.child("comment").getValue();
-                        Log.i("Comment: ", comment);
-
-
-                        data.add(new ConfirmerCasesListItem(name, comment));
-
-                        Log.i("DIE LISTE: " , data.toString());
-
-
-/*
-                        note.setUid(database.child("notes").push().getKey());
-                        note.setTitle(titleTextView.getText().toString());
-                        note.setDescription(descriptionTextView.getText().toString());
-                        database.child("notes").child(note.getUid()).setValue(note);*/
-
+                        titleDB = (String) singleSnapshot.child("name").getValue();
+                        cityDB = (String) singleSnapshot.child("city").getValue();
+                        countryDB = (String) singleSnapshot.child("country").getValue();
+                        commentDB = (String) singleSnapshot.child("comment").getValue();
+                        // TODO: get first image for case from db
+                        imageIdDB = R.drawable.placeholder_case;
+                        data.add(new ConfirmerCasesListItem(titleDB,cityDB, countryDB, commentDB,imageIdDB));
                     }
-
 
                 }
 
