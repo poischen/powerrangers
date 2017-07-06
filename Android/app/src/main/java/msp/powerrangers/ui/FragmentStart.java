@@ -55,6 +55,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
 
     private static final int CHOOSE_IMAGE_REQUEST = 123;
     private static final int STORAGE_PERMISSION_REQUEST = 234;
+    private static final String TAG = "StartFragment";
 
     CircleImageView userImage;
     TextView tvUserName;

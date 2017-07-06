@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,7 +83,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
@@ -217,7 +218,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
         buttonConfirmCaseReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "to be implemented ;-)", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "to be implemented ;-)", Toast.LENGTH_SHORT).show();
 
                 dbRefCases.addListenerForSingleValueEvent(
                         new ValueEventListener() {
@@ -251,6 +252,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
                             }
                         });
 
+
                 ///TODO: update Confirmed Cases Bubble on Start
                 //TextView confirmedCases = (TextView) view.findViewById(R.id.numberConfirmedCases);
 
@@ -258,12 +260,25 @@ public class FragmentDetailConfirmerCase extends Fragment {
                 //Toast.makeText(getActivity(), "cases: "+confirmedCases.getText(), Toast.LENGTH_SHORT).show();
                 //n++;
 
-               // confirmedCases.setText("bla");
+                View startView = new View(getActivity());
+                startView = inflater.inflate(R.layout.fragment_start, container, false);
 
-                // TODO: go back to FragmentStart
-               /* Intent i  = new Intent(getActivity(), MainActivity.class);
+                if (startView == null) {
+                    Toast.makeText(getActivity(), "fucked up", Toast.LENGTH_SHORT).show();
+                }
+
+                TextView confirmedCases = (TextView) startView.findViewById(R.id.numberConfirmedCases);
+                int nCases = Integer.parseInt(confirmedCases.getText().toString());
+               // Toast.makeText(getActivity(), "cases: "+txt, Toast.LENGTH_SHORT).show();
+                nCases++;
+                // TODO: write the incremented value in the db (user)
+                // TODO: all bubble values should be added to user!
+                // -->  by clicking on the fragment start the values should be pulled and inserted!
+
+                // go back to FragmentStart
+                Intent i  = new Intent(getActivity(), MainActivity.class);
                 startActivity(i);
-                ((Activity) getActivity()).overridePendingTransition(0,0);*/
+                ((Activity) getActivity()).overridePendingTransition(0,0);
             }
 
 
