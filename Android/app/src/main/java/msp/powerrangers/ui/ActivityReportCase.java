@@ -192,7 +192,7 @@ public class ActivityReportCase extends AppCompatActivity {
                         && !TextUtils.isEmpty(caseCity)
                         && !TextUtils.isEmpty(caseCountry)
                         && pictureUrisList.size() > 1) {
-                    uploadFiles(caseId, pictureUrisList);
+                    casePictures = uploadFiles(caseId, pictureUrisList);
 
                     //Create Case
                     c = new Case(dbId, us.getId(), caseId,
