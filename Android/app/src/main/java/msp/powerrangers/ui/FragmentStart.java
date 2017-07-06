@@ -62,6 +62,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     TextView openTasks;
     Button donateButton;
     Button reportACaseButton;
+    Button logoutButton;
 
     FirebaseUser firebaseUser;
     private User u;
@@ -79,6 +80,9 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_start, container, false);
 
         //find View elements
+        //logout button
+        logoutButton = (Button) view.findViewById(R.id.logoutButton);
+        logoutButton.setOnClickListener(this);
         // display user name
         tvUserName = (TextView) view.findViewById(R.id.textViewUserName);
         tvUserName.setText(firebaseUser.getDisplayName());
@@ -121,14 +125,24 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                 refPath.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        User userInfo = dataSnapshot.getValue(User.class);
-                        String name = userInfo.getName();
-                        String dbId = userInfo.getDbId();
-                        String userId = userInfo.getId();
-                        String mail = userInfo.getEmail();
-                        u = new User(dbId,userId, name, mail);
-                        //get and show profile pic
-                        showUserPic();
+                        try {
+                            User userInfo = dataSnapshot.getValue(User.class);
+                            String name = userInfo.getName();
+                            String dbId = userInfo.getDbId();
+                            String userId = userInfo.getId();
+                            String mail = userInfo.getEmail();
+                            u = new User(dbId,userId, name, mail);
+                            //get and show profile pic
+                            showUserPic();
+                        } catch (Exception e){
+                            Log.d("FragmentStart", "An error occured, user has to be signed out");
+                            FirebaseAuth.getInstance().signOut();
+                            android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                            android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            FragmentLogin fl = new FragmentLogin();
+                            fragmentTransaction.replace(R.id.activity_main_fragment_container, fl);
+                            fragmentTransaction.commit();
+                        }
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -152,6 +166,8 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+        android.support.v4.app.FragmentManager fragmentManager;
+        android.support.v4.app.FragmentTransaction fragmentTransaction;
         switch (view.getId()) {
             case R.id.userimage:
                 if (ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -171,20 +187,32 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
 
                 break;
             case R.id.numberOpenTasks:
-                android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentTransaction = fragmentManager.beginTransaction();
                 FragmentUsersOpenTasks fuot = new FragmentUsersOpenTasks();
                 fragmentTransaction.replace(R.id.activity_main_fragment_container, fuot);
                 fragmentTransaction.commit();
                 break;
 
             case R.id.reportACaseButton:
+                if (u != null){
+                    Log.i("User USERNAME IN START" , u.getId());
+                    Intent intentReportCase = new Intent(getActivity(), ActivityReportCase.class);
+                    intentReportCase.putExtra("USER", u);
+                    Log.i("I AM AFTER PUTEXTRA" , "IN REPORT A CASE");
+                    startActivity(intentReportCase);
+                } else {
+                    FirebaseAuth.getInstance().signOut();
+                }
+                break;
 
-                Log.i("User USERNAME IN START" , u.getId());
-                Intent intentReportCase = new Intent(getActivity(), ActivityReportCase.class);
-                intentReportCase.putExtra("USER", u);
-                Log.i("I AM AFTER PUTEXTRA" , "IN REPORT A CASE");
-                startActivity(intentReportCase);
+            case R.id.logoutButton:
+                FirebaseAuth.getInstance().signOut();
+                fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                FragmentLogin fl = new FragmentLogin();
+                fragmentTransaction.replace(R.id.activity_main_fragment_container, fl);
+                fragmentTransaction.commit();
                 break;
         }
     }
@@ -318,7 +346,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                                     }
                                 });
                             } catch (Exception e) {
-                                Log.d("Fail", "fail");
+                                Log.d("Fail", "no image available or some other error occured");
                             }
                         } catch (IOException e) {
                             e.printStackTrace();

@@ -38,6 +38,8 @@ public class FragmentLogin extends Fragment {
     private FirebaseAuth firebaseAuth;
     private User user;
 
+    private boolean wantsUserToRegister;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,6 +55,9 @@ public class FragmentLogin extends Fragment {
         buttonRegisterSignin = (Button) view.findViewById(R.id.buttonRegisterSignin);
         textViewSwitchRegisterSignin = (TextView) view.findViewById(R.id.textViewSignin);
         progressDialog = new ProgressDialog(getContext());
+        //set flag to decive if the view shall show the option to register or to signin
+        wantsUserToRegister = true;
+
         /*set OnClick Listener on Button for registering unregistered users via email or sign in registered users
          * A firebaseUser can only fLogin_Register, if he enters his mailaddress, a password, and a name (analog sign in only with both mailadress and password)
          */
@@ -64,19 +69,28 @@ public class FragmentLogin extends Fragment {
                 String name = editTextName.getText().toString().trim();
                 if (TextUtils.isEmpty(mail)){
                     Toast.makeText(getActivity(), "Please enter your mail for da real power! :)", Toast.LENGTH_SHORT).show();
-                } if (TextUtils.isEmpty((password))){
+                    return;
+                }
+                if (TextUtils.isEmpty((password))){
                     Toast.makeText(getActivity(), "Please enter a password", Toast.LENGTH_SHORT).show();
+                    return;
                 }
                 //see, if the firebaseUser wants to fLogin_Register or to sign in
-                else if (buttonRegisterSignin.getText().equals(R.string.fLogin_Signin)){
+                if (!wantsUserToRegister){
                     signIn(mail, password);
-                } else if (TextUtils.isEmpty((name))){
+                    return;
+                } else if (wantsUserToRegister && TextUtils.isEmpty(name)){
+                    Log.v("wantsUserToRegister", wantsUserToRegister + "");
+                    Log.v("TextUtils.isEmpty(name)", TextUtils.isEmpty(name) + "");
+                    Log.v("name", name + "");
                     Toast.makeText(getActivity(), "Nah, nah! No name, no power, sorry!", Toast.LENGTH_SHORT).show();
+                    return;
                 } else {
                     registerUser(mail, password, name);
                 }
             }
         });
+
         /* set OnClick Listener on TextView for sign in via email
          * firebaseUser can only sign in, if he enters both his mailaddress and a password
          */
@@ -204,11 +218,13 @@ public class FragmentLogin extends Fragment {
      */
     public void reverseView(String command){
         if (command.equals(getString(R.string.fLogin_AlreadyRegistered))){
+            wantsUserToRegister = false;
             Log.v("FragmentLogin", "switch view to sign in");
             buttonRegisterSignin.setText(R.string.fLogin_Signin);
             editTextName.setVisibility(View.GONE);
             textViewSwitchRegisterSignin.setText(R.string.fLogin_NotRegisteredYet);
         } else if (command.equals(getString(R.string.fLogin_NotRegisteredYet))){
+            wantsUserToRegister = true;
             Log.v("FragmentLogin", "switch view to register");
             buttonRegisterSignin.setText(R.string.fLogin_Register);
             editTextName.setVisibility(View.VISIBLE);
