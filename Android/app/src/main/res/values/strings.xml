@@ -67,6 +67,8 @@
   <string name="reportCanNotShowUploadedPicture">Sorry can not show the picture you uploaded</string>
   <string name="reportException">Something went wrong!</string>
   <string name="reportCaseSuccess">Case was reported successfully</string>
+  <string name="reportCaseFillFields">Please give all necessary inforamtion!</string>
+  <string name="reportInstructionManualUploadPics">Show us some pictures! First load up an image of the hole trashy area, then seperate the area in equal parts and load a picture for each.</string>
 
   <!-- FragmentDetailConfirmerCase-->
     <string name="detailConfirmerCaseFragmentTitle">Confirm case</string>

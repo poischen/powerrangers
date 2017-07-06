@@ -14,8 +14,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -24,7 +24,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -104,26 +104,26 @@
                         android:layout_weight="1"
                         android:text="@string/reportScalaOfCase" />
 
-                        <RadioButton
-                            android:id="@+id/radioButtonCaseLow"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/reportCaseCheckboxLow" />
+                    <RadioButton
+                        android:id="@+id/radioButtonCaseLow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/reportCaseCheckboxLow" />
 
-                        <RadioButton
-                            android:id="@+id/radioButtonCaseMiddle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/reportCaseCheckboxMiddle" />
+                    <RadioButton
+                        android:id="@+id/radioButtonCaseMiddle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/reportCaseCheckboxMiddle" />
 
-                        <RadioButton
-                            android:id="@+id/radioButtonCaseHigh"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/reportCaseCheckboxHigh" />
+                    <RadioButton
+                        android:id="@+id/radioButtonCaseHigh"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/reportCaseCheckboxHigh" />
 
 
                 </LinearLayout>
@@ -186,6 +186,15 @@
                         android:text="" />
                 </LinearLayout>
 
+               <LinearLayout
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content">
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:text="@string/reportInstructionManualUploadPics"/>
+               </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -217,23 +226,21 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:visibility="gone"
-                        android:text="@string/reportUploadedPicture" />
+                        android:text="@string/reportUploadedPicture"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
-                    <ImageView
-                        android:id="@+id/imageViewUploadedPicture"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_weight="1"
-                        android:visibility="gone"
-                        app:srcCompat="@android:drawable/btn_star" />
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/aReportCaseViewPager"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        />
                 </LinearLayout>
 
                 <LinearLayout
@@ -268,8 +275,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/colorAccent"
-                        android:textColor="@color/colorWhite"
-                        android:text="@string/reportACase" />
+                        android:text="@string/reportACase"
+                        android:textColor="@color/colorWhite" />
                 </LinearLayout>
 
             </LinearLayout>

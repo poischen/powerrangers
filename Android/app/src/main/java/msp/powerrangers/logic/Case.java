@@ -14,7 +14,7 @@ public class Case {
     private int scale;
     private int areaX;
     private int areaY;
-    //private String pictureURL;
+    private List<String> pictureURLs;
     private String comment;
     private boolean isConfirmed;
     List<Task> relatedTasks;
@@ -22,7 +22,7 @@ public class Case {
 
 
     public Case(String dbId, String userID, String caseId, String name, String city, String country,
-                int scale, int areaX, int areaY, //String pictureURL,
+                int scale, int areaX, int areaY, List<String> pictureURLs,
                 String comment){
         this.dbId = dbId;
         this.userID = userID;
@@ -33,7 +33,7 @@ public class Case {
         this.scale = scale;
         this.areaX = areaX;
         this.areaY = areaY;
-        //this.pictureURL = pictureURL;
+        this.pictureURLs = pictureURLs;
         this.comment = comment;
         this.isConfirmed = false;
     }
@@ -85,10 +85,10 @@ public class Case {
     public List<Task> getRelatedTasks() {
         return relatedTasks;
     }
-    /*
-    public String getPictureURL() {
-        return pictureURL;
-    }*/
+
+    public List<String> getPictureURL() {
+        return pictureURLs;
+    }
 
     // setter
     public void setId(String caseId) {
@@ -127,11 +127,9 @@ public class Case {
         this.relatedTasks = relatedTasks;
     }
 
-    /*
-    public void setPictureURL(String pictureURL) {
-        this.pictureURL = pictureURL;
+    public void setPictureURLs(List<String> pictureURLs) {
+        this.pictureURLs = pictureURLs;
     }
-    */
 
 
     /*

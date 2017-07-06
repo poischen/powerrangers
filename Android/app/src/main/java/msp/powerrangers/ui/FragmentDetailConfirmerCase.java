@@ -251,11 +251,11 @@ public class FragmentDetailConfirmerCase extends Fragment {
                             }
                         });
 
-                // TODO: update Confirmed Cases Bubble on Start
-                // TextView confirmedCases = (TextView) view.findViewById(R.id.numberConfirmedCases);
+                ///TODO: update Confirmed Cases Bubble on Start
+                //TextView confirmedCases = (TextView) view.findViewById(R.id.numberConfirmedCases);
 
-                //int n = Integer.parseInt(confirmedCases.getText().toString());
-                // Toast.makeText(getActivity(), "cases: "+confirmedCases.getText(), Toast.LENGTH_SHORT).show();
+               // int n = Integer.parseInt(confirmedCases.getText().toString());
+                //Toast.makeText(getActivity(), "cases: "+confirmedCases.getText(), Toast.LENGTH_SHORT).show();
                 //n++;
 
                // confirmedCases.setText("bla");
