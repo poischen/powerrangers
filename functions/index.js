@@ -140,7 +140,15 @@ exports.createTasks = functions.database.ref('/cases/{caseId}/confirmed')
             const scale = event.data.adminRef.parent.child('scale').once('value');
             const caseId = event.data.adminRef.parent.child('id').once('value');
             // Get image URIs for case pictures from the database
-            //const casePictureList = event.data.adminRef.parent.child('casePictures').once('value');
+            /*
+            const casePictureList = event.data.adminRef.parent.child('pictureURL').then(snapshot => {
+              snapshot.val().forEach(val) {
+                let casePictureList = [];
+                return casePictureList.push(val);
+              } 
+            };
+            */
+            const casePictureList = event.data.adminRef.parent.child('pictureURL').once('value');
 
             /* Get database case key
             const caseDbId = event.data.adminRef.parent.once("value").then(function(snapshot) {
@@ -149,10 +157,23 @@ exports.createTasks = functions.database.ref('/cases/{caseId}/confirmed')
             });
             */
 
-    	      return Promise.all([areaX, areaY, city, country, comment, title, scale, caseId]).then(results => {
-    	      // Calculate the size of case area
-    		   	const size = results[0].val() * results[1].val();
-    	     	console.log("Size: ", size);
+    	      return Promise.all([areaX, areaY, city, country, comment, title, scale, caseId, casePictureList]).then(results => {
+      	      // Get list of pictures assigned to a case and remove the first one (main case picture)
+              const casePictureList = results[8].val();
+              casepictureList = casePictureList.shift();
+              console.log("Pictures: ", casePictureList);
+              // Calculate Number of rangers needed
+              const number_rangers = casePictureList.length;
+              console.log("Number Rangers: ", number_rangers);
+
+              // Calculate the size of case area and reward
+      		   	const size = results[0].val() * results[1].val();
+      	     	console.log("Size: ", size);
+              // Total reward
+              const total_reward = Math.round(size/5);
+              // Reward per ranger
+              const ranger_reward = Math.round(total_reward/number_rangers);
+              console.log("Ranger reward: ", ranger_reward);
 
             // TODO: If there is only one picture assigned to the case, just one ranger is needed
 
@@ -162,26 +183,14 @@ exports.createTasks = functions.database.ref('/cases/{caseId}/confirmed')
     		    //}
     		    //else {
       			   	// calculate number of rangers and reward based on case size and write it to the database
-
-                // TODO: calculate number of rangers (tasks) based on number of pictures assigned to a case
-
-      			    const casePictureList = [1,2,3,4];
-
-                const number_rangers = casePictureList.length;
-      			    console.log("Number Rangers: ", number_rangers);
-                // Total reward
-      			    const total_reward = Math.round(size/5);
-                // Reward per ranger
-                const ranger_reward = Math.round(total_reward/number_rangers);
-      			    console.log("Ranger reward: ", ranger_reward);
-
+                
+                // Get all other values from Promise
                 const city = results[2].val();
                 const country = results[3].val();
                 const comment = results[4].val();
                 const title = results[5].val();
                 const scale = results[6].val();
                 const id = results[7].val();
-                //const dbId = results[8].val();
 
                 // Create task database nodes
                 casePictureList.forEach(function(uri, index) {
