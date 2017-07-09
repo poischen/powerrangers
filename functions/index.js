@@ -120,7 +120,7 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
 
 
 /*
-* Listens for cases being confirmed, 
+* Listens for cases being confirmed,
 * calculates number of tasks and the total reward,
 * and writes both to the Firebase Database
 */
@@ -139,13 +139,14 @@ exports.createTasks = functions.database.ref('/cases/{caseId}/confirmed')
             const title = event.data.adminRef.parent.child('name').once('value');
             const scale = event.data.adminRef.parent.child('scale').once('value');
             const caseId = event.data.adminRef.parent.child('id').once('value');
+
             // Get image URIs for case pictures from the database
             /*
             const casePictureList = event.data.adminRef.parent.child('pictureURL').then(snapshot => {
               snapshot.val().forEach(val) {
                 let casePictureList = [];
                 return casePictureList.push(val);
-              } 
+              }
             };
             */
             const casePictureList = event.data.adminRef.parent.child('pictureURL').once('value');
@@ -183,7 +184,7 @@ exports.createTasks = functions.database.ref('/cases/{caseId}/confirmed')
     		    //}
     		    //else {
       			   	// calculate number of rangers and reward based on case size and write it to the database
-                
+
                 // Get all other values from Promise
                 const city = results[2].val();
                 const country = results[3].val();
@@ -196,11 +197,10 @@ exports.createTasks = functions.database.ref('/cases/{caseId}/confirmed')
                 casePictureList.forEach(function(uri, index) {
                   return event.data.adminRef.root.child('tasks/').push().set({city: city, country: country, comment: comment, reward: ranger_reward, scale: scale, pictureUri: uri, caseId: id});
                 });
-                
 
       			    //return event.data.ref.parent.child('caseInfos').set({numberRangers: number_rangers, reward: total_reward});
     		    //}
-    	      });   
+    	      });
       	  }
       	  else {
       	  	console.log("Confirmed not true");

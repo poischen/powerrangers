@@ -26,7 +26,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,6 +42,7 @@ import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import android.Manifest;
+
 import msp.powerrangers.R;
 import msp.powerrangers.logic.User;
 
@@ -59,10 +59,15 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
 
     CircleImageView userImage;
     TextView tvUserName;
-    TextView openTasks;
     Button donateButton;
     Button reportACaseButton;
     Button logoutButton;
+
+    // bubbles to update
+    TextView nOpenTasks;
+    TextView nReportedCases;
+    TextView nConfirmedCases;
+    TextView nCompletedTasks;
 
     FirebaseUser firebaseUser;
     private User u;
@@ -86,11 +91,17 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         // display user name
         tvUserName = (TextView) view.findViewById(R.id.textViewUserName);
         tvUserName.setText(firebaseUser.getDisplayName());
+
         //interactive elements
         userImage = (CircleImageView) view.findViewById(R.id.userimage);
-        openTasks = (TextView) view.findViewById(R.id.numberOpenTasks);
+        nOpenTasks = (TextView) view.findViewById(R.id.numberOpenTasks);
         userImage.setOnClickListener(this);
-        openTasks.setOnClickListener(this);
+        nOpenTasks.setOnClickListener(this);
+
+        // bubbles to update
+        nReportedCases = (TextView) view.findViewById(R.id.numberReportedCases);
+        nConfirmedCases = (TextView) view.findViewById(R.id.numberConfirmedCases);
+        nCompletedTasks = (TextView) view.findViewById(R.id.numberCompletedTasks);
 
         // call to action buttons
         donateButton = (Button) view.findViewById(R.id.donateButton);
@@ -118,7 +129,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
             if (firebaseUser != null) {
                 //get user infos from database via users db id and instantiate User Object
                 SharedPreferences sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
-                String userDbID = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
+                final String userDbID = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
 
                 DatabaseReference db = FirebaseDatabase.getInstance().getReference();
                 DatabaseReference refPath = db.child("users").child(userDbID);
@@ -134,6 +145,20 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                             u = new User(dbId,userId, name, mail);
                             //get and show profile pic
                             showUserPic();
+
+
+                            // set the bubble values
+                           /* int repCases = userInfo.getNumberReportedCases();
+                            int confCases = userInfo.getNumberConfirmedCases();
+                            int opTasks = userInfo.getNumberOpenTasks();
+                            int complTasks = userInfo.getNumberCompletedTasks();
+*/
+                            /*
+                            nReportedCases.setText(repCases);
+                            nConfirmedCases.setText(confCases);
+                            nOpenTasks.setText(opTasks);
+                            nCompletedTasks.setText(complTasks); */
+
                         } catch (Exception e){
                             Log.d("FragmentStart", "An error occured, user has to be signed out");
                             FirebaseAuth.getInstance().signOut();
