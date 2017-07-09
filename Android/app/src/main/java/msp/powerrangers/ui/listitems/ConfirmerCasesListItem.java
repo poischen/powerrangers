@@ -65,9 +65,10 @@ public class ConfirmerCasesListItem {
                         cityDB = (String) singleSnapshot.child("city").getValue();
                         countryDB = (String) singleSnapshot.child("country").getValue();
                         commentDB = (String) singleSnapshot.child("comment").getValue();
-                        // TODO: get first image for case from db
                         imageIdDB = R.drawable.placeholder_case;
-                        data.add(new ConfirmerCasesListItem(titleDB,cityDB, countryDB, commentDB,imageIdDB));
+                        // TODO: get first image for case from db
+                       // imageIdDB = (String) singleSnapshot.child("pictureURL").child("0").getValue();
+                        data.add(new ConfirmerCasesListItem(titleDB,cityDB, countryDB, commentDB, imageIdDB));
 
                     }
 

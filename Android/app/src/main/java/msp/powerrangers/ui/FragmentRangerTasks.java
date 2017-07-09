@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -59,10 +60,28 @@ public class FragmentRangerTasks extends Fragment {
                 new RecyclerItemClickListener(getContext(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
 
-                        //  show FragmentDetailRangerTask
-                        Intent intent = new Intent(getActivity(), ActivityDetailContainer.class);
+
+                        /*
+                         Intent intent = new Intent(getActivity(), ActivityDetailContainer.class);
                         intent.putExtra(String.valueOf(R.string.activityDetailContainer_targetFr), "FragmentDetailRangerTask");
                         startActivity(intent);
+                         */
+
+                        //  show FragmentDetailRangerTask
+                        FragmentDetailRangerTask fragmentDetailRangerTask = new FragmentDetailRangerTask();
+                        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                        Bundle bundles = new Bundle();
+                        bundles.putInt("Position", position);
+                        fragmentDetailRangerTask.setArguments(bundles);
+                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                        ft.replace(R.id.activity_main_fragment_container, fragmentDetailRangerTask);
+                        ft.addToBackStack(null);
+
+                        ft.commit();
+
+
+
+
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
