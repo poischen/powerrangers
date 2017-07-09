@@ -119,6 +119,8 @@ public class ActivityReportCase extends AppCompatActivity {
         //stuff for pic upload
         pictureUrisList = new ArrayList<>();
         pictureBitmapList = new ArrayList<>();
+        Bitmap defaultPic = BitmapFactory.decodeResource(getResources(), R.drawable.nopicyet);
+        pictureBitmapList.add(defaultPic);
         casePictures = new ArrayList<>();
 
         //Firebase stuff
@@ -266,6 +268,7 @@ public class ActivityReportCase extends AppCompatActivity {
                 Uri uri = data.getData();
                 pictureUrisList.add(uri);
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                pictureBitmapList.clear();
                 pictureBitmapList.add(bitmap);
                 viewPager.getAdapter().notifyDataSetChanged();
 
@@ -277,6 +280,7 @@ public class ActivityReportCase extends AppCompatActivity {
         if (requestCode == CHOOSE_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getClipData() != null) {
             ClipData clipData = data.getClipData();
             if (clipData != null) {
+                pictureBitmapList.clear();
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);
 

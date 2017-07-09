@@ -1,10 +1,17 @@
 package msp.powerrangers.ui;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,17 +23,23 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import msp.powerrangers.R;
-
 
 
 public class FragmentDetailConfirmerCase extends Fragment {
@@ -59,6 +72,11 @@ public class FragmentDetailConfirmerCase extends Fragment {
     private Button buttonConfirmCaseReport;
     private ImageView imageViewConfirmUploadedPicture;
 
+    //swipegallery
+    ViewPager viewPager;
+    List<String> pictureURLs;
+    List<Bitmap> pictureBitmapList;
+
     private int position;
 
 
@@ -78,7 +96,11 @@ public class FragmentDetailConfirmerCase extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle bund = getArguments();
         position = bund.getInt("Position");
-      //  Log.i("DIE POSITION !!!!!!!!!!" , String.valueOf(position));
+        storageRef = FirebaseStorage.getInstance().getReference();
+        pictureURLs = new ArrayList<>();
+        pictureBitmapList = new ArrayList<>();
+        Bitmap defaultPic = BitmapFactory.decodeResource(getResources(), R.drawable.nopicyet);
+        pictureBitmapList.add(defaultPic);
 
     }
 
@@ -87,7 +109,12 @@ public class FragmentDetailConfirmerCase extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fr_detail_confirmer_case, container, false);
+        View view = inflater.inflate(R.layout.fr_detail_confirmer_case, container, false);
+
+        //give user progredd feedback while downloading pictures
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle(getString(R.string.uploadPicture));
+        progressDialog.show();
 
         // find UI elements
         // text Views
@@ -100,6 +127,9 @@ public class FragmentDetailConfirmerCase extends Fragment {
         textViewConfirmCaseYCoordinate = (TextView) view.findViewById(R.id.textViewConfirmCaseYCoordinate);
         textViewConfirmUploadedPictures = (TextView) view.findViewById(R.id.textViewConfirmUploadedPictures);
         textViewConfirmCaseInformation = (TextView) view.findViewById(R.id.textViewConfirmCaseInformation);
+        viewPager = (ViewPager) view.findViewById(R.id.fConfirmCaseViewPager);
+        FragmentDetailConfirmerCase.ImageAdapter adapter = new FragmentDetailConfirmerCase.ImageAdapter(this.getContext());
+        viewPager.setAdapter(adapter);
 
         // edit Texts
         editTextConfirmCaseTitle = (EditText) view.findViewById(R.id.editTextConfirmCaseTitle);
@@ -112,8 +142,10 @@ public class FragmentDetailConfirmerCase extends Fragment {
 
         // radio buttons scale
         radioButtonConfirmCaseLow = (RadioButton) view.findViewById(R.id.radioButtonConfirmCaseLow);
-        radioButtonConfirmCaseMiddle= (RadioButton) view.findViewById(R.id.radioButtonConfirmCaseMiddle);;
-        radioButtonConfirmCaseHigh= (RadioButton) view.findViewById(R.id.radioButtonConfirmCaseHigh);;
+        radioButtonConfirmCaseMiddle = (RadioButton) view.findViewById(R.id.radioButtonConfirmCaseMiddle);
+        ;
+        radioButtonConfirmCaseHigh = (RadioButton) view.findViewById(R.id.radioButtonConfirmCaseHigh);
+        ;
 
         // buttons
         buttonConfirmCaseReport = (Button) view.findViewById(R.id.buttonConfirmCaseReport);
@@ -126,55 +158,88 @@ public class FragmentDetailConfirmerCase extends Fragment {
         dbRefCases = FirebaseDatabase.getInstance().getReference("cases");
 
         // get attributes from a case
-       // final String dbId = dbRefCases.push().getKey();
+        // final String dbId = dbRefCases.push().getKey();
 
-        dbRefCases.addListenerForSingleValueEvent(
+        //dbRefCases.addListenerForSingleValueEvent(
+        dbRefCases.addValueEventListener(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        Iterator iter = dataSnapshot.getChildren().iterator();
 
-                            Iterator iter = dataSnapshot.getChildren().iterator();
+                        for (int i = 0; i < position; i++) {
+                            iter.next();
+                        }
+                        DataSnapshot singleSnapshot = (DataSnapshot) iter.next();
 
-                            for(int i = 0; i < position; i++) {
-                                iter.next();
+                        // Fetch the data from the DB
+                        String caseTitle = (String) singleSnapshot.child("name").getValue();
+                        String caseCity = (String) singleSnapshot.child("city").getValue();
+                        String caseCountry = (String) singleSnapshot.child("country").getValue();
+                        String caseComment = (String) singleSnapshot.child("comment").getValue();
+                        String caseXCoord = String.valueOf(singleSnapshot.child("areaX").getValue());
+                        String caseYCoord = String.valueOf(singleSnapshot.child("areaY").getValue());
+                        String caseScale = String.valueOf(singleSnapshot.child("scale").getValue());
+
+                        //get cases picture urls from db, download pictures from stroage and show them
+                        Iterator<DataSnapshot> dsPictureURLs = singleSnapshot.child("pictureURL").getChildren().iterator();
+                        Log.v("DetailConfirmerCase", "dsPictureURLS: " + dsPictureURLs);
+
+                        pictureBitmapList.clear();
+                        updateImageViews();
+
+                        while (dsPictureURLs.hasNext()) {
+                            DataSnapshot dataSnapshotChild = dsPictureURLs.next();
+                            String url = dataSnapshotChild.getValue(String.class);
+                            pictureURLs.add(url);
+
+                            try {final File localFile = File.createTempFile("images", "jpg");
+                                StorageReference riversRef = storageRef.child(url);
+                                riversRef.getFile(localFile)
+                                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                            @Override
+                                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                                Log.v("Download", "download erfolgreich");
+                                                Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                                pictureBitmapList.add(bitmap);
+                                                updateImageViews();
+                                                Log.v("DetailConfirmerCase", "picture Bitmap List new entry: " + bitmap);
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        Log.d("DetailConfirmerCase", exception.getMessage());
+                                    }
+                                });
+                            } catch (Exception e) {
+                                Log.d("DetailConfirmerCase", e.getMessage());
                             }
 
-                            DataSnapshot singleSnapshot = (DataSnapshot) iter.next();
+                        }
 
-                            // Fetch the data from the DB
-                            String caseTitle = (String) singleSnapshot.child("name").getValue();
-                            String caseCity = (String) singleSnapshot.child("city").getValue();
-                            String caseCountry = (String) singleSnapshot.child("country").getValue();
-                            String caseComment = (String) singleSnapshot.child("comment").getValue();
-                            String caseXCoord =  String.valueOf(singleSnapshot.child("areaX").getValue());
-                            String caseYCoord =  String.valueOf(singleSnapshot.child("areaY").getValue());
-                            String caseScale =  String.valueOf(singleSnapshot.child("scale").getValue());
+                        // set all data in the Detail View except of pictures
+                        editTextConfirmCaseTitle.setText(caseTitle);
+                        editTextConfirmCaseCity.setText(caseCity);
+                        editTextConfirmCaseCountry.setText(caseCountry);
+                        editTextConfirmCaseInformation.setText(caseComment);
+                        editTextConfirmCaseXCoordinate.setText(caseXCoord);
+                        editTextConfirmCaseYCoordinate.setText(caseYCoord);
 
-                            //Toast.makeText(getContext(), caseTitle, Toast.LENGTH_LONG).show();
+                        switch (caseScale) {
 
-                            // set the data in the Detail View
-                            editTextConfirmCaseTitle.setText(caseTitle);
-                            editTextConfirmCaseCity.setText(caseCity);
-                            editTextConfirmCaseCountry.setText(caseCountry);
-                            editTextConfirmCaseInformation.setText(caseComment);
-                            editTextConfirmCaseXCoordinate.setText(caseXCoord);
-                            editTextConfirmCaseYCoordinate.setText(caseYCoord);
+                            case "1":
+                                radioButtonConfirmCaseLow.setChecked(true);
+                                break;
 
-                            switch(caseScale){
+                            case "2":
+                                radioButtonConfirmCaseMiddle.setChecked(true);
+                                break;
 
-                                case "1":
-                                    radioButtonConfirmCaseLow.setChecked(true);
-                                    break;
+                            case "3":
+                                radioButtonConfirmCaseHigh.setChecked(true);
+                                break;
 
-                                case "2":
-                                    radioButtonConfirmCaseMiddle.setChecked(true);
-                                    break;
-
-                                case "3":
-                                    radioButtonConfirmCaseHigh.setChecked(true);
-                                    break;
-
-                            }
+                        }
 
                     }
 
@@ -185,8 +250,9 @@ public class FragmentDetailConfirmerCase extends Fragment {
                 });
 
 
+        radioButtonConfirmCaseLow.setOnClickListener(new View.OnClickListener()
 
-        radioButtonConfirmCaseLow.setOnClickListener(new View.OnClickListener() {
+        {
             @Override
             public void onClick(View v) {
                 radioButtonConfirmCaseHigh.setChecked(false);
@@ -196,7 +262,9 @@ public class FragmentDetailConfirmerCase extends Fragment {
         });
 
 
-        radioButtonConfirmCaseMiddle.setOnClickListener(new View.OnClickListener() {
+        radioButtonConfirmCaseMiddle.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
                 radioButtonConfirmCaseLow.setChecked(false);
@@ -206,7 +274,9 @@ public class FragmentDetailConfirmerCase extends Fragment {
         });
 
 
-        radioButtonConfirmCaseHigh.setOnClickListener(new View.OnClickListener() {
+        radioButtonConfirmCaseHigh.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
                 radioButtonConfirmCaseLow.setChecked(false);
@@ -215,12 +285,14 @@ public class FragmentDetailConfirmerCase extends Fragment {
             }
         });
 
-        buttonConfirmCaseReport.setOnClickListener(new View.OnClickListener() {
+        buttonConfirmCaseReport.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "to be implemented ;-)", Toast.LENGTH_SHORT).show();
 
-                dbRefCases.addListenerForSingleValueEvent(
+                dbRefCases.addValueEventListener(
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -256,7 +328,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
                 ///TODO: update Confirmed Cases Bubble on Start
                 //TextView confirmedCases = (TextView) view.findViewById(R.id.numberConfirmedCases);
 
-               // int n = Integer.parseInt(confirmedCases.getText().toString());
+                // int n = Integer.parseInt(confirmedCases.getText().toString());
                 //Toast.makeText(getActivity(), "cases: "+confirmedCases.getText(), Toast.LENGTH_SHORT).show();
                 //n++;
 
@@ -269,39 +341,157 @@ public class FragmentDetailConfirmerCase extends Fragment {
 
                 TextView confirmedCases = (TextView) startView.findViewById(R.id.numberConfirmedCases);
                 int nCases = Integer.parseInt(confirmedCases.getText().toString());
-               // Toast.makeText(getActivity(), "cases: "+txt, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getActivity(), "cases: "+txt, Toast.LENGTH_SHORT).show();
                 nCases++;
                 // TODO: write the incremented value in the db (user)
                 // TODO: all bubble values should be added to user!
                 // -->  by clicking on the fragment start the values should be pulled and inserted!
 
                 // go back to FragmentStart
-                Intent i  = new Intent(getActivity(), MainActivity.class);
+                Intent i = new Intent(getActivity(), MainActivity.class);
                 startActivity(i);
-                ((Activity) getActivity()).overridePendingTransition(0,0);
+                ((Activity) getActivity()).overridePendingTransition(0, 0);
             }
 
 
         });
 
+        progressDialog.cancel();
         // Inflate the layout for this fragment
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        /*if (pictureBitmapList.size() != pictureURLs.size()) {
+            for (int i=0; i<=pictureURLs.size(); i++){
+                try {final File localFile = File.createTempFile("images", "jpg");
+                    StorageReference riversRef = storageRef.child(pictureURLs.get(i));
+                    riversRef.getFile(localFile)
+                            .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                    Log.v("Download", "download erfolgreich");
+                                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                    pictureBitmapList.add(bitmap);
+                                    Log.v("DetailConfirmerCase", "picture Bitmap List new entry: " + bitmap);
+
+                                    getActivity().runOnUiThread(new Runnable() {
+
+                                        @Override
+                                        public void run() {
+                                            viewPager.getAdapter().notifyDataSetChanged();
+                                        }
+                                    });
+
+                                    //viewPager.getAdapter().notifyDataSetChanged();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Log.d("DetailConfirmerCase", exception.getMessage());
+                        }
+                    });
+
+
+                } catch (Exception e) {
+                    Log.d("DetailConfirmerCase", e.getMessage());
+                }
+            }
+
+        }*/
+
+    }
+
+
+
+    //TODO: add childEventListener for new added entrys
+    /*ref.addChildEventListener(new ChildEventListener() {
+        @Override
+        public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
+            Post newPost = dataSnapshot.getValue(Post.class);
+            System.out.println("Author: " + newPost.author);
+            System.out.println("Title: " + newPost.title);
+            System.out.println("Previous Post ID: " + prevChildKey);
+        }
+
+        @Override
+        public void onChildChanged(DataSnapshot dataSnapshot, String prevChildKey) {}
+
+        @Override
+        public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+        @Override
+        public void onChildMoved(DataSnapshot dataSnapshot, String prevChildKey) {}
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {}
+    });*/
+
 
     /**
      * Get the value of a checkbox
+     *
      * @param low
      * @param medium
      * @param high
      * @return
      */
+
     public int getScaleValue(RadioButton low, RadioButton medium, RadioButton high) {
-        if(low.isChecked()) return 1;
-        if(medium.isChecked()) return 2;
-        if(high.isChecked()) return 3;
+        if (low.isChecked()) return 1;
+        if (medium.isChecked()) return 2;
+        if (high.isChecked()) return 3;
         else return -1;
     }
 
+    public void updateImageViews(){
+        viewPager.getAdapter().notifyDataSetChanged();
+    }
+
+
+    public class ImageAdapter extends PagerAdapter {
+        Context context;
+
+        ImageAdapter(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            if (pictureBitmapList.contains((View) object)){
+                return pictureBitmapList.indexOf((View) object);
+            } else {
+                return POSITION_NONE;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return pictureBitmapList.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == ((ImageView) object);
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            ImageView imageView = new ImageView(context);
+            //int padding = 10;
+            //mageView.setPadding(padding, padding, padding, padding);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            imageView.setImageBitmap(pictureBitmapList.get(position));
+            ((ViewPager) container).addView(imageView, 0);
+            return imageView;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            ((ViewPager) container).removeView((ImageView) object);
+        }
+    }
 
 }

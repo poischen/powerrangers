@@ -68,7 +68,6 @@ public class FragmentConfirmerCases extends Fragment {
                         ft.addToBackStack(null);
 
                         ft.commit();
-
                     }
 
                     @Override public void onLongItemClick(View view, int position) {

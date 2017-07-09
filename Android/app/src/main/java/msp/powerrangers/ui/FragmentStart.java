@@ -1,5 +1,6 @@
 package msp.powerrangers.ui;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,7 +27,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -63,6 +63,8 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     Button donateButton;
     Button reportACaseButton;
     Button logoutButton;
+
+    Bitmap userPicBmp;
 
     FirebaseUser firebaseUser;
     private User u;
@@ -132,8 +134,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                             String userId = userInfo.getId();
                             String mail = userInfo.getEmail();
                             u = new User(dbId,userId, name, mail);
-                            //get and show profile pic
-                            showUserPic();
+                            downloadUserPic();
                         } catch (Exception e){
                             Log.d("FragmentStart", "An error occured, user has to be signed out");
                             FirebaseAuth.getInstance().signOut();
@@ -162,6 +163,20 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     public void onStart() {
         super.onStart();
         Bundle args = getArguments();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //downloadUserPic(false);
+        if (userPicBmp!=null){
+            userImage.setImageBitmap(userPicBmp);
+        }
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
     }
 
     @Override
@@ -279,7 +294,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                             db.child(usersDbId).child("userPic").setValue(storageAndDBPath);
 
                             //show pic in app after upload was successful
-                            showUserPic();
+                            downloadUserPic();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -310,8 +325,8 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
      * method gets current firebaseUser profile picture fromk Firebase and shows it
      */
     //TODO: store profile picture as local file, so it does not have to be downlaoded all the time, and check first, if it is available on the device: "You can also download to device memory using getBytes()"
-    private void showUserPic() {
-     //   FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+    private void downloadUserPic() {
+        //   FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             /*String uid = null;
             //get UID to identify firebaseUser
@@ -319,46 +334,53 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                 uid = profile.getUid();
             };*/
 
-                DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-                String userDbId = u.getDbId();
-                DatabaseReference refPath = db.child("users").child(userDbId).child("userPic");
+            DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+            String userDbId = u.getDbId();
+            DatabaseReference refPath = db.child("users").child(userDbId).child("userPic");
 
-                refPath.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+            refPath.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
+                    try {
+                        final File localFile = File.createTempFile("images", "jpg");
                         try {
-                            final File localFile = File.createTempFile("images", "jpg");
-                            try {String picUrlFromDB = dataSnapshot.getValue(String.class);
-                                StorageReference riversRef = storageRef.child(picUrlFromDB);
-                                riversRef.getFile(localFile)
-                                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                            @Override
-                                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                                Log.v("Download", "download erfolgreich");
-                                                Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                                userImage.setImageBitmap(bitmap);
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception exception) {
-                                        Log.d("FragmentStart", exception.getMessage());
-                                    }
-                                });
-                            } catch (Exception e) {
-                                Log.d("Fail", "no image available or some other error occured");
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                            String picUrlFromDB = dataSnapshot.getValue(String.class);
+                            StorageReference riversRef = storageRef.child(picUrlFromDB);
+                            riversRef.getFile(localFile)
+                                    .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                            Log.v("Download", "download erfolgreich");
+                                            userPicBmp = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                            userImage.setImageBitmap(userPicBmp);
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    Log.d("FragmentStart", exception.getMessage());
+                                }
+                            });
+                        } catch (Exception e) {
+                            Log.d("Fail", "no image available or some other error occured");
                         }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
+                }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
-            }
+                }
+            });
+
+
+    } else {
+            userImage.setImageBitmap(userPicBmp);
+            Log.v("No Download", "userPicBmp " + userPicBmp);
+
+        }
         }
 
 
