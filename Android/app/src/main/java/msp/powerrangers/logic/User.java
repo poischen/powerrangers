@@ -77,7 +77,15 @@ public class User extends Role implements Serializable  {
     }
 
     public int getNumberCompletedTasks() {
-        return completedTasksIdList.size()-1;
+        return completedTasksIdList.size() -1;
+    }
+
+    public void setNumberCompletedTasks(){
+        completedTasksIdList.add("viki");
+    }
+
+    public void addCaseIDToReportedCases(String caseID){
+        reportedCasesIdList.add(caseID);
     }
 
     public int getNumberOpenTasks() {

@@ -212,7 +212,8 @@ public class ActivityReportCase extends AppCompatActivity {
 
                     Detective detective = new Detective(us, caseId);
                     // TODO: add case id in function!!!!! [Julia]
-                    //us.addCaseIDtoList(caseId);
+                    us.addCaseIDToReportedCases(caseId);
+                    Log.i("ES IST PASSIERT" , Integer.toString(us.getNumberReportedCases()));
 
                     Toast.makeText(getApplicationContext(), R.string.reportCaseSuccess, Toast.LENGTH_LONG).show();
 

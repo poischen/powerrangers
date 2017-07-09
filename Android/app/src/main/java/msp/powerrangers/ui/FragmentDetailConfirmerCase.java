@@ -244,6 +244,8 @@ public class FragmentDetailConfirmerCase extends Fragment {
                                 singleSnapshot.child("scale").getRef().setValue(getScaleValue(radioButtonConfirmCaseLow, radioButtonConfirmCaseMiddle, radioButtonConfirmCaseHigh));
                                 singleSnapshot.child("confirmed").getRef().setValue(true);
 
+
+
                             }
 
                             @Override

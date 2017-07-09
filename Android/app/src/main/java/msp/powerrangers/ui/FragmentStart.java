@@ -146,18 +146,17 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                             //get and show profile pic
                             showUserPic();
 
-
                             // set the bubble values
-                           /* int repCases = userInfo.getNumberReportedCases();
-                            int confCases = userInfo.getNumberConfirmedCases();
-                            int opTasks = userInfo.getNumberOpenTasks();
-                            int complTasks = userInfo.getNumberCompletedTasks();
-*/
-                            /*
-                            nReportedCases.setText(repCases);
-                            nConfirmedCases.setText(confCases);
-                            nOpenTasks.setText(opTasks);
-                            nCompletedTasks.setText(complTasks); */
+                            Log.i("NUMBERCOMPLETEDTASKS " , Integer.toString( u.getNumberCompletedTasks()));
+                            u.setNumberCompletedTasks();
+                            Log.i("NACH SET CTASKS " , Integer.toString( u.getNumberCompletedTasks()));
+                            nCompletedTasks.setText("" +  Integer.toString( u.getNumberCompletedTasks()) );
+                            nReportedCases.setText("" +  Integer.toString( u.getNumberReportedCases()) );
+                            nConfirmedCases.setText("" +  Integer.toString( u.getNumberConfirmedCases() ));
+                            nOpenTasks.setText("" +  Integer.toString( u.getNumberOpenTasks() ));
+                            // TODO set balance
+
+
 
                         } catch (Exception e){
                             Log.d("FragmentStart", "An error occured, user has to be signed out");
@@ -177,9 +176,20 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                 });
 
             } else {
+
                 Toast.makeText(getContext(), getResources().getString(R.string.fStart_closeAppError), Toast.LENGTH_LONG).show();
                 getActivity().finish();
             }
+        } else {
+
+            // set the bubble values
+            Log.i("uNUMBERCOMPLETEDTASKS " , Integer.toString( u.getNumberCompletedTasks()));
+            u.setNumberCompletedTasks();
+            Log.i("uNACH SET CTASKS " , Integer.toString( u.getNumberCompletedTasks()));
+            nCompletedTasks.setText("" +  Integer.toString( u.getNumberCompletedTasks()) );
+            nReportedCases.setText("" +  Integer.toString( u.getNumberReportedCases()) );
+            nConfirmedCases.setText("" +  Integer.toString( u.getNumberConfirmedCases() ));
+            nOpenTasks.setText("" +  Integer.toString( u.getNumberOpenTasks() ));
         }
     }
 
