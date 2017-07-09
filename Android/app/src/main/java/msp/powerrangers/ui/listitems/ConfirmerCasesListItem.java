@@ -60,17 +60,17 @@ public class ConfirmerCasesListItem {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 // get data for each case from the db
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
 
-                    titleDB = (String) singleSnapshot.child("name").getValue();
-                    cityDB = (String) singleSnapshot.child("city").getValue();
-                    countryDB = (String) singleSnapshot.child("country").getValue();
-                    commentDB = (String) singleSnapshot.child("comment").getValue();
-                    // TODO: get first image for case from db
-                    imageIdDB = R.drawable.placeholder_case;
-                    data.add(new ConfirmerCasesListItem(titleDB, cityDB, countryDB, commentDB, imageIdDB));
+                        titleDB = (String) singleSnapshot.child("name").getValue();
+                        cityDB = (String) singleSnapshot.child("city").getValue();
+                        countryDB = (String) singleSnapshot.child("country").getValue();
+                        commentDB = (String) singleSnapshot.child("comment").getValue();
+                        imageIdDB = R.drawable.placeholder_case;
+                        // TODO: get first image for case from db
+                       // imageIdDB = (String) singleSnapshot.child("pictureURL").child("0").getValue();
+                        data.add(new ConfirmerCasesListItem(titleDB,cityDB, countryDB, commentDB, imageIdDB));
 
                 }
 

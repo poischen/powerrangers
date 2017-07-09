@@ -1,13 +1,7 @@
 package msp.powerrangers.logic;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.provider.ContactsContract;
-import android.util.Log;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("serial")
@@ -16,12 +10,14 @@ public class User extends Role implements Serializable  {
 
     private String dbId;
     private String userId;
-    private List<String> caseIdList;
-    private List<String> taskIdList;
     private String userName;
     private String email;
     private String userPic = "";
     private double balance;
+    private List<String> reportedCasesIdList;
+    private List<String> confirmedCasesIdList;
+    private List<String> completedTasksIdList;
+    private List<String> openTasksIdList;
     private List<Role> roleList;
 
     public User(){
@@ -29,13 +25,25 @@ public class User extends Role implements Serializable  {
     }
 
     public User(String dbId, String userId, String userName, String email){
+
         this.dbId = dbId;
         this.userId = userId;
         this.userName = userName;
         this.email = email;
+
+        reportedCasesIdList = new ArrayList<String>();
+        reportedCasesIdList.add("DummyID");
+
+        confirmedCasesIdList = new ArrayList<String>();
+        confirmedCasesIdList.add("DummyID");
+
+        completedTasksIdList = new ArrayList<String>();
+        completedTasksIdList.add("DummyID");
+
+        openTasksIdList = new ArrayList<String>();
+        openTasksIdList.add("DummyID");
+
         roleList = new ArrayList<Role>();
-        caseIdList = new ArrayList<String>();
-        taskIdList = new ArrayList<String>();
     }
 
 
@@ -60,6 +68,30 @@ public class User extends Role implements Serializable  {
         return balance;
     }
 
+    public int getNumberReportedCases() {
+        return reportedCasesIdList.size()-1;
+    }
+
+    public int getNumberConfirmedCases() {
+        return confirmedCasesIdList.size()-1;
+    }
+
+    public int getNumberCompletedTasks() {
+        return completedTasksIdList.size() -1;
+    }
+
+    public void setNumberCompletedTasks(){
+        completedTasksIdList.add("viki");
+    }
+
+    public void addCaseIDToReportedCases(String caseID){
+        reportedCasesIdList.add(caseID);
+    }
+
+    public int getNumberOpenTasks() {
+        return openTasksIdList.size()-1;
+    }
+
 
     // setter
     public void setName(String userName) {
@@ -77,7 +109,6 @@ public class User extends Role implements Serializable  {
     public void setBalance(double balance) {
         this.balance = balance;
     }
-
 
     @Override
     public List<Role> getRoles() {
@@ -97,17 +128,6 @@ public class User extends Role implements Serializable  {
 
     }
 
-    public void addCaseIDtoList(String caseID){
-        caseIdList.add(caseID);
-        Object [] totest;
-        totest = caseIdList.toArray();
-        Log.i("CASE ID ADDED TO LIST" , Arrays.toString(totest));
-    }
-
-    public void addTaskIDtoList(String taskID){
-        taskIdList.add(taskID);
-
-    }
 
     public  void login(){
         System.out.println("User Login");

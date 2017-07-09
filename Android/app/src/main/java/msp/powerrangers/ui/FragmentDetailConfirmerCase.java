@@ -154,7 +154,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
         // eventuell todo ActionBar
 
 
-        // fill in information from detective case in EditTexts TODO
+        // fill in information from detective case in EditTexts
         dbRefCases = FirebaseDatabase.getInstance().getReference("cases");
 
         // get attributes from a case
@@ -290,7 +290,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
         {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "to be implemented ;-)", Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(getContext(), "to be implemented ;-)", Toast.LENGTH_SHORT).show();
 
                 dbRefCases.addValueEventListener(
                         new ValueEventListener() {
@@ -315,6 +315,8 @@ public class FragmentDetailConfirmerCase extends Fragment {
                                 singleSnapshot.child("areaY").getRef().setValue(editTextConfirmCaseYCoordinate.getText().toString());
                                 singleSnapshot.child("scale").getRef().setValue(getScaleValue(radioButtonConfirmCaseLow, radioButtonConfirmCaseMiddle, radioButtonConfirmCaseHigh));
                                 singleSnapshot.child("confirmed").getRef().setValue(true);
+
+
 
                             }
 

@@ -43,6 +43,7 @@ import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import android.Manifest;
+
 import msp.powerrangers.R;
 import msp.powerrangers.logic.User;
 
@@ -59,12 +60,17 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
 
     CircleImageView userImage;
     TextView tvUserName;
-    TextView openTasks;
     Button donateButton;
     Button reportACaseButton;
     Button logoutButton;
 
     Bitmap userPicBmp;
+
+    // bubbles to update
+    TextView nOpenTasks;
+    TextView nReportedCases;
+    TextView nConfirmedCases;
+    TextView nCompletedTasks;
 
     FirebaseUser firebaseUser;
     private User u;
@@ -88,11 +94,17 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         // display user name
         tvUserName = (TextView) view.findViewById(R.id.textViewUserName);
         tvUserName.setText(firebaseUser.getDisplayName());
+
         //interactive elements
         userImage = (CircleImageView) view.findViewById(R.id.userimage);
-        openTasks = (TextView) view.findViewById(R.id.numberOpenTasks);
+        nOpenTasks = (TextView) view.findViewById(R.id.numberOpenTasks);
         userImage.setOnClickListener(this);
-        openTasks.setOnClickListener(this);
+        nOpenTasks.setOnClickListener(this);
+
+        // bubbles to update
+        nReportedCases = (TextView) view.findViewById(R.id.numberReportedCases);
+        nConfirmedCases = (TextView) view.findViewById(R.id.numberConfirmedCases);
+        nCompletedTasks = (TextView) view.findViewById(R.id.numberCompletedTasks);
 
         // call to action buttons
         donateButton = (Button) view.findViewById(R.id.donateButton);
@@ -120,7 +132,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
             if (firebaseUser != null) {
                 //get user infos from database via users db id and instantiate User Object
                 SharedPreferences sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
-                String userDbID = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
+                final String userDbID = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
 
                 DatabaseReference db = FirebaseDatabase.getInstance().getReference();
                 DatabaseReference refPath = db.child("users").child(userDbID);
@@ -134,7 +146,19 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                             String userId = userInfo.getId();
                             String mail = userInfo.getEmail();
                             u = new User(dbId,userId, name, mail);
+
                             downloadUserPic();
+
+                            // set the bubble values
+                            Log.i("NUMBERCOMPLETEDTASKS " , Integer.toString( u.getNumberCompletedTasks()));
+                            u.setNumberCompletedTasks();
+                            Log.i("NACH SET CTASKS " , Integer.toString( u.getNumberCompletedTasks()));
+                            nCompletedTasks.setText("" +  Integer.toString( u.getNumberCompletedTasks()) );
+                            nReportedCases.setText("" +  Integer.toString( u.getNumberReportedCases()) );
+                            nConfirmedCases.setText("" +  Integer.toString( u.getNumberConfirmedCases() ));
+                            nOpenTasks.setText("" +  Integer.toString( u.getNumberOpenTasks() ));
+                            // TODO set balance
+
                         } catch (Exception e){
                             Log.d("FragmentStart", "An error occured, user has to be signed out");
                             FirebaseAuth.getInstance().signOut();
@@ -153,9 +177,20 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                 });
 
             } else {
+
                 Toast.makeText(getContext(), getResources().getString(R.string.fStart_closeAppError), Toast.LENGTH_LONG).show();
                 getActivity().finish();
             }
+        } else {
+
+            // set the bubble values
+            Log.i("uNUMBERCOMPLETEDTASKS " , Integer.toString( u.getNumberCompletedTasks()));
+            u.setNumberCompletedTasks();
+            Log.i("uNACH SET CTASKS " , Integer.toString( u.getNumberCompletedTasks()));
+            nCompletedTasks.setText("" +  Integer.toString( u.getNumberCompletedTasks()) );
+            nReportedCases.setText("" +  Integer.toString( u.getNumberReportedCases()) );
+            nConfirmedCases.setText("" +  Integer.toString( u.getNumberConfirmedCases() ));
+            nOpenTasks.setText("" +  Integer.toString( u.getNumberOpenTasks() ));
         }
     }
 

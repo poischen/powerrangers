@@ -11,7 +11,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
+
 import org.w3c.dom.Text;
+
+import java.util.Iterator;
 
 import msp.powerrangers.R;
 
@@ -27,6 +36,14 @@ public class FragmentDetailRangerTask extends Fragment {
     private ImageView iconPollution;
     private TextView rangerTaskDescription;
     private Button buttonJoin;
+    private int position;
+
+    // firebase storage Ref
+    private StorageReference storageRef;
+
+    // firebase db instances
+    private DatabaseReference dbRefTasks;
+
 
     public FragmentDetailRangerTask() {
         // Required empty public constructor
@@ -35,8 +52,13 @@ public class FragmentDetailRangerTask extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle bund = getArguments();
+        position = bund.getInt("Position");
 
     }
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -44,49 +66,94 @@ public class FragmentDetailRangerTask extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fr_detail_ranger_task, container, false);
 
-        // TODO: get & set task name (location?) from db
+        // Elements
         rangerTaskName = (TextView) view.findViewById(R.id.taskDetailName);
-        rangerTaskName.setText("Kathmandu, Nepal");
-
-        // TODO: get & set image for this task from the db
-        rangerTaskDetailImage = (ImageView) view.findViewById(R.id.rangerTaskDetailImage);
-        int imageId = R.drawable.polluted_beach1;
-        rangerTaskDetailImage.setImageResource(imageId);
-
         textRangerReward = (TextView) view.findViewById(R.id.textRangerReward);
         textNumberRangers = (TextView) view.findViewById(R.id.textNumberRangers);
         textPollutionLevel = (TextView) view.findViewById(R.id.textScalePollution);
-
-        // TODO: get & set the reward, #rangers & pollution level for this task from the db
-        String rangerReward = "10";
-        String nRangers = "5";
-        String pollutionLevel = "high";
-        textRangerReward.setText(rangerReward);
-        textNumberRangers.setText(nRangers);
-        textPollutionLevel.setText(pollutionLevel);
-
-        // set some fancy icons
-        // TODO: bitcoin icon :)
+        rangerTaskDescription = (TextView) view.findViewById(R.id.detailTaskDescription);
+        rangerTaskDetailImage = (ImageView) view.findViewById(R.id.rangerTaskDetailImage);
+        // fancy icons
         iconMoney = (ImageView) view.findViewById(R.id.rangerReward);
         iconMoney.setImageResource(R.drawable.iconrewardsmall);
-
         iconRanger = (ImageView) view.findViewById(R.id.imageNumberRangers);
         iconRanger.setImageResource(R.drawable.iconranger);
-
         iconPollution = (ImageView) view.findViewById(R.id.imagePollutionLevel);
-        // set appropriate icon
-        if (pollutionLevel.equals("medium")) {
-            iconPollution.setImageResource(R.drawable.icon_pollution_medium);
-        }
-        else if (pollutionLevel.equals("low")) {
-            iconPollution.setImageResource(R.drawable.icon_pollution_low);
-        }
-        else if (pollutionLevel.equals("high")) {
-            iconPollution.setImageResource(R.drawable.icon_pollution_high);
-        }
 
-        rangerTaskDescription = (TextView) view.findViewById(R.id.detailTaskDescription);
-        rangerTaskDescription.setText("Summary of the case in Kathmandu....\nWe need you! ;)");
+
+
+        // fill in information from task
+        dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
+
+        dbRefTasks.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Iterator iter = dataSnapshot.getChildren().iterator();
+
+                for(int i = 0; i < position; i++) {
+                    iter.next();
+                }
+
+                DataSnapshot singleSnapshot = (DataSnapshot) iter.next();
+
+                // Fetch the data from the DB
+
+                String city = (String) singleSnapshot.child("city").getValue();
+                String country = (String) singleSnapshot.child("country").getValue();
+                // TODO set image
+                String reward = String.valueOf(singleSnapshot.child("reward").getValue());
+                String scale = String.valueOf(singleSnapshot.child("scale").getValue());
+                String taskInfo = (String) singleSnapshot.child("comment").getValue();
+
+
+                rangerTaskName.setText( city + " , " + country);
+                textRangerReward.setText(reward);
+                // here hard coded because we decided, that 1 task 1 ranger
+                textNumberRangers.setText("1");
+                textPollutionLevel.setText(convertScaleToText(scale));
+                rangerTaskDescription.setText(taskInfo + "\nWe need you! ;-)");
+
+
+                // set appropriate icon
+
+                switch(scale){
+
+                    case "1":
+                        iconPollution.setImageResource(R.drawable.icon_pollution_low);
+                        break;
+
+                    case "2":
+                        iconPollution.setImageResource(R.drawable.icon_pollution_medium);
+                        break;
+
+                    case "3":
+                        iconPollution.setImageResource(R.drawable.icon_pollution_high);
+                        break;
+
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
+
+
+
+        // TODO: get & set image for this task from the db
+
+        int imageId = R.drawable.polluted_beach1;
+        rangerTaskDetailImage.setImageResource(imageId);
+
+
+
+        // set some fancy icons
 
         buttonJoin = (Button) view.findViewById(R.id.buttonJoinAsRanger);
         buttonJoin.setOnClickListener(new View.OnClickListener() {
@@ -95,7 +162,7 @@ public class FragmentDetailRangerTask extends Fragment {
                 Toast.makeText(v.getContext(), "You have joined the task! \n", Toast.LENGTH_LONG).show();
                 // TODO: Ranger erstellen
                 // TODO: task zuweisen und in die db eintragen (users, tasks)
-                // TODO: Anzeige in FragmentStart andern (openTasks +1 )
+                // TODO: Anzeige in FragmentStart andern (nOpenTasks +1 )
 
                 // move to Main Activity (FragmentStart)
                 Intent i = new Intent(getActivity(), MainActivity.class);
@@ -107,5 +174,26 @@ public class FragmentDetailRangerTask extends Fragment {
 
         return view;
     }
+
+
+    public String convertScaleToText(String scale){
+
+        String result = "";
+
+        switch(scale){
+            case ("1"):
+                result = "Low";
+                break;
+            case("2"):
+                result = "Middle";
+                break;
+            case("3"):
+                result = "High";
+                break;
+        }
+
+        return result;
+    }
+
 
 }
