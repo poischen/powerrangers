@@ -95,7 +95,7 @@ public class FragmentDetailRangerTask extends Fragment {
                 Toast.makeText(v.getContext(), "You have joined the task! \n", Toast.LENGTH_LONG).show();
                 // TODO: Ranger erstellen
                 // TODO: task zuweisen und in die db eintragen (users, tasks)
-                // TODO: Anzeige in FragmentStart andern (openTasks +1 )
+                // TODO: Anzeige in FragmentStart andern (nOpenTasks +1 )
 
                 // move to Main Activity (FragmentStart)
                 Intent i = new Intent(getActivity(), MainActivity.class);
