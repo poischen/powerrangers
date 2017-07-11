@@ -197,12 +197,13 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
             userImage.setImageBitmap(userPicBmp);
         }
 
-
+        // get the bubble values and the user name
         Bundle extras = new Bundle();
         Intent intent = getActivity().getIntent();
         extras = intent.getExtras();
 
         if (extras != null) {
+            tvUserName.setText(extras.getString("name"));
             balance.setText(extras.getString("balance"));
             nOpenTasks.setText(extras.getString("nOpTasks"));
             nReportedCases.setText(extras.getString("nRepCases"));
@@ -210,14 +211,16 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
             nCompletedTasks.setText(extras.getString("nCompCases"));
             //Toast.makeText(getContext(),value , Toast.LENGTH_LONG).show();
         }
-        
+
     }
 
     @Override
     public void onPause(){
         super.onPause();
 
+        // store current values (they will be set in onResume after switching tabs)
         Bundle extras = new Bundle();
+        extras.putString("name", tvUserName.getText().toString());
         extras.putString("balance", balance.getText().toString());
         extras.putString("nOpTasks",nOpenTasks.getText().toString());
         extras.putString("nRepCases",nReportedCases.getText().toString());
@@ -281,23 +284,18 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     }
 
     /**
-     * Set bubble values in fragment start screen
+     * Set bubble values in fragment start screen and the user name
      * @param ds
      */
     private void setUserInfos(DataSnapshot ds) {
-        // get values for bubbles
-        String earned = String.valueOf(ds.child("balance").getValue());
-        String nOpTasks = String.valueOf(ds.child("numberOpenTasks").getValue());
-        String nConfCases = String.valueOf(ds.child("numberConfirmedCases").getValue());
-        String nRepCases = String.valueOf(ds.child("numberReportedCases").getValue());
-        String nComplTasks = String.valueOf(ds.child("numberCompletedTasks").getValue());
-
-        // set values for bubbles
-        balance.setText(earned);
-        nOpenTasks.setText(nOpTasks);
-        nConfirmedCases.setText(nConfCases);
-        nReportedCases.setText(nRepCases);
-        nCompletedTasks.setText(nComplTasks);
+        // name
+        tvUserName.setText(String.valueOf(ds.child("name").getValue()));
+        // get & set values for bubbles
+        balance.setText(String.valueOf(ds.child("balance").getValue()));
+        nOpenTasks.setText(String.valueOf(ds.child("numberOpenTasks").getValue()));
+        nConfirmedCases.setText(String.valueOf(ds.child("numberConfirmedCases").getValue()));
+        nReportedCases.setText(String.valueOf(ds.child("numberReportedCases").getValue()));
+        nCompletedTasks.setText( String.valueOf(ds.child("numberCompletedTasks").getValue()));
     }
 
     /**
