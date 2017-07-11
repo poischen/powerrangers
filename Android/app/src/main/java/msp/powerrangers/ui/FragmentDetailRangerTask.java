@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +53,11 @@ public class FragmentDetailRangerTask extends Fragment {
     // task ID
     private String taskID;
     private  String taskDBId;
+
+    SharedPreferences sharedPrefs;
+    String userDbID;
+    DatabaseReference refPathCurrentUser;
+    String currentCount;
 
 
     public FragmentDetailRangerTask() {
@@ -176,28 +182,26 @@ public class FragmentDetailRangerTask extends Fragment {
                 // TODO: Anzeige in FragmentStart andern (nOpenTasks +1 )
 
                 Toast.makeText(v.getContext(), "You have joined the task :-)!", Toast.LENGTH_LONG).show();
-                SharedPreferences sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
-                final String userDbID = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
+                sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
+                userDbID = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
 
                 DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-                final DatabaseReference refPath = db.child("users").child(userDbID);
+                refPathCurrentUser = db.child("users").child(userDbID);
 
-
-                //DatabaseReference taskRefPath = db.child("tasks").child();
-
-
-                refPath.addListenerForSingleValueEvent(new ValueEventListener() {
+                refPathCurrentUser.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
-
                         User userInfo = dataSnapshot.getValue(User.class);
+                        currentCount = String.valueOf(dataSnapshot.child("numberOpenTasks").getValue());
 
                         // Create a new Ranger and fill additional information in the DB Tasks
                         Ranger ranger = new Ranger(userInfo, taskID);
-                        dbRefTasks.child(taskDBId).child("userID").setValue(ranger.getId());
+                        dbRefTasks.child(taskDBId).child("rangerID").setValue(ranger.getId());
 
-
+                        // update the number of rangers open tasks
+                        int newCount = Integer.valueOf(currentCount) + 1;
+                        refPathCurrentUser.child("numberOpenTasks").setValue(String.valueOf(newCount));
 
                     }
 
@@ -206,9 +210,6 @@ public class FragmentDetailRangerTask extends Fragment {
 
                     }
                 });
-
-
-
 
 
 
