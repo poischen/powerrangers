@@ -80,6 +80,7 @@ public class ConfirmerCasesListItem {
             public void onCancelled(DatabaseError databaseError) {
 
             }
+
         });
 
       /*  data.add(new ConfirmerCasesListItem("Munich, Germany", "English Garden, 25.06.2017 ...", R.drawable.placeholder_case));
@@ -88,7 +89,9 @@ public class ConfirmerCasesListItem {
         data.add(new ConfirmerCasesListItem("Colombo, Sri Lanka", "Summary of the case in Colombo...", R.drawable.placeholder_case));
 
         */
+
         return data;
+
     }
 
 }

@@ -129,9 +129,9 @@ exports.createTasks = functions.database.ref('/cases/{caseId}/confirmed')
           const isConfirmed = event.data.val();
           // First check if 'confirmed' value is true
           if(isConfirmed) {
-      		  // Get the current values of areaX and areaY from the database
-      	    const areaX = event.data.adminRef.parent.child('areaX').once('value');
-      	    const areaY = event.data.adminRef.parent.child('areaY').once('value');
+            // Get the current values of areaX and areaY from the database
+            const areaX = event.data.adminRef.parent.child('areaX').once('value');
+            const areaY = event.data.adminRef.parent.child('areaY').once('value');
             // Get the case values
             const city = event.data.adminRef.parent.child('city').once('value');
             const country = event.data.adminRef.parent.child('country').once('value');
@@ -139,27 +139,21 @@ exports.createTasks = functions.database.ref('/cases/{caseId}/confirmed')
             const title = event.data.adminRef.parent.child('name').once('value');
             const scale = event.data.adminRef.parent.child('scale').once('value');
             const caseId = event.data.adminRef.parent.child('id').once('value');
+            const userId = event.data.adminRef.parent.child('userID').once('value');
 
             // Get image URIs for case pictures from the database
-            /*
-            const casePictureList = event.data.adminRef.parent.child('pictureURL').then(snapshot => {
-              snapshot.val().forEach(val) {
-                let casePictureList = [];
-                return casePictureList.push(val);
-              }
-            };
-            */
             const casePictureList = event.data.adminRef.parent.child('pictureURL').once('value');
 
             /* Get database case key
-            const caseDbId = event.data.adminRef.parent.once("value").then(function(snapshot) {
+            event.data.adminRef.parent.once("value").then(function(snapshot) {
               console.log("Key: " + snapshot.key);
-              return snapshot.key;
+              const caseDbId = snapshot.key;
             });
             */
+            //const caseDbId = event.data.adminRef.parent.once('key');
 
-    	      return Promise.all([areaX, areaY, city, country, comment, title, scale, caseId, casePictureList]).then(results => {
-      	      // Get list of pictures assigned to a case and remove the first one (main case picture)
+            return Promise.all([areaX, areaY, city, country, comment, title, scale, caseId, casePictureList, userId]).then(results => {
+              // Get list of pictures assigned to a case and remove the first one (main case picture)
               const casePictureList = results[8].val();
               casepictureList = casePictureList.shift();
               console.log("Pictures: ", casePictureList);
@@ -168,41 +162,93 @@ exports.createTasks = functions.database.ref('/cases/{caseId}/confirmed')
               console.log("Number Rangers: ", number_rangers);
 
               // Calculate the size of case area and reward
-      		   	const size = results[0].val() * results[1].val();
-      	     	console.log("Size: ", size);
+              var size = results[0].val() * results[1].val();
+              const scale = results[6].val();
               // Total reward
-              const total_reward = Math.round(size/5);
+              var total_reward = Math.round(size/5);
               // Reward per ranger
-              const ranger_reward = Math.round(total_reward/number_rangers);
+              var ranger_reward = Math.round(total_reward/number_rangers) + scale;
               console.log("Ranger reward: ", ranger_reward);
-
-            // TODO: If there is only one picture assigned to the case, just one ranger is needed
-
-    	      // If case size is bigger than 10 cut it in smaller tasks otherwise just one ranger is needed
-    		    //if(size <= 10) {
-    		      //	return event.data.adminRef.parent.child('caseInfos').set({numberRangers: 1, reward: 2});
-    		    //}
-    		    //else {
-      			   	// calculate number of rangers and reward based on case size and write it to the database
 
                 // Get all other values from Promise
                 const city = results[2].val();
                 const country = results[3].val();
                 const comment = results[4].val();
                 const title = results[5].val();
-                const scale = results[6].val();
                 const id = results[7].val();
+                const userId = results[9].val();
+
+                // Create a random task id
+                var taskId = Math.random().toString(36).substring(7);
 
                 // Create task database nodes
                 casePictureList.forEach(function(uri, index) {
-                  return event.data.adminRef.root.child('tasks/').push().set({city: city, country: country, comment: comment, reward: ranger_reward, scale: scale, pictureUri: uri, caseId: id});
+                  var taskRef = event.data.adminRef.root.child('tasks/').push();
+                  var taskDbId = taskRef.key;
+                  return taskRef.set({taskDbId: taskDbId, taskId: taskId, city: city, country: country, comment: comment, reward: ranger_reward, scale: scale, pictureUri: uri, caseId: id, taskCompleted: false});
                 });
 
-      			    //return event.data.ref.parent.child('caseInfos').set({numberRangers: number_rangers, reward: total_reward});
-    		    //}
-    	      });
-      	  }
-      	  else {
-      	  	console.log("Confirmed not true");
-      	  }
+                /*
+                // Write case with its caseId into corresponding user db
+                const userRef = event.data.adminRef.root.child('users/');
+                userRef.orderByChild("id").equalTo(userId).then(snapshot => {
+                  console.log("User DB Id: " + snapshot.ref().parent().name());
+                  // Find the parent and return the key (dbId)
+                  var userDBID = snapshot.data.ref.parent.key;
+                  return event.data.adminRef.root.child('users/' + userDBID).child('cases/').push().set({caseId: caseId});
+                });
+                */
+                
+            });
+          }
+          else {
+            console.log("Confirmed not true");
+          }
+});
+
+
+/*
+* Listens for tasks being completed, and writes number of upvotes and downvotes into task databse
+*/
+exports.completeTask = functions.database.ref('/tasks/{taskId}/taskCompleted')
+    .onWrite(event => {
+      const isCompleted = event.data.val();
+          // First check if 'confirmed' value is true
+          if(isCompleted) {
+            return event.data.adminRef.parent.update({numberDownvotes: 0, numberUpvotes: 0});
+          }
+          else {
+            console.log("Task not completed yet");
+          }
+});
+
+
+/*
+* Listens for tasks being confirmed (more than 5 upvotes), and writes isConfirmed true into db
+*/
+exports.upvotedTask = functions.database.ref('/tasks/{taskId}/numberUpvotes')
+    .onWrite(event => {
+      const numberUpvotes = event.data.val();
+          // First check if 'numberUpvotes' value is greater 5
+          if(numberUpvotes >= 5) {
+            return event.data.adminRef.parent.update({isConfirmed: true});
+          }
+          else {
+            console.log("Number of Upvotes: ", numberUpvotes);
+          }
+});
+
+/*
+* Listens for tasks being aborted (more than 5 downvotes), and writes isConfirmed false into db
+*/
+exports.downvotedTask = functions.database.ref('/tasks/{taskId}/numberDownvotes')
+    .onWrite(event => {
+      const numberDownvotes = event.data.val();
+          // First check if 'numberDownvotes' value is greater 5
+          if(numberDownvotes >= 5) {
+            return event.data.adminRef.parent.update({isConfirmed: false});
+          }
+          else {
+            console.log("Number of downvotes: ", numberDownvotes);
+          }
 });
