@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -29,6 +30,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -40,6 +43,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import msp.powerrangers.R;
+import msp.powerrangers.logic.User;
 
 
 public class FragmentDetailConfirmerCase extends Fragment {
@@ -85,6 +89,11 @@ public class FragmentDetailConfirmerCase extends Fragment {
 
     // firebase db instances
     private DatabaseReference dbRefCases;
+    // shared preferences
+    SharedPreferences sharedPrefs;
+    String userDbID;
+    DatabaseReference refPathCurrentUser;
+    String currentCount;
 
     public FragmentDetailConfirmerCase() {
         // Required empty public constructor
@@ -101,6 +110,29 @@ public class FragmentDetailConfirmerCase extends Fragment {
         pictureBitmapList = new ArrayList<>();
         Bitmap defaultPic = BitmapFactory.decodeResource(getResources(), R.drawable.nopicyet);
         pictureBitmapList.add(defaultPic);
+
+        // get the current user
+        sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
+        userDbID = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
+        //Log.i("KATJA", "current user id:"+userDbID);
+        refPathCurrentUser = FirebaseDatabase.getInstance().getReference().child("users").child(userDbID);
+
+        // get the current count of the confirmed cases
+        refPathCurrentUser.addValueEventListener(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        currentCount = String.valueOf(dataSnapshot.child("numberConfirmedCases").getValue());
+                        //Log.i("KATJA", "currentCount "+currentCount);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
 
     }
 
@@ -151,7 +183,6 @@ public class FragmentDetailConfirmerCase extends Fragment {
         imageViewConfirmUploadedPicture = (ImageView) view.findViewById(R.id.imageViewConfirmUploadedPicture);
 
         // eventuell todo ActionBar
-
 
         // fill in information from detective case in EditTexts
         dbRefCases = FirebaseDatabase.getInstance().getReference("cases");
@@ -287,7 +318,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
         {
             @Override
             public void onClick(View v) {
-              //  Toast.makeText(getContext(), "to be implemented ;-)", Toast.LENGTH_SHORT).show();
+
 
                 dbRefCases.addValueEventListener(
                         new ValueEventListener() {
@@ -311,6 +342,13 @@ public class FragmentDetailConfirmerCase extends Fragment {
                                 singleSnapshot.child("areaY").getRef().setValue(editTextConfirmCaseYCoordinate.getText().toString());
                                 singleSnapshot.child("scale").getRef().setValue(getScaleValue(radioButtonConfirmCaseLow, radioButtonConfirmCaseMiddle, radioButtonConfirmCaseHigh));
                                 singleSnapshot.child("confirmed").getRef().setValue(true);
+                                // add the confirmer id to the childs
+                                singleSnapshot.child("confirmerId").getRef().setValue(userDbID);
+
+                                // update the number of users confirmed cases
+                                int newCount = Integer.valueOf(currentCount)+1;
+                                //Log.i("KATJA",String.valueOf(newCount));
+                                refPathCurrentUser.child("numberConfirmedCases").setValue(String.valueOf(newCount));
 
                             }
 
@@ -319,7 +357,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
 
                             }
                         });
-                
+
 
                 // go back to FragmentStart
                 Intent i = new Intent(getActivity(), MainActivity.class);

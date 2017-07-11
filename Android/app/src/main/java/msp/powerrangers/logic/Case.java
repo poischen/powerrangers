@@ -1,7 +1,5 @@
 package msp.powerrangers.logic;
 
-import java.security.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 public class Case {
@@ -18,14 +16,16 @@ public class Case {
     private String comment;
     private boolean isConfirmed;
     List<Task> relatedTasks;
-    private String userID;
+    private String detectiveID;
+    private String confirmerID;
 
 
-    public Case(String dbId, String userID, String caseId, String name, String city, String country,
+
+    public Case(String dbId, String detectiveID, String caseId, String name, String city, String country,
                 int scale, int areaX, int areaY, List<String> pictureURLs,
                 String comment){
         this.dbId = dbId;
-        this.userID = userID;
+        this.detectiveID = detectiveID;
         this.name = name;
         this.caseId = caseId;
         this.city = city;
@@ -48,7 +48,9 @@ public class Case {
         return dbId;
     }
 
-    public String getUserID () { return userID; }
+    public String getDetectiveID() { return detectiveID; }
+
+    public String getConfirmerID() { return confirmerID; }
 
     public String getName() {
         return name;
