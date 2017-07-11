@@ -143,9 +143,8 @@ public class FragmentDetailConfirmerCase extends Fragment {
         // radio buttons scale
         radioButtonConfirmCaseLow = (RadioButton) view.findViewById(R.id.radioButtonConfirmCaseLow);
         radioButtonConfirmCaseMiddle = (RadioButton) view.findViewById(R.id.radioButtonConfirmCaseMiddle);
-        ;
         radioButtonConfirmCaseHigh = (RadioButton) view.findViewById(R.id.radioButtonConfirmCaseHigh);
-        ;
+
 
         // buttons
         buttonConfirmCaseReport = (Button) view.findViewById(R.id.buttonConfirmCaseReport);

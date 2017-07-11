@@ -42,6 +42,7 @@ import java.io.File;
 import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
 import android.Manifest;
 
 import msp.powerrangers.R;
@@ -50,7 +51,8 @@ import msp.powerrangers.logic.User;
 import static android.app.Activity.RESULT_OK;
 
 
-/** Start screen, where a firebaseUser can see information about his account and navigate between Tasks & Fälle
+/**
+ * Start screen, where a firebaseUser can see information about his account and navigate between Tasks & Fälle
  */
 public class FragmentStart extends Fragment implements View.OnClickListener {
 
@@ -67,6 +69,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     Bitmap userPicBmp;
 
     // bubbles to update
+    TextView balance;
     TextView nOpenTasks;
     TextView nReportedCases;
     TextView nConfirmedCases;
@@ -93,7 +96,6 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         logoutButton.setOnClickListener(this);
         // display user name
         tvUserName = (TextView) view.findViewById(R.id.textViewUserName);
-        tvUserName.setText(firebaseUser.getDisplayName());
 
         //interactive elements
         userImage = (CircleImageView) view.findViewById(R.id.userimage);
@@ -102,6 +104,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         nOpenTasks.setOnClickListener(this);
 
         // bubbles to update
+        balance = (TextView) view.findViewById(R.id.numberBalance);
         nReportedCases = (TextView) view.findViewById(R.id.numberReportedCases);
         nConfirmedCases = (TextView) view.findViewById(R.id.numberConfirmedCases);
         nCompletedTasks = (TextView) view.findViewById(R.id.numberCompletedTasks);
@@ -115,9 +118,11 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         return view;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         //Firebase stuff
         storageRef = FirebaseStorage.getInstance().getReference();
@@ -126,40 +131,32 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         //get current User Object
         Bundle bundle = getArguments();
         u = (User) bundle.getSerializable("USER");
-        Log.v("USER: ", u + "");
 
-        if (u == null){
+        if (u == null) {
             if (firebaseUser != null) {
                 //get user infos from database via users db id and instantiate User Object
                 SharedPreferences sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
                 final String userDbID = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
-
                 DatabaseReference db = FirebaseDatabase.getInstance().getReference();
                 DatabaseReference refPath = db.child("users").child(userDbID);
-                refPath.addListenerForSingleValueEvent(new ValueEventListener() {
+                refPath.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         try {
+
                             User userInfo = dataSnapshot.getValue(User.class);
                             String name = userInfo.getName();
+                            tvUserName.setText(name);
                             String dbId = userInfo.getDbId();
                             String userId = userInfo.getId();
                             String mail = userInfo.getEmail();
-                            u = new User(dbId,userId, name, mail);
 
+                            setUserInfos(dataSnapshot);
+                            // create user object (user is registered)
+                            u = new User(dbId, userId, name, mail);
+                            // set user pic
                             downloadUserPic();
-
-                            // set the bubble values
-                            /*Log.i("NUMBERCOMPLETEDTASKS " , Integer.toString( u.getNumberCompletedTasks()));
-                            u.setNumberCompletedTasks();
-                            Log.i("NACH SET CTASKS " , Integer.toString( u.getNumberCompletedTasks()));
-                            nCompletedTasks.setText("" +  Integer.toString( u.getNumberCompletedTasks()) );
-                            nReportedCases.setText("" +  Integer.toString( u.getNumberReportedCases()) );
-                            nConfirmedCases.setText("" +  Integer.toString( u.getNumberConfirmedCases() ));
-                            nOpenTasks.setText("" +  Integer.toString( u.getNumberOpenTasks() ));
-                            // TODO set balance*/
-
-                        } catch (Exception e){
+                        } catch (Exception e) {
                             Log.d("FragmentStart", "An error occured, user has to be signed out");
                             FirebaseAuth.getInstance().signOut();
                             android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -169,6 +166,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                             fragmentTransaction.commit();
                         }
                     }
+
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                         Toast.makeText(getContext(), getResources().getString(R.string.fStart_closeAppError), Toast.LENGTH_LONG).show();
@@ -181,16 +179,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                 Toast.makeText(getContext(), getResources().getString(R.string.fStart_closeAppError), Toast.LENGTH_LONG).show();
                 getActivity().finish();
             }
-        } else {
 
-            // set the bubble values
-            /*Log.i("uNUMBERCOMPLETEDTASKS " , Integer.toString( u.getNumberCompletedTasks()));
-            u.setNumberCompletedTasks();
-            Log.i("uNACH SET CTASKS " , Integer.toString( u.getNumberCompletedTasks()));
-            nCompletedTasks.setText("" +  Integer.toString( u.getNumberCompletedTasks()) );
-            nReportedCases.setText("" +  Integer.toString( u.getNumberReportedCases()) );
-            nConfirmedCases.setText("" +  Integer.toString( u.getNumberConfirmedCases() ));
-            nOpenTasks.setText("" +  Integer.toString( u.getNumberOpenTasks() ));*/
         }
     }
 
@@ -204,14 +193,41 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     public void onResume() {
         super.onResume();
         //downloadUserPic(false);
-        if (userPicBmp!=null){
+        if (userPicBmp != null) {
             userImage.setImageBitmap(userPicBmp);
         }
+
+        // get the bubble values and the user name
+        Bundle extras = new Bundle();
+        Intent intent = getActivity().getIntent();
+        extras = intent.getExtras();
+
+        if (extras != null) {
+            tvUserName.setText(extras.getString("name"));
+            balance.setText(extras.getString("balance"));
+            nOpenTasks.setText(extras.getString("nOpTasks"));
+            nReportedCases.setText(extras.getString("nRepCases"));
+            nConfirmedCases.setText(extras.getString("nConfCases"));
+            nCompletedTasks.setText(extras.getString("nCompCases"));
+            //Toast.makeText(getContext(),value , Toast.LENGTH_LONG).show();
+        }
+
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
+
+        // store current values (they will be set in onResume after switching tabs)
+        Bundle extras = new Bundle();
+        extras.putString("name", tvUserName.getText().toString());
+        extras.putString("balance", balance.getText().toString());
+        extras.putString("nOpTasks", nOpenTasks.getText().toString());
+        extras.putString("nRepCases", nReportedCases.getText().toString());
+        extras.putString("nConfCases", nConfirmedCases.getText().toString());
+        extras.putString("nCompCases", nCompletedTasks.getText().toString());
+
+        getActivity().getIntent().putExtras(extras);
     }
 
     @Override
@@ -220,15 +236,14 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         android.support.v4.app.FragmentTransaction fragmentTransaction;
         switch (view.getId()) {
             case R.id.userimage:
-                if (ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
                         Log.v(this.getClass().getName(), "request permission");
-                        ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},STORAGE_PERMISSION_REQUEST);
+                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_REQUEST);
 
-                    } else
-                    {
+                    } else {
                         Log.v(this.getClass().getName(), "request permission");
-                        ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},STORAGE_PERMISSION_REQUEST);
+                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_REQUEST);
                     }
                 } else {
                     Log.v(this.getClass().getName(), "show file chooser");
@@ -245,11 +260,11 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.reportACaseButton:
-                if (u != null){
-                    Log.i("User USERNAME IN START" , u.getId());
+                if (u != null) {
+                    Log.i("User USERNAME IN START", u.getId());
                     Intent intentReportCase = new Intent(getActivity(), ActivityReportCase.class);
                     intentReportCase.putExtra("USER", u);
-                    Log.i("I AM AFTER PUTEXTRA" , "IN REPORT A CASE");
+                    Log.i("I AM AFTER PUTEXTRA", "IN REPORT A CASE");
                     startActivity(intentReportCase);
                 } else {
                     FirebaseAuth.getInstance().signOut();
@@ -267,9 +282,25 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         }
     }
 
-/**
- * method to show file chooser for images
- */
+    /**
+     * Set bubble values in fragment start screen and the user name
+     *
+     * @param ds
+     */
+    private void setUserInfos(DataSnapshot ds) {
+        // name
+        tvUserName.setText(String.valueOf(ds.child("name").getValue()));
+        // get & set values for bubbles
+        balance.setText(String.valueOf(ds.child("balance").getValue()));
+        nOpenTasks.setText(String.valueOf(ds.child("numberOpenTasks").getValue()));
+        nConfirmedCases.setText(String.valueOf(ds.child("numberConfirmedCases").getValue()));
+        nReportedCases.setText(String.valueOf(ds.child("numberReportedCases").getValue()));
+        nCompletedTasks.setText(String.valueOf(ds.child("numberCompletedTasks").getValue()));
+    }
+
+    /**
+     * method to show file chooser for images
+     */
     private void showFileChooser() {
         Intent getimageintent = new Intent();
         getimageintent.setType("image/*");
@@ -292,10 +323,11 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
 
     /**
      * method to upload a profile picture via firebase if the firebaseUser is logged in
+     *
      * @param filePath Path of image on device storage
      */
     private void uploadFile(Uri filePath) {
-     //   FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        //   FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             /*String uid = null;
             //get UID to identify firebaseUser
@@ -356,6 +388,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     }
 
     //https://stackoverflow.com/questions/38017765/retrieving-child-value-firebase
+
     /**
      * method gets current firebaseUser profile picture fromk Firebase and shows it
      */
@@ -411,13 +444,12 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
             });
 
 
-    } else {
+        } else {
             userImage.setImageBitmap(userPicBmp);
             Log.v("No Download", "userPicBmp " + userPicBmp);
 
         }
-        }
-
+    }
 
 
     /*
@@ -426,13 +458,13 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.v(this.getClass().getName(), "show file chooser after giving permission");
-                    showFileChooser();
-                } else {
-                    Toast.makeText(getContext(), R.string.frStart_permissionNeeded, Toast.LENGTH_SHORT).show();
-                }
+        if (grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Log.v(this.getClass().getName(), "show file chooser after giving permission");
+            showFileChooser();
+        } else {
+            Toast.makeText(getContext(), R.string.frStart_permissionNeeded, Toast.LENGTH_SHORT).show();
+        }
     }
 
     /*
