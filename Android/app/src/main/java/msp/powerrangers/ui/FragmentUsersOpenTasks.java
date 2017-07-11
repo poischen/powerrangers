@@ -82,9 +82,6 @@ public class FragmentUsersOpenTasks extends Fragment {
         // will be filled with data
         usersOpenTasksListItem = new UsersOpenTasksListItem();
 
-        // test data
-        //List<UsersOpenTasksListItem> data = usersOpenTasksListItem.fill_with_data();
-
         // 3. Create an adapter
         mAdapter = new Recycler_View_Adapter(usersOpenTasksListItem.fill_with_data(), getContext());
 
