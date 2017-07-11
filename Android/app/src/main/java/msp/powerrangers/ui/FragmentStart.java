@@ -116,9 +116,11 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         return view;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         //Firebase stuff
         storageRef = FirebaseStorage.getInstance().getReference();
@@ -127,10 +129,8 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         //get current User Object
         Bundle bundle = getArguments();
         u = (User) bundle.getSerializable("USER");
-        Log.v("USER: ", u + "");
 
-
-        if (u == null){
+        if (u == null) {
             if (firebaseUser != null) {
                 //get user infos from database via users db id and instantiate User Object
                 SharedPreferences sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
@@ -151,11 +151,11 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
 
                             setUserInfos(dataSnapshot);
                             // create user object (user is registered)
-                            u = new User(dbId,userId, name, mail);
+                            u = new User(dbId, userId, name, mail);
                             // set user pic
                             downloadUserPic();
 
-                        } catch (Exception e){
+                        } catch (Exception e) {
                             Log.d("FragmentStart", "An error occured, user has to be signed out");
                             FirebaseAuth.getInstance().signOut();
                             android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -165,6 +165,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                             fragmentTransaction.commit();
                         }
                     }
+
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                         Toast.makeText(getContext(), getResources().getString(R.string.fStart_closeAppError), Toast.LENGTH_LONG).show();
@@ -195,11 +196,35 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         if (userPicBmp!=null){
             userImage.setImageBitmap(userPicBmp);
         }
+
+
+        Bundle extras = new Bundle();
+        Intent intent = getActivity().getIntent();
+        extras = intent.getExtras();
+
+        if (extras != null) {
+            balance.setText(extras.getString("balance"));
+            nOpenTasks.setText(extras.getString("nOpTasks"));
+            nReportedCases.setText(extras.getString("nRepCases"));
+            nConfirmedCases.setText(extras.getString("nConfCases"));
+            nCompletedTasks.setText(extras.getString("nCompCases"));
+            //Toast.makeText(getContext(),value , Toast.LENGTH_LONG).show();
+        }
+        
     }
 
     @Override
     public void onPause(){
         super.onPause();
+
+        Bundle extras = new Bundle();
+        extras.putString("balance", balance.getText().toString());
+        extras.putString("nOpTasks",nOpenTasks.getText().toString());
+        extras.putString("nRepCases",nReportedCases.getText().toString());
+        extras.putString("nConfCases",nConfirmedCases.getText().toString());
+        extras.putString("nCompCases",nCompletedTasks.getText().toString());
+
+        getActivity().getIntent().putExtras(extras);
     }
 
     @Override
