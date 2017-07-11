@@ -150,14 +150,14 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                             downloadUserPic();
 
                             // set the bubble values
-                            Log.i("NUMBERCOMPLETEDTASKS " , Integer.toString( u.getNumberCompletedTasks()));
+                            /*Log.i("NUMBERCOMPLETEDTASKS " , Integer.toString( u.getNumberCompletedTasks()));
                             u.setNumberCompletedTasks();
                             Log.i("NACH SET CTASKS " , Integer.toString( u.getNumberCompletedTasks()));
                             nCompletedTasks.setText("" +  Integer.toString( u.getNumberCompletedTasks()) );
                             nReportedCases.setText("" +  Integer.toString( u.getNumberReportedCases()) );
                             nConfirmedCases.setText("" +  Integer.toString( u.getNumberConfirmedCases() ));
                             nOpenTasks.setText("" +  Integer.toString( u.getNumberOpenTasks() ));
-                            // TODO set balance
+                            // TODO set balance*/
 
                         } catch (Exception e){
                             Log.d("FragmentStart", "An error occured, user has to be signed out");
@@ -184,13 +184,13 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         } else {
 
             // set the bubble values
-            Log.i("uNUMBERCOMPLETEDTASKS " , Integer.toString( u.getNumberCompletedTasks()));
+            /*Log.i("uNUMBERCOMPLETEDTASKS " , Integer.toString( u.getNumberCompletedTasks()));
             u.setNumberCompletedTasks();
             Log.i("uNACH SET CTASKS " , Integer.toString( u.getNumberCompletedTasks()));
             nCompletedTasks.setText("" +  Integer.toString( u.getNumberCompletedTasks()) );
             nReportedCases.setText("" +  Integer.toString( u.getNumberReportedCases()) );
             nConfirmedCases.setText("" +  Integer.toString( u.getNumberConfirmedCases() ));
-            nOpenTasks.setText("" +  Integer.toString( u.getNumberOpenTasks() ));
+            nOpenTasks.setText("" +  Integer.toString( u.getNumberOpenTasks() ));*/
         }
     }
 

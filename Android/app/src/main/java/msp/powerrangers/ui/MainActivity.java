@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import msp.powerrangers.R;
+import msp.powerrangers.logic.User;
 import msp.powerrangers.ui.listitems.UsersOpenTasksListItem;
 
 
@@ -17,6 +18,7 @@ public class MainActivity extends FragmentActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authListener;
     private FirebaseUser currentUser = null;
+    private User user;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -70,6 +72,14 @@ public class MainActivity extends FragmentActivity {
     protected void onSaveInstanceState(Bundle outState) {
         outState.putString("WORKAROUND_FOR_BUG_19917_KEY", "WORKAROUND_FOR_BUG_19917_VALUE");
         super.onSaveInstanceState(outState);
+    }
+
+    public void setUser(User user){
+        this.user = user;
+    }
+
+    public User getUser(){
+        return user;
     }
 
 }
