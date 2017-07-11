@@ -78,7 +78,6 @@
                     android:id="@+id/numberBalance"
                     android:layout_height="60dp"
                     android:layout_width="60dp"
-                    android:text="42 €"
                     android:textColor="@color/colorWhite"
                     android:textSize="20sp"
                     android:background="@drawable/startcircle"

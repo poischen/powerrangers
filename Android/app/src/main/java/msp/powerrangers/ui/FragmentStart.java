@@ -67,6 +67,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     Bitmap userPicBmp;
 
     // bubbles to update
+    TextView balance;
     TextView nOpenTasks;
     TextView nReportedCases;
     TextView nConfirmedCases;
@@ -93,7 +94,6 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         logoutButton.setOnClickListener(this);
         // display user name
         tvUserName = (TextView) view.findViewById(R.id.textViewUserName);
-        tvUserName.setText(firebaseUser.getDisplayName());
 
         //interactive elements
         userImage = (CircleImageView) view.findViewById(R.id.userimage);
@@ -102,6 +102,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         nOpenTasks.setOnClickListener(this);
 
         // bubbles to update
+        balance = (TextView) view.findViewById(R.id.numberBalance);
         nReportedCases = (TextView) view.findViewById(R.id.numberReportedCases);
         nConfirmedCases = (TextView) view.findViewById(R.id.numberConfirmedCases);
         nCompletedTasks = (TextView) view.findViewById(R.id.numberCompletedTasks);
@@ -128,36 +129,31 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         u = (User) bundle.getSerializable("USER");
         Log.v("USER: ", u + "");
 
+
         if (u == null){
             if (firebaseUser != null) {
                 //get user infos from database via users db id and instantiate User Object
                 SharedPreferences sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
                 final String userDbID = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
-
                 DatabaseReference db = FirebaseDatabase.getInstance().getReference();
                 DatabaseReference refPath = db.child("users").child(userDbID);
-                refPath.addListenerForSingleValueEvent(new ValueEventListener() {
+                refPath.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         try {
+
                             User userInfo = dataSnapshot.getValue(User.class);
                             String name = userInfo.getName();
+                            tvUserName.setText(name);
                             String dbId = userInfo.getDbId();
                             String userId = userInfo.getId();
                             String mail = userInfo.getEmail();
+
+                            setUserInfos(dataSnapshot);
+                            // create user object (user is registered)
                             u = new User(dbId,userId, name, mail);
-
+                            // set user pic
                             downloadUserPic();
-
-                            // set the bubble values
-                            Log.i("NUMBERCOMPLETEDTASKS " , Integer.toString( u.getNumberCompletedTasks()));
-                            u.setNumberCompletedTasks();
-                            Log.i("NACH SET CTASKS " , Integer.toString( u.getNumberCompletedTasks()));
-                            nCompletedTasks.setText("" +  Integer.toString( u.getNumberCompletedTasks()) );
-                            nReportedCases.setText("" +  Integer.toString( u.getNumberReportedCases()) );
-                            nConfirmedCases.setText("" +  Integer.toString( u.getNumberConfirmedCases() ));
-                            nOpenTasks.setText("" +  Integer.toString( u.getNumberOpenTasks() ));
-                            // TODO set balance
 
                         } catch (Exception e){
                             Log.d("FragmentStart", "An error occured, user has to be signed out");
@@ -181,17 +177,9 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                 Toast.makeText(getContext(), getResources().getString(R.string.fStart_closeAppError), Toast.LENGTH_LONG).show();
                 getActivity().finish();
             }
-        } else {
 
-            // set the bubble values
-            Log.i("uNUMBERCOMPLETEDTASKS " , Integer.toString( u.getNumberCompletedTasks()));
-            u.setNumberCompletedTasks();
-            Log.i("uNACH SET CTASKS " , Integer.toString( u.getNumberCompletedTasks()));
-            nCompletedTasks.setText("" +  Integer.toString( u.getNumberCompletedTasks()) );
-            nReportedCases.setText("" +  Integer.toString( u.getNumberReportedCases()) );
-            nConfirmedCases.setText("" +  Integer.toString( u.getNumberConfirmedCases() ));
-            nOpenTasks.setText("" +  Integer.toString( u.getNumberOpenTasks() ));
         }
+
     }
 
     @Override
@@ -267,9 +255,29 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         }
     }
 
-/**
- * method to show file chooser for images
- */
+    /**
+     * Set bubble values in fragment start screen
+     * @param ds
+     */
+    private void setUserInfos(DataSnapshot ds) {
+        // get values for bubbles
+        String earned = String.valueOf(ds.child("balance").getValue());
+        String nOpTasks = String.valueOf(ds.child("numberOpenTasks").getValue());
+        String nConfCases = String.valueOf(ds.child("numberConfirmedCases").getValue());
+        String nRepCases = String.valueOf(ds.child("numberReportedCases").getValue());
+        String nComplTasks = String.valueOf(ds.child("numberCompletedTasks").getValue());
+
+        // set values for bubbles
+        balance.setText(earned);
+        nOpenTasks.setText(nOpTasks);
+        nConfirmedCases.setText(nConfCases);
+        nReportedCases.setText(nRepCases);
+        nCompletedTasks.setText(nComplTasks);
+    }
+
+    /**
+    * method to show file chooser for images
+    */
     private void showFileChooser() {
         Intent getimageintent = new Intent();
         getimageintent.setType("image/*");
