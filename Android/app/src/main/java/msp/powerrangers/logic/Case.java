@@ -16,16 +16,16 @@ public class Case {
     private String comment;
     private boolean isConfirmed;
     List<Task> relatedTasks;
-    private String detectiveID;
-    private String confirmerID;
+    private String detectiveId;
+    private String confirmerId;
 
 
 
-    public Case(String dbId, String detectiveID, String caseId, String name, String city, String country,
+    public Case(String dbId, String detectiveId, String caseId, String name, String city, String country,
                 int scale, int areaX, int areaY, List<String> pictureURLs,
                 String comment){
         this.dbId = dbId;
-        this.detectiveID = detectiveID;
+        this.detectiveId = detectiveId;
         this.name = name;
         this.caseId = caseId;
         this.city = city;
@@ -48,9 +48,9 @@ public class Case {
         return dbId;
     }
 
-    public String getDetectiveID() { return detectiveID; }
+    public String getDetectiveID() { return detectiveId; }
 
-    public String getConfirmerID() { return confirmerID; }
+    public String getConfirmerID() { return confirmerId; }
 
     public String getName() {
         return name;

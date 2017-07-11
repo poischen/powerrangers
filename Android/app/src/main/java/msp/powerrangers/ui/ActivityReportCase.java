@@ -206,7 +206,9 @@ public class ActivityReportCase extends AppCompatActivity {
                     casePictures = uploadFiles(caseId, pictureUrisList);
 
                     //Create Case
-                    c = new Case(dbId, us.getId(), caseId,
+                    c = new Case(dbId,
+                            us.getDbId(),
+                            caseId,
                             caseTitle,
                             caseCity,
                             caseCountry,
@@ -222,12 +224,9 @@ public class ActivityReportCase extends AppCompatActivity {
                     dbRefCases.child(dbId).setValue(c);
 
                     Detective detective = new Detective(us, caseId);
-                    // TODO: add case id in function!!!!! [Julia]
+
                     us.addCaseIDToReportedCases(caseId);
-                    Log.i("ES IST PASSIERT" , Integer.toString(us.getNumberReportedCases()));
-
                     Toast.makeText(getApplicationContext(), R.string.reportCaseSuccess, Toast.LENGTH_LONG).show();
-
                     finish();
 
                 } else {
@@ -325,7 +324,7 @@ public class ActivityReportCase extends AppCompatActivity {
                 storageAndDBPath = "images/cases/" + caseID + "/" + i + ".jpg";
             }
 
-            Toast.makeText(getApplicationContext(), R.string.uploadPicture, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.uploadPicture, Toast.LENGTH_SHORT).show();
 
 
             //write path from storage into list for case-db
