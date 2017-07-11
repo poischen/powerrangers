@@ -1,9 +1,9 @@
 package msp.powerrangers.logic;
 
 public class Ranger extends RoleForwarding{
-    int taskId;
+    String taskId;
 
-    public Ranger(User user, int taskId){
+    public Ranger(User user, String taskId){
         this.user = user;
         this.taskId = taskId;
 

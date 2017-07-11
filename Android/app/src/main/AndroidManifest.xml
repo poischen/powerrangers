@@ -12,25 +12,33 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:manageSpaceActivity=".ui.MainActivity" >
-        <activity android:name=".ui.MainActivity">
+        <activity android:name=".ui.MainActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.ActivityDonate" />
+        <activity android:name=".ui.ActivityDonate"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.ActivityReportCase"
             android:label="@string/reportCaseActivityTitle"
-            android:parentActivityName=".ui.MainActivity" />
+            android:parentActivityName=".ui.MainActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value=".ui.MainActivity" />
         <activity
             android:name=".ui.ActivityDetailContainer"
             android:label="@string/title_activity_detail_container"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

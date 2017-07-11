@@ -24,7 +24,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import msp.powerrangers.R;
 import msp.powerrangers.logic.User;
-
 /** Login screen, where a firebaseUser can fLogin_Register or login via his email
  * Auth via Firebase
  */
@@ -37,9 +36,7 @@ public class FragmentLogin extends Fragment {
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
     private User user;
-
     private boolean wantsUserToRegister;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,7 +54,6 @@ public class FragmentLogin extends Fragment {
         progressDialog = new ProgressDialog(getContext());
         //set flag to decive if the view shall show the option to register or to signin
         wantsUserToRegister = true;
-
         /*set OnClick Listener on Button for registering unregistered users via email or sign in registered users
          * A firebaseUser can only fLogin_Register, if he enters his mailaddress, a password, and a name (analog sign in only with both mailadress and password)
          */
@@ -90,7 +86,6 @@ public class FragmentLogin extends Fragment {
                 }
             }
         });
-
         /* set OnClick Listener on TextView for sign in via email
          * firebaseUser can only sign in, if he enters both his mailaddress and a password
          */
@@ -141,14 +136,11 @@ public class FragmentLogin extends Fragment {
                                             }
                                         });
                             }
-
-
                             //write firebaseUser into the database
                             //Tutorial for database: http://www.androidhive.info/2016/10/android-working-with-firebase-realtime-database/
                             DatabaseReference database = FirebaseDatabase.getInstance().getReference("users");
                             String dbId = database.push().getKey();
                             String userId = currentuser.getUid();
-
                             //save users db key in shared preferances
                             SharedPreferences sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
                             SharedPreferences.Editor editor = sharedPrefs.edit();
@@ -159,28 +151,20 @@ public class FragmentLogin extends Fragment {
                             // pushing firebaseUser to 'users' node using the userId
                             database.child(dbId).setValue(user);
                             Log.i("THE USER ID" , user.getId());
-
                             Log.i("The USER" , user.toString());
-
                             //switch to Start
-
                             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                             FragmentStart fragmentStart = new FragmentStart();
-
-
                             Bundle bundles = new Bundle();
-
                             if (user != null){
                                 bundles.putSerializable("USER" , user);
                                 Log.i("USER" , "IS NOT NULL");
                             } else {
                                 Log.i("USER" , "IS NULL");
                             }
-
                             fragmentStart.setArguments(bundles);
                             getActivity().getSupportFragmentManager().beginTransaction().add(R.id.activity_main_fragment_container, fragmentStart).commit();
-
                         } else {
                             Toast.makeText(getActivity(), "Noooooooo! Try again!", Toast.LENGTH_SHORT).show();
                         }

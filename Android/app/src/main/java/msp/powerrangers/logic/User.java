@@ -1,5 +1,10 @@
 package msp.powerrangers.logic;
 
+import android.util.Log;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +49,7 @@ public class User extends Role implements Serializable  {
         openTasksIdList.add("DummyID");
 
         roleList = new ArrayList<Role>();
+
     }
 
 
@@ -77,7 +83,7 @@ public class User extends Role implements Serializable  {
     }
 
     public int getNumberCompletedTasks() {
-        return completedTasksIdList.size() -1;
+        return completedTasksIdList.size()-1;
     }
 
     public void setNumberCompletedTasks(){
