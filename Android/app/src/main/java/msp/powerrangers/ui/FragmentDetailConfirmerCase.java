@@ -156,10 +156,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
         // fill in information from detective case in EditTexts
         dbRefCases = FirebaseDatabase.getInstance().getReference("cases");
 
-        // get attributes from a case
-        // final String dbId = dbRefCases.push().getKey();
-
-        //dbRefCases.addListenerForSingleValueEvent(
+        // get attributes from a case as default values to edit
         dbRefCases.addValueEventListener(
                 new ValueEventListener() {
                     @Override
@@ -180,7 +177,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
                         String caseYCoord = String.valueOf(singleSnapshot.child("areaY").getValue());
                         String caseScale = String.valueOf(singleSnapshot.child("scale").getValue());
 
-                        //get cases picture urls from db, download pictures from stroage and show them
+                        //get cases picture urls from db, download pictures from storage and show them
                         Iterator<DataSnapshot> dsPictureURLs = singleSnapshot.child("pictureURL").getChildren().iterator();
                         Log.v("DetailConfirmerCase", "dsPictureURLS: " + dsPictureURLs);
 
@@ -192,7 +189,8 @@ public class FragmentDetailConfirmerCase extends Fragment {
                             String url = dataSnapshotChild.getValue(String.class);
                             pictureURLs.add(url);
 
-                            try {final File localFile = File.createTempFile("images", "jpg");
+                            try {
+                                final File localFile = File.createTempFile("images", "jpg");
                                 StorageReference riversRef = storageRef.child(url);
                                 riversRef.getFile(localFile)
                                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
@@ -304,7 +302,6 @@ public class FragmentDetailConfirmerCase extends Fragment {
 
                                 DataSnapshot singleSnapshot = (DataSnapshot) iter.next();
 
-
                                 // fill in new values
                                 singleSnapshot.child("name").getRef().setValue(editTextConfirmCaseTitle.getText().toString());
                                 singleSnapshot.child("city").getRef().setValue(editTextConfirmCaseCity.getText().toString());
@@ -315,8 +312,6 @@ public class FragmentDetailConfirmerCase extends Fragment {
                                 singleSnapshot.child("scale").getRef().setValue(getScaleValue(radioButtonConfirmCaseLow, radioButtonConfirmCaseMiddle, radioButtonConfirmCaseHigh));
                                 singleSnapshot.child("confirmed").getRef().setValue(true);
 
-
-
                             }
 
                             @Override
@@ -324,29 +319,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
 
                             }
                         });
-
-
-                ///TODO: update Confirmed Cases Bubble on Start
-                //TextView confirmedCases = (TextView) view.findViewById(R.id.numberConfirmedCases);
-
-                // int n = Integer.parseInt(confirmedCases.getText().toString());
-                //Toast.makeText(getActivity(), "cases: "+confirmedCases.getText(), Toast.LENGTH_SHORT).show();
-                //n++;
-
-                View startView = new View(getActivity());
-                startView = inflater.inflate(R.layout.fragment_start, container, false);
-
-                if (startView == null) {
-                    Toast.makeText(getActivity(), "fucked up", Toast.LENGTH_SHORT).show();
-                }
-
-                TextView confirmedCases = (TextView) startView.findViewById(R.id.numberConfirmedCases);
-                int nCases = Integer.parseInt(confirmedCases.getText().toString());
-                // Toast.makeText(getActivity(), "cases: "+txt, Toast.LENGTH_SHORT).show();
-                nCases++;
-                // TODO: write the incremented value in the db (user)
-                // TODO: all bubble values should be added to user!
-                // -->  by clicking on the fragment start the values should be pulled and inserted!
+                
 
                 // go back to FragmentStart
                 Intent i = new Intent(getActivity(), MainActivity.class);
