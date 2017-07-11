@@ -1,18 +1,33 @@
 package msp.powerrangers.ui;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,7 +44,8 @@ public class FragmentConfirmerCases extends Fragment {
     protected RecyclerView mRecyclerView;
     protected RecyclerView.LayoutManager mLayoutManager;
     protected Recycler_View_Adapter mAdapter;
-    private ConfirmerCasesListItem  casesListItem;
+    private ConfirmerCasesListItem casesListItem;
+    private StorageReference storageRef;
 
 
     /**
@@ -42,6 +58,7 @@ public class FragmentConfirmerCases extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        storageRef = FirebaseStorage.getInstance().getReference();
 
 
     }
@@ -55,8 +72,9 @@ public class FragmentConfirmerCases extends Fragment {
         // 1. Get a reference to recyclerView & set the onClickListener
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewCC);
         mRecyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getContext(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
+                new RecyclerItemClickListener(getContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
                         // switch to FragmentDetailConfirmerCase
                         FragmentDetailConfirmerCase confirmCaseFragment = new FragmentDetailConfirmerCase();
                         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
@@ -70,7 +88,8 @@ public class FragmentConfirmerCases extends Fragment {
                         ft.commit();
                     }
 
-                    @Override public void onLongItemClick(View view, int position) {
+                    @Override
+                    public void onLongItemClick(View view, int position) {
                         // TODO: do whatever
                     }
                 })
@@ -98,7 +117,6 @@ public class FragmentConfirmerCases extends Fragment {
      * ##################################################################################################################
      * ################################        RecyclerViewAdapter       ################################################
      * ##################################################################################################################
-     *
      */
     private class Recycler_View_Adapter extends RecyclerView.Adapter<View_Holder> {
 
@@ -124,9 +142,35 @@ public class FragmentConfirmerCases extends Fragment {
         public void onBindViewHolder(final View_Holder holder, int position) {
             //Use the provided View Holder on the onCreateViewHolder method to populate the current row on the RecyclerView
             holder.title.setText(listItem.get(position).title);
-            holder.location.setText(listItem.get(position).city + ", "+listItem.get(position).country);
+            holder.location.setText(listItem.get(position).city + ", " + listItem.get(position).country);
             holder.comment.setText(listItem.get(position).comment);
-            holder.image.setImageResource(listItem.get(position).imageId);
+
+            String imageURL = listItem.get(position).imageUrlDB;
+            Log.v("FragmentConfirmerCases", "imageURL: " + imageURL);
+
+            try {
+                final File localFile = File.createTempFile("images", "jpg");
+                StorageReference riversRef = storageRef.child(imageURL);
+                riversRef.getFile(localFile)
+                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                Log.v("FragmentConfirmerCases", "download erfolgreich");
+                                Bitmap caseImage = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                holder.image.setImageBitmap(caseImage);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Log.d("FragmentConfirmerCases", "download nicht erfolgreich");
+                        holder.image.setImageResource(R.drawable.placeholder_case);
+                    }
+                });
+            } catch (Exception e) {
+                Log.d("FragmentConfirmerCases", "download nicht erfolgreich");
+                holder.image.setImageResource(R.drawable.placeholder_case);
+
+            }
         }
 
         @Override
@@ -158,13 +202,12 @@ public class FragmentConfirmerCases extends Fragment {
      * ##################################################################################################################
      * ###################################        VIEW HOLDER         ###################################################
      * ##################################################################################################################
-     *
+     * <p>
      * The RecyclerView uses a ViewHolder to store the references to the relevant views for one entry in the RecyclerView.
      * This solution avoids all the findViewById() method calls in the adapter to find the views to be filled with data.
-     *
+     * <p>
      * ##################################################################################################################
      * ##################################################################################################################
-     *
      */
     private class View_Holder extends RecyclerView.ViewHolder {
 

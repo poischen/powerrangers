@@ -26,22 +26,23 @@ public class ConfirmerCasesListItem {
     public String country;
     public String comment;
     public int imageId;
+    public String imageUrlDB;
 
     String titleDB;
     String cityDB;
     String countryDB;
     String commentDB;
-    int imageIdDB;
+
 
     List<ConfirmerCasesListItem> data = new ArrayList<>();
     private DatabaseReference dbRefCases;
 
-    public ConfirmerCasesListItem(String title, String city, String country, String comment, int imageId) {
+    public ConfirmerCasesListItem(String title, String city, String country, String comment, String imageURL) {
         this.title = title;
         this.city = city;
         this.country = country;
         this.comment = comment;
-        this.imageId = imageId;
+        this.imageUrlDB = imageURL;
     }
 
     public ConfirmerCasesListItem() {
@@ -52,7 +53,6 @@ public class ConfirmerCasesListItem {
      * Generates Confirmer Cases Objects for RecyclerView's adapter.
      */
     public List<ConfirmerCasesListItem> fill_with_data() {
-
         // get the reference to the db cases
         dbRefCases = FirebaseDatabase.getInstance().getReference("cases");
 
@@ -63,17 +63,13 @@ public class ConfirmerCasesListItem {
                 // get data for each case from the db
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
 
-                        titleDB = (String) singleSnapshot.child("name").getValue();
-                        cityDB = (String) singleSnapshot.child("city").getValue();
-                        countryDB = (String) singleSnapshot.child("country").getValue();
-                        commentDB = (String) singleSnapshot.child("comment").getValue();
-                        imageIdDB = R.drawable.placeholder_case;
-                        // TODO: get first image for case from db
-                       // imageIdDB = (String) singleSnapshot.child("pictureURL").child("0").getValue();
-                        data.add(new ConfirmerCasesListItem(titleDB,cityDB, countryDB, commentDB, imageIdDB));
-
+                    titleDB = (String) singleSnapshot.child("name").getValue();
+                    cityDB = (String) singleSnapshot.child("city").getValue();
+                    countryDB = (String) singleSnapshot.child("country").getValue();
+                    commentDB = (String) singleSnapshot.child("comment").getValue();
+                    imageUrlDB = (String) singleSnapshot.child("pictureURL").child("0").getValue();
+                    data.add(new ConfirmerCasesListItem(titleDB, cityDB, countryDB, commentDB, imageUrlDB));
                 }
-
             }
 
             @Override
@@ -88,6 +84,7 @@ public class ConfirmerCasesListItem {
         data.add(new ConfirmerCasesListItem("Colombo, Sri Lanka", "Summary of the case in Colombo...", R.drawable.placeholder_case));
 
         */
+
         return data;
     }
 

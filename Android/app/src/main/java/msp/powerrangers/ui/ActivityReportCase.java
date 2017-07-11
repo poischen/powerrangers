@@ -1,5 +1,6 @@
 package msp.powerrangers.ui;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.Context;
@@ -60,7 +61,7 @@ public class ActivityReportCase extends AppCompatActivity {
 
     // TODO: set all fields in res to requiered!
     // text Views
-    private TextView textViewCaseTitle;
+    /*private TextView textViewCaseTitle;
     private TextView textViewCaseCity;
     private TextView textViewCaseCountry;
     private TextView textViewCaseScala;
@@ -69,7 +70,7 @@ public class ActivityReportCase extends AppCompatActivity {
     private TextView textViewCaseYCoordinate;
     private TextView textViewCasePicture;
     private TextView textViewCaseInformation;
-    private TextView textViewUploadedPictures;
+    private TextView textViewUploadedPictures;*/
 
     // edit Texts
     private EditText editTextCaseTitle;
@@ -110,6 +111,7 @@ public class ActivityReportCase extends AppCompatActivity {
     private List<Uri> pictureUrisList;
     private List<Bitmap> pictureBitmapList;
     List<String> casePictures;
+    boolean isDefaultPic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,9 +121,10 @@ public class ActivityReportCase extends AppCompatActivity {
         //stuff for pic upload
         pictureUrisList = new ArrayList<>();
         pictureBitmapList = new ArrayList<>();
-        Bitmap defaultPic = BitmapFactory.decodeResource(getResources(), R.drawable.nopicyet);
-        pictureBitmapList.add(defaultPic);
+        //Bitmap defaultPic = BitmapFactory.decodeResource(getResources(), R.drawable.nopicyet);
+        //pictureBitmapList.add(defaultPic);
         casePictures = new ArrayList<>();
+        isDefaultPic = true;
 
         //Firebase stuff
         storageRef = FirebaseStorage.getInstance().getReference();
@@ -133,7 +136,7 @@ public class ActivityReportCase extends AppCompatActivity {
         us = (User) myIntent.getSerializableExtra("USER");
 
         // find UI elements
-        textViewCaseTitle = (TextView) findViewById(R.id.textViewCaseTitle);
+        /*textViewCaseTitle = (TextView) findViewById(R.id.textViewCaseTitle);
         textViewCaseCity = (TextView) findViewById(R.id.textViewCaseCity);
         textViewCaseCountry = (TextView) findViewById(R.id.textViewCaseCountry);
         textViewCaseScala = (TextView) findViewById(R.id.textViewCaseScala);
@@ -142,7 +145,7 @@ public class ActivityReportCase extends AppCompatActivity {
         textViewCaseYCoordinate = (TextView) findViewById(R.id.textViewCaseYCoordinate);
         textViewCasePicture = (TextView) findViewById(R.id.textViewCasePicture);
         textViewCaseInformation = (TextView) findViewById(R.id.textViewCaseInformation);
-        textViewUploadedPictures = (TextView) findViewById(R.id.textViewUploadedPictures);
+        textViewUploadedPictures = (TextView) findViewById(R.id.textViewUploadedPictures);*/
         editTextCaseTitle = (EditText) findViewById(R.id.editTextCaseTitle);
         editTextCaseCity = (EditText) findViewById(R.id.editTextCaseCity);
         editTextCaseCountry = (EditText) findViewById(R.id.editTextCaseCountry);
@@ -156,7 +159,7 @@ public class ActivityReportCase extends AppCompatActivity {
         //imageViewUploadedPicture = (ImageView) findViewById(R.id.imageViewUploadedPicture);
         buttonCaseReport = (Button) findViewById(R.id.buttonCaseReport);
         viewPager = (ViewPager) findViewById(R.id.aReportCaseViewPager);
-        ImageAdapter adapter = new ImageAdapter(this);
+        ActivityReportCase.ImageAdapter adapter = new ActivityReportCase.ImageAdapter(this);
         viewPager.setAdapter(adapter);
 
         // add action bar going back to parent
@@ -168,6 +171,12 @@ public class ActivityReportCase extends AppCompatActivity {
         imageButtonUploadPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                /*if (isDefaultPic){
+                    isDefaultPic = false;
+                    pictureBitmapList.clear();
+                    updateImageViews();
+                }*/
                 showFileChooser();
             }
         });
@@ -270,7 +279,6 @@ public class ActivityReportCase extends AppCompatActivity {
                 Uri uri = data.getData();
                 pictureUrisList.add(uri);
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-                pictureBitmapList.clear();
                 pictureBitmapList.add(bitmap);
                 viewPager.getAdapter().notifyDataSetChanged();
 
@@ -282,10 +290,8 @@ public class ActivityReportCase extends AppCompatActivity {
         if (requestCode == CHOOSE_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getClipData() != null) {
             ClipData clipData = data.getClipData();
             if (clipData != null) {
-                pictureBitmapList.clear();
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);
-
                     try {
                         Uri uri = item.getUri();
                         pictureUrisList.add(uri);
@@ -354,6 +360,9 @@ public class ActivityReportCase extends AppCompatActivity {
         return storageUrls;
     }
 
+    public void updateImageViews(){
+        viewPager.getAdapter().notifyDataSetChanged();
+    }
 
     /*
     Method to get the picturename of the file from the filechooser
@@ -392,7 +401,7 @@ public class ActivityReportCase extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return pictureUrisList.size();
+            return pictureBitmapList.size();
         }
 
         @Override
