@@ -155,6 +155,7 @@ exports.createTasks = functions.database.ref('/cases/{caseId}/confirmed')
             return Promise.all([areaX, areaY, city, country, comment, title, scale, caseId, casePictureList, userId]).then(results => {
               // Get list of pictures assigned to a case and remove the first one (main case picture)
               const casePictureList = results[8].val();
+              const casePicture = casePictureList[0];
               casepictureList = casePictureList.shift();
               console.log("Pictures: ", casePictureList);
               // Calculate Number of rangers needed
@@ -185,7 +186,7 @@ exports.createTasks = functions.database.ref('/cases/{caseId}/confirmed')
                 casePictureList.forEach(function(uri, index) {
                   var taskRef = event.data.adminRef.root.child('tasks/').push();
                   var taskDbId = taskRef.key;
-                  return taskRef.set({taskDbId: taskDbId, taskId: taskId, city: city, country: country, comment: comment, reward: ranger_reward, scale: scale, pictureUri: uri, caseId: id, taskCompleted: false});
+                  return taskRef.set({taskDbId: taskDbId, taskId: taskId, city: city, country: country, comment: comment, reward: ranger_reward, scale: scale, taskPicture: uri, casePicture: casePicture, caseId: id, taskCompleted: false});
                 });
 
                 /*

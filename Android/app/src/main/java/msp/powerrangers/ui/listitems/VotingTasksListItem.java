@@ -34,7 +34,6 @@ public class VotingTasksListItem {
     List<VotingTasksListItem> data = new ArrayList<>();
     private DatabaseReference dbRefTasks;
 
-
     public VotingTasksListItem(String title, String location, int imageID1, int imageID2) {
         this.title = title;
         this.location = location;
@@ -81,6 +80,7 @@ public class VotingTasksListItem {
         //Log.i("Data", "This is the data: " + data);
 
         return data;
+
     }
 
 
