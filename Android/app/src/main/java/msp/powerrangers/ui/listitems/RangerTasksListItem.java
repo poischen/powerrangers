@@ -52,8 +52,7 @@ public class RangerTasksListItem {
 
         // get the reference to the db cases
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
-
-        dbRefTasks.addListenerForSingleValueEvent(new ValueEventListener() {
+        dbRefTasks.orderByChild("assigned").equalTo(false).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
