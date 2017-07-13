@@ -29,10 +29,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -49,7 +51,6 @@ import msp.powerrangers.logic.Case;
 import msp.powerrangers.logic.Detective;
 import msp.powerrangers.logic.User;
 
-import static java.security.AccessController.getContext;
 
 public class ActivityReportCase extends AppCompatActivity {
 
@@ -248,6 +249,23 @@ public class ActivityReportCase extends AppCompatActivity {
 
                     // write case to in database cases
                     dbRefCases.child(dbId).setValue(c);
+
+                    // update user balance
+                    dbRefUsers.child(us.getDbId()).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            long currentBalance = (long) dataSnapshot.child("balance").getValue();
+                            dataSnapshot.getRef().child("balance").setValue(currentBalance + 5);
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
 
                     Detective detective = new Detective(us, caseId);
                     // us.addCaseIDToReportedCases(caseId);

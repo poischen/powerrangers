@@ -56,7 +56,7 @@ public class ConfirmerCasesListItem {
         // get the reference to the db cases
         dbRefCases = FirebaseDatabase.getInstance().getReference("cases");
 
-        dbRefCases.addValueEventListener(new ValueEventListener() {
+        dbRefCases.orderByChild("confirmed").equalTo(false).addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
