@@ -255,9 +255,7 @@ public class ActivityReportCase extends AppCompatActivity {
 
                             long currentBalance = (long) dataSnapshot.child("balance").getValue();
                             dataSnapshot.getRef().child("balance").setValue(currentBalance + rewardForCase);
-
                         }
-
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
 
