@@ -74,6 +74,7 @@
     <string name="detailConfirmerCaseFragmentTitle">Confirm case</string>
     <string name="detailConfirmerCaseCaseTitle">Confirm a case</string>
     <string name="detailConfirmerCaseConfirmButton">Confirm this case</string>
+   <string name="detailConfirmerCaseDectiveError">Sorry, you can\'t confirm your own case! </string>
 
 
   <!-- FragmentRangerTasks & DetailRangerTask-->

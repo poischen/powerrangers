@@ -207,6 +207,7 @@ public class FragmentDetailRangerTask extends Fragment {
                         // Create a new Ranger and fill additional information in the DB Tasks
                         Ranger ranger = new Ranger(userInfo, taskID);
                         dbRefTasks.child(taskDBId).child("rangerID").setValue(ranger.getId());
+                        dbRefTasks.child(taskDBId).child("assigned").setValue(true);
 
                         // update the number of rangers open tasks
                         int newCount = Integer.valueOf(currentCount) + 1;

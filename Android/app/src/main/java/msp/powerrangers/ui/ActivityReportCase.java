@@ -1,18 +1,14 @@
 package msp.powerrangers.ui;
 
-import android.app.Activity;
-import android.content.BroadcastReceiver;
+
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -27,22 +23,24 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +50,7 @@ import msp.powerrangers.R;
 import msp.powerrangers.logic.Case;
 import msp.powerrangers.logic.Detective;
 import msp.powerrangers.logic.User;
+
 
 public class ActivityReportCase extends AppCompatActivity {
 
@@ -99,12 +98,19 @@ public class ActivityReportCase extends AppCompatActivity {
     // firebase db instances
     private DatabaseReference dbRefCases;
     private DatabaseReference dbRefUsers;
+    private DatabaseReference refPathCurrentUser;
+
+    // current values of user
+    String currentCount;
+    //String currentBalance;
+    int rewardForCase;
 
 
     // current firebaseUser
     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
     private User us;
+    String userDbId;
 
     private Case c;
 
@@ -134,6 +140,27 @@ public class ActivityReportCase extends AppCompatActivity {
         //get current User Object from Intent
         Intent myIntent = getIntent();
         us = (User) myIntent.getSerializableExtra("USER");
+
+        userDbId = us.getDbId();
+        refPathCurrentUser = FirebaseDatabase.getInstance().getReference().child("users").child(userDbId);
+
+        // get the current count of the reported cases
+        refPathCurrentUser.addValueEventListener(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        currentCount = String.valueOf(dataSnapshot.child("numberReportedCases").getValue());
+                        //currentBalance = String.valueOf(dataSnapshot.child("balance").getValue());
+                        //Log.i("KATJA", "currentBalance "+currentBalance);
+                        Log.i("KATJA", "nReportedCases "+currentCount);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
 
         // find UI elements
         /*textViewCaseTitle = (TextView) findViewById(R.id.textViewCaseTitle);
@@ -206,7 +233,9 @@ public class ActivityReportCase extends AppCompatActivity {
                     casePictures = uploadFiles(caseId, pictureUrisList);
 
                     //Create Case
-                    c = new Case(dbId, us.getId(), caseId,
+                    c = new Case(dbId,
+                            us.getDbId(),
+                            caseId,
                             caseTitle,
                             caseCity,
                             caseCountry,
@@ -221,13 +250,38 @@ public class ActivityReportCase extends AppCompatActivity {
                     // write case to in database cases
                     dbRefCases.child(dbId).setValue(c);
 
+                    // update user balance
+                    dbRefUsers.child(us.getDbId()).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            long currentBalance = (long) dataSnapshot.child("balance").getValue();
+                            dataSnapshot.getRef().child("balance").setValue(currentBalance + 5);
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
                     Detective detective = new Detective(us, caseId);
-                    // TODO: add case id in function!!!!! [Julia]
-                    us.addCaseIDToReportedCases(caseId);
-                    Log.i("ES IST PASSIERT" , Integer.toString(us.getNumberReportedCases()));
+                    // us.addCaseIDToReportedCases(caseId);
+
+                    // increment the numberConfirmedCases Bubble
+                    int newCount = Integer.valueOf(currentCount) + 1;
+                    //Log.i("KATJA","newCount:"+newCount);
+                    // set reward
+                    // rewardForCase = detective.getRewardPerCase();
+                    //currentBalance = String.valueOf(Integer.valueOf(currentBalance) + rewardForCase);
+                    // Log.i("KATJA","newBalance:"+currentBalance);
+
+                    refPathCurrentUser.child("numberReportedCases").setValue(String.valueOf(newCount));
+                    //refPathCurrentUser.child("balance").setValue(currentBalance);
 
                     Toast.makeText(getApplicationContext(), R.string.reportCaseSuccess, Toast.LENGTH_LONG).show();
-
                     finish();
 
                 } else {
@@ -325,7 +379,7 @@ public class ActivityReportCase extends AppCompatActivity {
                 storageAndDBPath = "images/cases/" + caseID + "/" + i + ".jpg";
             }
 
-            Toast.makeText(getApplicationContext(), R.string.uploadPicture, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.uploadPicture, Toast.LENGTH_SHORT).show();
 
 
             //write path from storage into list for case-db

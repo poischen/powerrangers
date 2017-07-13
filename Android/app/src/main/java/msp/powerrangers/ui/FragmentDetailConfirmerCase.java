@@ -89,11 +89,18 @@ public class FragmentDetailConfirmerCase extends Fragment {
 
     // firebase db instances
     private DatabaseReference dbRefCases;
-    // shared preferences
+
+    // current user from shared preferences
     SharedPreferences sharedPrefs;
-    String userDbID;
     DatabaseReference refPathCurrentUser;
+    String userDbID;  // CONFIRMER
+    String detectiveID; // DETECTIVE
+    // current values of user
     String currentCount;
+    String currentBalance;
+    // TODO eigentlich sollte der fixedReward in der Confirmer-Instanz gesetzt werden. Zurzeit gibt es keinen Confimer objekt..
+    // [getFixedReward vom Confirmer benutzen]
+    int fixedReward = 2;
 
     public FragmentDetailConfirmerCase() {
         // Required empty public constructor
@@ -111,10 +118,10 @@ public class FragmentDetailConfirmerCase extends Fragment {
         Bitmap defaultPic = BitmapFactory.decodeResource(getResources(), R.drawable.nopicyet);
         pictureBitmapList.add(defaultPic);
 
-        // get the current user
+        // get the current user [role: Confirmer]
         sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
         userDbID = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
-        //Log.i("KATJA", "current user id:"+userDbID);
+        Log.i("KATJA", "confirmer id:"+userDbID);
         refPathCurrentUser = FirebaseDatabase.getInstance().getReference().child("users").child(userDbID);
 
         // get the current count of the confirmed cases
@@ -123,7 +130,8 @@ public class FragmentDetailConfirmerCase extends Fragment {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         currentCount = String.valueOf(dataSnapshot.child("numberConfirmedCases").getValue());
-                        //Log.i("KATJA", "currentCount "+currentCount);
+                        currentBalance = String.valueOf(dataSnapshot.child("balance").getValue());
+                        Log.i("KATJA", "currentBalance "+currentBalance);
                     }
 
                     @Override
@@ -333,22 +341,36 @@ public class FragmentDetailConfirmerCase extends Fragment {
 
                                 DataSnapshot singleSnapshot = (DataSnapshot) iter.next();
 
-                                // fill in new values
-                                singleSnapshot.child("name").getRef().setValue(editTextConfirmCaseTitle.getText().toString());
-                                singleSnapshot.child("city").getRef().setValue(editTextConfirmCaseCity.getText().toString());
-                                singleSnapshot.child("country").getRef().setValue(editTextConfirmCaseCountry.getText().toString());
-                                singleSnapshot.child("comment").getRef().setValue(editTextConfirmCaseInformation.getText().toString());
-                                singleSnapshot.child("areaX").getRef().setValue(editTextConfirmCaseXCoordinate.getText().toString());
-                                singleSnapshot.child("areaY").getRef().setValue(editTextConfirmCaseYCoordinate.getText().toString());
-                                singleSnapshot.child("scale").getRef().setValue(getScaleValue(radioButtonConfirmCaseLow, radioButtonConfirmCaseMiddle, radioButtonConfirmCaseHigh));
-                                singleSnapshot.child("confirmed").getRef().setValue(true);
-                                // add the confirmer id to the childs
-                                singleSnapshot.child("confirmerId").getRef().setValue(userDbID);
+                                detectiveID = String.valueOf(singleSnapshot.child("detectiveID").getValue());
 
-                                // update the number of users confirmed cases
-                                int newCount = Integer.valueOf(currentCount)+1;
-                                //Log.i("KATJA",String.valueOf(newCount));
-                                refPathCurrentUser.child("numberConfirmedCases").setValue(String.valueOf(newCount));
+                                // detective can`t confirme his own case :)
+                                if (detectiveID.equals(userDbID)) {
+                                    Toast.makeText(getContext(), R.string.detailConfirmerCaseDectiveError, Toast.LENGTH_LONG).show();
+                                }
+
+                                // fill in new values
+                                else {
+                                    singleSnapshot.child("name").getRef().setValue(editTextConfirmCaseTitle.getText().toString());
+                                    singleSnapshot.child("city").getRef().setValue(editTextConfirmCaseCity.getText().toString());
+                                    singleSnapshot.child("country").getRef().setValue(editTextConfirmCaseCountry.getText().toString());
+                                    singleSnapshot.child("comment").getRef().setValue(editTextConfirmCaseInformation.getText().toString());
+                                    singleSnapshot.child("areaX").getRef().setValue(editTextConfirmCaseXCoordinate.getText().toString());
+                                    singleSnapshot.child("areaY").getRef().setValue(editTextConfirmCaseYCoordinate.getText().toString());
+                                    singleSnapshot.child("scale").getRef().setValue(getScaleValue(radioButtonConfirmCaseLow, radioButtonConfirmCaseMiddle, radioButtonConfirmCaseHigh));
+                                    singleSnapshot.child("confirmed").getRef().setValue(true);
+                                    // add the confirmer id to the childs
+                                    singleSnapshot.child("confirmerId").getRef().setValue(userDbID);
+
+                                    // update the number of users confirmed cases
+                                    int newCount = Integer.valueOf(currentCount) + 1;
+                                    refPathCurrentUser.child("numberConfirmedCases").setValue(String.valueOf(newCount));
+
+                                    // update the balance of user
+                                    // TODO: es crasht
+                                    /*
+                                    int newBalance = Integer.valueOf(currentBalance) + fixedReward;
+                                    refPathCurrentUser.child("balance").setValue(String.valueOf(newBalance)); */
+                                }
 
                             }
 
