@@ -130,6 +130,15 @@ public class FragmentDetailRangerTask extends Fragment {
                 textRangerReward.setText(reward);
                 // here hard coded because we decided, that 1 task 1 ranger
                 textNumberRangers.setText("1");
+
+                String currentCaseIdOfTask = (String) singleSnapshot.child("caseId").getValue();
+
+
+               // dataSnapshot.child("tasks").equals(currentCaseIdOfTask);
+                //dbRefTasks.orderByChild("caseId").equalTo(currentCaseIdOfTask);
+
+                //String numberTasksFromCase =
+
                 textPollutionLevel.setText(convertScaleToText(scale));
                 rangerTaskDescription.setText(taskInfo + "\nWe need you! ;-)");
 
