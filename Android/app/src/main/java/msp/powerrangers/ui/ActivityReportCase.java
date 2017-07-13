@@ -1,6 +1,5 @@
 package msp.powerrangers.ui;
 
-
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
@@ -102,9 +101,7 @@ public class ActivityReportCase extends AppCompatActivity {
 
     // current values of user
     String currentCount;
-    //String currentBalance;
-    int rewardForCase;
-
+    long rewardForCase;
 
     // current firebaseUser
     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -150,8 +147,6 @@ public class ActivityReportCase extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         currentCount = String.valueOf(dataSnapshot.child("numberReportedCases").getValue());
-                        //currentBalance = String.valueOf(dataSnapshot.child("balance").getValue());
-                        //Log.i("KATJA", "currentBalance "+currentBalance);
                         Log.i("KATJA", "nReportedCases "+currentCount);
                     }
 
@@ -246,18 +241,20 @@ public class ActivityReportCase extends AppCompatActivity {
                             caseInformation
                     );
 
+                    // create a detective
+                    Detective detective = new Detective(us, caseId);
+                    rewardForCase = detective.getRewardPerCase();
 
                     // write case to in database cases
                     dbRefCases.child(dbId).setValue(c);
 
                     // update user balance
-                    dbRefUsers.child(us.getDbId()).addListenerForSingleValueEvent(new ValueEventListener() {
-
+                    refPathCurrentUser.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
                             long currentBalance = (long) dataSnapshot.child("balance").getValue();
-                            dataSnapshot.getRef().child("balance").setValue(currentBalance + 5);
+                            dataSnapshot.getRef().child("balance").setValue(currentBalance + rewardForCase);
 
                         }
 
@@ -265,21 +262,12 @@ public class ActivityReportCase extends AppCompatActivity {
                         public void onCancelled(DatabaseError databaseError) {
 
                         }
-                    });
 
-                    Detective detective = new Detective(us, caseId);
-                    // us.addCaseIDToReportedCases(caseId);
+                    });
 
                     // increment the numberConfirmedCases Bubble
                     int newCount = Integer.valueOf(currentCount) + 1;
-                    //Log.i("KATJA","newCount:"+newCount);
-                    // set reward
-                    // rewardForCase = detective.getRewardPerCase();
-                    //currentBalance = String.valueOf(Integer.valueOf(currentBalance) + rewardForCase);
-                    // Log.i("KATJA","newBalance:"+currentBalance);
-
                     refPathCurrentUser.child("numberReportedCases").setValue(String.valueOf(newCount));
-                    //refPathCurrentUser.child("balance").setValue(currentBalance);
 
                     Toast.makeText(getApplicationContext(), R.string.reportCaseSuccess, Toast.LENGTH_LONG).show();
                     finish();
