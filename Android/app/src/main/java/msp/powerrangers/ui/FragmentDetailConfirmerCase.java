@@ -31,6 +31,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
@@ -171,7 +172,8 @@ public class FragmentDetailConfirmerCase extends Fragment {
         dbRefCases = FirebaseDatabase.getInstance().getReference("cases");
 
         // get attributes from a case as default values to edit
-        dbRefCases.addValueEventListener(
+        Query filteredCases = dbRefCases.orderByChild("confirmed").equalTo(false);
+        filteredCases.addValueEventListener(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -302,14 +304,15 @@ public class FragmentDetailConfirmerCase extends Fragment {
             @Override
             public void onClick(View v) {
 
-
-                dbRefCases.addValueEventListener(
+                Query filteredCases = dbRefCases.orderByChild("confirmed").equalTo(false);
+                filteredCases.addValueEventListener(
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
                                 Iterator iter = dataSnapshot.getChildren().iterator();
 
+                                Log.i("KATJA", "position in DCC:" + position);
                                 for (int i = 0; i < position; i++) {
                                     iter.next();
                                 }
@@ -317,14 +320,18 @@ public class FragmentDetailConfirmerCase extends Fragment {
                                 DataSnapshot singleSnapshot = (DataSnapshot) iter.next();
 
                                 detectiveID = String.valueOf(singleSnapshot.child("detectiveID").getValue());
+                                Log.i("KATJA","Detective id:"+detectiveID);
+                                Log.i("KATJA","User id:"+userDbID);
 
                                 // detective can`t confirme his own case :)
                                 if (detectiveID.equals(userDbID)) {
+                                    Log.i("KATJA","Detective is the confirmer!");
                                     Toast.makeText(getContext(), R.string.detailConfirmerCaseDectiveError, Toast.LENGTH_LONG).show();
                                 }
 
                                 // fill in new values
                                 else {
+                                    Log.i("KATJA","Detective is not the the confirmer!");
                                     singleSnapshot.child("name").getRef().setValue(editTextConfirmCaseTitle.getText().toString());
                                     singleSnapshot.child("city").getRef().setValue(editTextConfirmCaseCity.getText().toString());
                                     singleSnapshot.child("country").getRef().setValue(editTextConfirmCaseCountry.getText().toString());
