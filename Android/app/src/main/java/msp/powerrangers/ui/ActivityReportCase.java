@@ -58,18 +58,6 @@ public class ActivityReportCase extends AppCompatActivity {
     final long ONE_MEGABYTE = 1024 * 1024;
 
     // TODO: set all fields in res to requiered!
-    // text Views
-    /*private TextView textViewCaseTitle;
-    private TextView textViewCaseCity;
-    private TextView textViewCaseCountry;
-    private TextView textViewCaseScala;
-    private TextView textViewCaseAreaCoordinates;
-    private TextView textViewCaseXCoordinate;
-    private TextView textViewCaseYCoordinate;
-    private TextView textViewCasePicture;
-    private TextView textViewCaseInformation;
-    private TextView textViewUploadedPictures;*/
-
     // edit Texts
     private EditText editTextCaseTitle;
     private EditText editTextCaseCity;
@@ -78,7 +66,7 @@ public class ActivityReportCase extends AppCompatActivity {
     private EditText editTextCaseYCoordinate;
     private EditText editTextCaseInformation;
 
-    // TODO: only one radio button should be selectable
+    //TODO: only one button should be selectable!!
     // radio buttons scale
     private RadioButton radioButtonCaseLow;
     private RadioButton radioButtonCaseMiddle;
@@ -96,15 +84,7 @@ public class ActivityReportCase extends AppCompatActivity {
 
     // firebase db instances
     private DatabaseReference dbRefCases;
-    private DatabaseReference dbRefUsers;
     private DatabaseReference refPathCurrentUser;
-
-    // current values of user
-    String currentCount;
-    long rewardForCase;
-
-    // current firebaseUser
-    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
     private User us;
     String userDbId;
@@ -124,50 +104,21 @@ public class ActivityReportCase extends AppCompatActivity {
         //stuff for pic upload
         pictureUrisList = new ArrayList<>();
         pictureBitmapList = new ArrayList<>();
-        //Bitmap defaultPic = BitmapFactory.decodeResource(getResources(), R.drawable.nopicyet);
-        //pictureBitmapList.add(defaultPic);
         casePictures = new ArrayList<>();
         isDefaultPic = true;
 
         //Firebase stuff
         storageRef = FirebaseStorage.getInstance().getReference();
         dbRefCases = FirebaseDatabase.getInstance().getReference("cases");
-        dbRefUsers = FirebaseDatabase.getInstance().getReference("users");
 
         //get current User Object from Intent
         Intent myIntent = getIntent();
         us = (User) myIntent.getSerializableExtra("USER");
-
         userDbId = us.getDbId();
         refPathCurrentUser = FirebaseDatabase.getInstance().getReference().child("users").child(userDbId);
 
-        // get the current count of the reported cases
-        refPathCurrentUser.addValueEventListener(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        currentCount = String.valueOf(dataSnapshot.child("numberReportedCases").getValue());
-                        Log.i("KATJA", "nReportedCases "+currentCount);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
 
         // find UI elements
-        /*textViewCaseTitle = (TextView) findViewById(R.id.textViewCaseTitle);
-        textViewCaseCity = (TextView) findViewById(R.id.textViewCaseCity);
-        textViewCaseCountry = (TextView) findViewById(R.id.textViewCaseCountry);
-        textViewCaseScala = (TextView) findViewById(R.id.textViewCaseScala);
-        textViewCaseAreaCoordinates = (TextView) findViewById(R.id.textViewCaseAreaCoordinates);
-        textViewCaseXCoordinate = (TextView) findViewById(R.id.textViewCaseXCoordinate);
-        textViewCaseYCoordinate = (TextView) findViewById(R.id.textViewCaseYCoordinate);
-        textViewCasePicture = (TextView) findViewById(R.id.textViewCasePicture);
-        textViewCaseInformation = (TextView) findViewById(R.id.textViewCaseInformation);
-        textViewUploadedPictures = (TextView) findViewById(R.id.textViewUploadedPictures);*/
         editTextCaseTitle = (EditText) findViewById(R.id.editTextCaseTitle);
         editTextCaseCity = (EditText) findViewById(R.id.editTextCaseCity);
         editTextCaseCountry = (EditText) findViewById(R.id.editTextCaseCountry);
@@ -178,7 +129,6 @@ public class ActivityReportCase extends AppCompatActivity {
         radioButtonCaseMiddle = (RadioButton) findViewById(R.id.radioButtonCaseMiddle);
         radioButtonCaseHigh = (RadioButton) findViewById(R.id.radioButtonCaseHigh);
         imageButtonUploadPicture = (ImageButton) findViewById(R.id.imageButtonUploadPicture);
-        //imageViewUploadedPicture = (ImageView) findViewById(R.id.imageViewUploadedPicture);
         buttonCaseReport = (Button) findViewById(R.id.buttonCaseReport);
         viewPager = (ViewPager) findViewById(R.id.aReportCaseViewPager);
         ActivityReportCase.ImageAdapter adapter = new ActivityReportCase.ImageAdapter(this);
@@ -193,12 +143,6 @@ public class ActivityReportCase extends AppCompatActivity {
         imageButtonUploadPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                /*if (isDefaultPic){
-                    isDefaultPic = false;
-                    pictureBitmapList.clear();
-                    updateImageViews();
-                }*/
                 showFileChooser();
             }
         });
@@ -243,18 +187,22 @@ public class ActivityReportCase extends AppCompatActivity {
 
                     // create a detective
                     Detective detective = new Detective(us, caseId);
-                    rewardForCase = detective.getRewardPerCase();
+                    final int rewardForCase = detective.getRewardPerCase();
 
                     // write case to in database cases
                     dbRefCases.child(dbId).setValue(c);
 
-                    // update user balance
+                    // update user balance & number reported cases
                     refPathCurrentUser.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
                             long currentBalance = (long) dataSnapshot.child("balance").getValue();
                             dataSnapshot.getRef().child("balance").setValue(currentBalance + rewardForCase);
+
+                            String currentCount = String.valueOf(dataSnapshot.child("numberReportedCases").getValue());
+                            int newCount = Integer.valueOf(currentCount)+1;
+                            dataSnapshot.getRef().child("numberReportedCases").setValue(String.valueOf(newCount));
                         }
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
@@ -262,10 +210,6 @@ public class ActivityReportCase extends AppCompatActivity {
                         }
 
                     });
-
-                    // increment the numberConfirmedCases Bubble
-                    int newCount = Integer.valueOf(currentCount) + 1;
-                    refPathCurrentUser.child("numberReportedCases").setValue(String.valueOf(newCount));
 
                     Toast.makeText(getApplicationContext(), R.string.reportCaseSuccess, Toast.LENGTH_LONG).show();
                     finish();

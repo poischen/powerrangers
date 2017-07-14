@@ -2,7 +2,7 @@ package msp.powerrangers.logic;
 
 public class Detective extends RoleForwarding{
     String caseId;
-    int rewardPerCase = 2;
+    int rewardPerCase = 5;
 
     public Detective(User user, String caseId){
         this.user = user;
