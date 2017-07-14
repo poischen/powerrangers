@@ -106,7 +106,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bund = getArguments();
-        position = bund.getInt("Position");
+        position = bund.getInt("PositionConfirm");
         storageRef = FirebaseStorage.getInstance().getReference();
         pictureURLs = new ArrayList<>();
         pictureBitmapList = new ArrayList<>();

@@ -147,6 +147,46 @@ public class ActivityReportCase extends AppCompatActivity {
             }
         });
 
+
+
+        // allow only one radio button to be checked!
+        radioButtonCaseLow.setOnClickListener(new View.OnClickListener()
+
+        {
+            @Override
+            public void onClick(View v) {
+                radioButtonCaseHigh.setChecked(false);
+                radioButtonCaseMiddle.setChecked(false);
+                radioButtonCaseLow.setChecked(true);
+            }
+        });
+
+
+        radioButtonCaseMiddle.setOnClickListener(new View.OnClickListener()
+
+        {
+            @Override
+            public void onClick(View v) {
+                radioButtonCaseLow.setChecked(false);
+                radioButtonCaseHigh.setChecked(false);
+                radioButtonCaseMiddle.setChecked(true);
+            }
+        });
+
+
+        radioButtonCaseHigh.setOnClickListener(new View.OnClickListener()
+
+        {
+            @Override
+            public void onClick(View v) {
+                radioButtonCaseLow.setChecked(false);
+                radioButtonCaseMiddle.setChecked(false);
+                radioButtonCaseHigh.setChecked(true);
+            }
+        });
+
+
+
         // report a case
         buttonCaseReport.setOnClickListener(new View.OnClickListener() {
             @Override

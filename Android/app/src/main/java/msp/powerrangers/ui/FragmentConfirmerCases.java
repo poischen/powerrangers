@@ -80,7 +80,7 @@ public class FragmentConfirmerCases extends Fragment {
                         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                         Bundle bundles = new Bundle();
                         Log.i("KATJA", "position in CC: "+ position);
-                        bundles.putInt("Position", position);
+                        bundles.putInt("PositionConfirm", position);
                         confirmCaseFragment.setArguments(bundles);
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                         ft.replace(R.id.activity_main_fragment_container, confirmCaseFragment);

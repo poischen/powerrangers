@@ -68,7 +68,7 @@ public class FragmentDetailRangerTask extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bund = getArguments();
-        position = bund.getInt("Position");
+        position = bund.getInt("PositionRanger");
 
     }
 
@@ -108,6 +108,7 @@ public class FragmentDetailRangerTask extends Fragment {
                 Iterator iter = dataSnapshot.getChildren().iterator();
 
                 for(int i = 0; i < position; i++) {
+
                     iter.next();
                 }
 
@@ -125,11 +126,11 @@ public class FragmentDetailRangerTask extends Fragment {
                 // get the task id
                 taskID =  (String) singleSnapshot.child("taskId").getValue();
                 taskDBId = (String) singleSnapshot.child("taskDbId").getValue();
-
                 rangerTaskName.setText( city + " , " + country);
                 textRangerReward.setText(reward);
-                // here hard coded because we decided, that 1 task 1 ranger
-                textNumberRangers.setText("1");
+                String numberRangers = (String) singleSnapshot.child("numberRangers").getValue();
+                textNumberRangers.setText(numberRangers);
+
                 textPollutionLevel.setText(convertScaleToText(scale));
                 rangerTaskDescription.setText(taskInfo + "\nWe need you! ;-)");
 
