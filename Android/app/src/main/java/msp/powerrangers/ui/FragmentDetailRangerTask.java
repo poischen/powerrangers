@@ -18,6 +18,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
@@ -100,7 +101,11 @@ public class FragmentDetailRangerTask extends Fragment {
         // fill in information from task
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
 
-        dbRefTasks.addListenerForSingleValueEvent(new ValueEventListener() {
+        Query filteredTasks = dbRefTasks.orderByChild("assigned").equalTo(false);
+        filteredTasks.addValueEventListener( new ValueEventListener() {
+
+
+        //dbRefTasks.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -128,7 +133,7 @@ public class FragmentDetailRangerTask extends Fragment {
                 taskDBId = (String) singleSnapshot.child("taskDbId").getValue();
                 rangerTaskName.setText( city + " , " + country);
                 textRangerReward.setText(reward);
-                String numberRangers = (String) singleSnapshot.child("numberRangers").getValue();
+                String numberRangers = String.valueOf(singleSnapshot.child("numberRangers").getValue());
                 textNumberRangers.setText(numberRangers);
 
                 textPollutionLevel.setText(convertScaleToText(scale));
