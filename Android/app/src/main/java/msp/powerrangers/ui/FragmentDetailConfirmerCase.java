@@ -305,7 +305,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
             public void onClick(View v) {
 
                 Query filteredCases = dbRefCases.orderByChild("confirmed").equalTo(false);
-                filteredCases.addValueEventListener(
+                filteredCases.addListenerForSingleValueEvent(
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
