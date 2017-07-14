@@ -95,12 +95,6 @@ public class FragmentDetailConfirmerCase extends Fragment {
     DatabaseReference refPathCurrentUser;
     String userDbID;  // CONFIRMER
     String detectiveID; // DETECTIVE
-    // current values of user
-    String currentCount;
-    String currentBalance;
-    // TODO eigentlich sollte der fixedReward in der Confirmer-Instanz gesetzt werden. Zurzeit gibt es keinen Confimer objekt..
-    // [getFixedReward vom Confirmer benutzen]
-    int fixedReward = 2;
 
     public FragmentDetailConfirmerCase() {
         // Required empty public constructor
@@ -121,26 +115,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
         // get the current user [role: Confirmer]
         sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
         userDbID = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
-        Log.i("KATJA", "confirmer id:"+userDbID);
         refPathCurrentUser = FirebaseDatabase.getInstance().getReference().child("users").child(userDbID);
-
-        // get the current count of the confirmed cases
-        refPathCurrentUser.addValueEventListener(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        currentCount = String.valueOf(dataSnapshot.child("numberConfirmedCases").getValue());
-                        currentBalance = String.valueOf(dataSnapshot.child("balance").getValue());
-                        Log.i("KATJA", "currentBalance "+currentBalance);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-
 
     }
 
@@ -361,15 +336,29 @@ public class FragmentDetailConfirmerCase extends Fragment {
                                     // add the confirmer id to the childs
                                     singleSnapshot.child("confirmerId").getRef().setValue(userDbID);
 
-                                    // update the number of users confirmed cases
-                                    int newCount = Integer.valueOf(currentCount) + 1;
-                                    refPathCurrentUser.child("numberConfirmedCases").setValue(String.valueOf(newCount));
 
-                                    // update the balance of user
-                                    // TODO: es crasht
-                                    /*
-                                    int newBalance = Integer.valueOf(currentBalance) + fixedReward;
-                                    refPathCurrentUser.child("balance").setValue(String.valueOf(newBalance)); */
+                                    // update user balance & number confirmed cases
+                                    refPathCurrentUser.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                            // TODO eigentlich sollte der fixedReward in der Confirmer-Instanz gesetzt werden. Zurzeit gibt es keinen Confimer objekt..
+                                            // [getFixedReward vom Confirmer benutzen]
+                                            int fixedReward = 5;
+                                            long currentBalance = (long) dataSnapshot.child("balance").getValue();
+                                            dataSnapshot.getRef().child("balance").setValue(currentBalance + fixedReward);
+
+                                            String currentCount = String.valueOf(dataSnapshot.child("numberConfirmedCases").getValue());
+                                            int newCount = Integer.valueOf(currentCount)+1;
+                                            dataSnapshot.getRef().child("numberConfirmedCases").setValue(String.valueOf(newCount));
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+
+                                    });
                                 }
 
                             }
