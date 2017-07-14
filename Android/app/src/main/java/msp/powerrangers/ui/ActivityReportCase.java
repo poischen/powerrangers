@@ -343,11 +343,11 @@ public class ActivityReportCase extends AppCompatActivity {
 
         for (int i = 0; i < pictureUrisList.size(); i++) {
             final String storageAndDBPath;
-            if (i == 0) {
+            /*if (i == 0) {
                 storageAndDBPath = "images/cases/" + caseID + "/case.jpg";
-            } else {
+            } else {*/
                 storageAndDBPath = "images/cases/" + caseID + "/" + i + ".jpg";
-            }
+            //}
 
             Toast.makeText(getApplicationContext(), R.string.uploadPicture, Toast.LENGTH_SHORT).show();
 
