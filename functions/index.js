@@ -186,7 +186,7 @@ exports.createTasks = functions.database.ref('/cases/{caseId}/confirmed')
                 casePictureList.forEach(function(uri, index) {
                   var taskRef = event.data.adminRef.root.child('tasks/').push();
                   var taskDbId = taskRef.key;
-                  return taskRef.set({taskDbId: taskDbId, taskId: taskId, city: city, country: country, comment: comment, reward: ranger_reward, scale: scale, taskPicture: uri, casePicture: casePicture, caseId: id, taskCompleted: false, assigned: false});
+                  return taskRef.set({taskDbId: taskDbId, taskId: taskId, city: city, country: country, comment: comment, reward: ranger_reward, scale: scale, taskPicture: uri, casePicture: casePicture, caseId: id, taskCompleted: false, assigned: false, numberRangers: number_rangers});
                 });
 
                 /*
@@ -209,7 +209,7 @@ exports.createTasks = functions.database.ref('/cases/{caseId}/confirmed')
 
 
 /*
-* Listens for tasks being completed, and writes number of upvotes and downvotes into task databse
+* Listens for tasks being completed, and writes upvotes and downvotes into task databse
 */
 exports.completeTask = functions.database.ref('/tasks/{taskId}/taskCompleted')
     .onWrite(event => {
