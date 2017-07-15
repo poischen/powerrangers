@@ -1,12 +1,13 @@
 package msp.powerrangers.ui;
 
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 
 import msp.powerrangers.R;
 import msp.powerrangers.ui.listitems.ConfirmerCasesListItem;
@@ -15,23 +16,20 @@ import msp.powerrangers.ui.listitems.ConfirmerCasesListItem;
 public class FragmentWait extends Fragment {
 
     private ConfirmerCasesListItem casesListItem;
+
     public FragmentWait() {
         // Required empty public constructor
     }
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         String tag = getTag();
-
         casesListItem = new ConfirmerCasesListItem();
         casesListItem.fill_with_data(this);
 
     }
-
 
     public void changeToContentView(){
         FragmentConfirmerCases confirmerCasesFragment = new FragmentConfirmerCases();
@@ -45,8 +43,6 @@ public class FragmentWait extends Fragment {
         ft.commit();
 
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
