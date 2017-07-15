@@ -34,7 +34,7 @@ public class FragmentTabs extends Fragment {
             Bundle arg2 = new Bundle();
             arg2.putInt("Arg for Frag2", 2);
             tabHost.addTab(tabHost.newTabSpec(getString(R.string.votingTasksTag)).setIndicator(getString(R.string.confirmTasks)),
-                    FragmentVotingTasks.class, arg2);
+                    FragmentWait.class, arg2);
 
             Bundle arg3 = new Bundle();
             arg3.putInt("Arg for Frag3", 3);
@@ -44,7 +44,7 @@ public class FragmentTabs extends Fragment {
             Bundle arg4 = new Bundle();
             arg2.putInt("Arg for Frag4", 4);
             tabHost.addTab(tabHost.newTabSpec(getString(R.string.rangerTasksTag)).setIndicator(getString(R.string.findYorJob)),
-                   FragmentRangerTasks.class, arg4);
+                    FragmentWait.class, arg4);
 
             // set the width of Confirm-Tab (else the text appears over two lines)
             tabHost.getTabWidget().getChildAt(2).getLayoutParams().width = 80;

@@ -15,11 +15,16 @@
     <string name="confirmCases">confirm</string>
     <string name="findYorJob">get a job</string>
 
-    <!-- Tabnames-->
+    <!-- Tags for tabnames -->
     <string name="startTag">startTag</string>
     <string name="votingTasksTag">votingTag</string>
     <string name="confirmCasesTag">confirmTag</string>
     <string name="rangerTasksTag">jobTag</string>
+
+    <!-- Serializable tabnames -->
+    <string name="votingTasksSerializable">votingListItems</string>
+    <string name="confirmCasesSerializable">casesListItems</string>
+    <string name="rangerTasksSerializable">tasksListItems</string>
 
     <!-- FragmentStart-->
     <string name="balance">earned</string>

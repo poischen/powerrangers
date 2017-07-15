@@ -35,7 +35,6 @@ public class FragmentVotingTasks extends Fragment {
     protected RecyclerView mRecyclerView;
     protected RecyclerView.LayoutManager mLayoutManager;
     protected Recycler_View_Adapter mAdapter;
-    private VotingTasksListItem  votingTasksListItems;
     private VotingTasksListItem  votingTasksListItem;
 
     // Firebase db instance
@@ -53,7 +52,7 @@ public class FragmentVotingTasks extends Fragment {
         super.onCreate(savedInstanceState);
 
         Bundle bund = getArguments();
-        votingTasksListItems = (VotingTasksListItem) bund.getSerializable("votingTaskListItems");
+        votingTasksListItem = (VotingTasksListItem) bund.getSerializable(getString(R.string.votingTasksSerializable));
 
     }
 
@@ -71,14 +70,8 @@ public class FragmentVotingTasks extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        // test data
-        //List<VotingTasksListItem> data = VotingTasksListItem.fill_with_data();
-
-        // will be filled with data
-        votingTasksListItem = new VotingTasksListItem();
-
         // 3. Create an adapter and fill
-        mAdapter = new FragmentVotingTasks.Recycler_View_Adapter(votingTasksListItems.getData(), getContext());
+        mAdapter = new FragmentVotingTasks.Recycler_View_Adapter(votingTasksListItem.getData(), getContext());
 
         // 3. Create an adapter
        // mAdapter = new Recycler_View_Adapter(data, getContext());
