@@ -17,9 +17,9 @@
 
     <!-- Tabnames-->
     <string name="startTag">startTag</string>
-    <string name="confirmTasksTag">votingTag</string>
+    <string name="votingTasksTag">votingTag</string>
     <string name="confirmCasesTag">confirmTag</string>
-    <string name="findYorJobTag">jobTag</string>
+    <string name="rangerTasksTag">jobTag</string>
 
     <!-- FragmentStart-->
     <string name="balance">earned</string>

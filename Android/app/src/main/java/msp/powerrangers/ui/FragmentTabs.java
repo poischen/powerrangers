@@ -28,24 +28,22 @@ public class FragmentTabs extends Fragment {
 
             Bundle arg1 = new Bundle();
             arg1.putInt("Arg for Frag1", 1);
-            tabHost.addTab(tabHost.newTabSpec(getString(R.string.start)).setIndicator(getString(R.string.start)),
+            tabHost.addTab(tabHost.newTabSpec(getString(R.string.startTag)).setIndicator(getString(R.string.start)),
                     FragmentStart.class, arg1);
 
             Bundle arg2 = new Bundle();
             arg2.putInt("Arg for Frag2", 2);
-            tabHost.addTab(tabHost.newTabSpec(getString(R.string.confirmTasks)).setIndicator(getString(R.string.confirmTasks)),
+            tabHost.addTab(tabHost.newTabSpec(getString(R.string.votingTasksTag)).setIndicator(getString(R.string.confirmTasks)),
                     FragmentVotingTasks.class, arg2);
 
             Bundle arg3 = new Bundle();
             arg3.putInt("Arg for Frag3", 3);
-            /*tabHost.addTab(tabHost.newTabSpec(getString(R.string.confirmCases)).setIndicator(getString(R.string.confirmCases)),
-                    FragmentConfirmerCases.class, arg3);*/
-            tabHost.addTab(tabHost.newTabSpec("bla").setIndicator(getString(R.string.confirmCases)),
+            tabHost.addTab(tabHost.newTabSpec(getString(R.string.confirmCasesTag)).setIndicator(getString(R.string.confirmCases)),
                     FragmentWait.class, arg3);
 
             Bundle arg4 = new Bundle();
             arg2.putInt("Arg for Frag4", 4);
-            tabHost.addTab(tabHost.newTabSpec(getString(R.string.findYorJob)).setIndicator(getString(R.string.findYorJob)),
+            tabHost.addTab(tabHost.newTabSpec(getString(R.string.rangerTasksTag)).setIndicator(getString(R.string.findYorJob)),
                    FragmentRangerTasks.class, arg4);
 
             // set the width of Confirm-Tab (else the text appears over two lines)
