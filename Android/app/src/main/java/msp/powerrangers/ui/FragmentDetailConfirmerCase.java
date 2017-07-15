@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -117,6 +118,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
         sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
         userDbID = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
         refPathCurrentUser = FirebaseDatabase.getInstance().getReference().child("users").child(userDbID);
+
 
     }
 

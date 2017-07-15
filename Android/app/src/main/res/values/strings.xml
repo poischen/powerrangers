@@ -70,6 +70,7 @@
   <string name="reportCaseSuccess">Case was reported successfully</string>
   <string name="reportCaseFillFields">Please give all necessary inforamtion!</string>
   <string name="reportInstructionManualUploadPics">Show us some pictures! First load up an image of the hole trashy area, then seperate the area in equal parts and load a picture for each.</string>
+  <string name="uploadPictureFailed">Uploading of picture failed! Sorry</string>
 
   <!-- FragmentDetailConfirmerCase-->
     <string name="detailConfirmerCaseFragmentTitle">Confirm case</string>
