@@ -1,7 +1,6 @@
 package msp.powerrangers.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -43,10 +42,8 @@ public class FragmentConfirmerCases extends Fragment {
     protected RecyclerView mRecyclerView;
     protected RecyclerView.LayoutManager mLayoutManager;
     protected Recycler_View_Adapter mAdapter;
-    private ConfirmerCasesListItem casesListItem;
     private StorageReference storageRef;
-
-    private ConfirmerCasesListItem confirmerCasesListItems;
+    private ConfirmerCasesListItem confirmerCasesListItem;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -61,7 +58,7 @@ public class FragmentConfirmerCases extends Fragment {
         storageRef = FirebaseStorage.getInstance().getReference();
 
         Bundle bund = getArguments();
-        confirmerCasesListItems = (ConfirmerCasesListItem) bund.getSerializable("caseListItems");
+        confirmerCasesListItem = (ConfirmerCasesListItem) bund.getSerializable(getString(R.string.confirmCasesSerializable));
     }
 
     @Override
@@ -77,17 +74,17 @@ public class FragmentConfirmerCases extends Fragment {
                 new RecyclerItemClickListener(getContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
+
                         // switch to FragmentDetailConfirmerCase
                         FragmentDetailConfirmerCase confirmCaseFragment = new FragmentDetailConfirmerCase();
                         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+
                         Bundle bundles = new Bundle();
-                        Log.i("KATJA", "position in CC: "+ position);
                         bundles.putInt("PositionConfirm", position);
                         confirmCaseFragment.setArguments(bundles);
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                         ft.replace(R.id.activity_main_fragment_container, confirmCaseFragment);
                         ft.addToBackStack(null);
-
                         ft.commit();
                     }
 
@@ -103,11 +100,8 @@ public class FragmentConfirmerCases extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        // will be filled with data
-        casesListItem = new ConfirmerCasesListItem();
-
         // 3. Create an adapter and fill
-        mAdapter = new Recycler_View_Adapter(confirmerCasesListItems.getData(), getContext());
+        mAdapter = new Recycler_View_Adapter(confirmerCasesListItem.getData(), getContext());
 
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);

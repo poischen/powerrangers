@@ -9,10 +9,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import msp.powerrangers.R;
+import msp.powerrangers.ui.FragmentWait;
 
 import static android.content.ContentValues.TAG;
 
@@ -21,7 +23,7 @@ import static android.content.ContentValues.TAG;
  * Tutorial: https://www.sitepoint.com/mastering-complex-lists-with-the-android-recyclerview/
  *
  */
-public class VotingTasksListItem {
+public class VotingTasksListItem implements Serializable {
 
     public String title;
     public String location;
@@ -48,7 +50,7 @@ public class VotingTasksListItem {
     /**
      * Generates Voting Task Objects for RecyclerView's adapter.
      */
-    public List<VotingTasksListItem> fill_with_data() {
+    public List<VotingTasksListItem> fill_with_data(final FragmentWait fragmentWait) {
 
         // get the reference to the db tasks
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
@@ -65,6 +67,8 @@ public class VotingTasksListItem {
                     data.add(new VotingTasksListItem(titleDB, locationDB, R.drawable.polluted_beach1, R.drawable.clean_beach));
                     //Log.i("Data Top", "This is the data: " + data);
                 }
+
+                fragmentWait.changeToContentView();
             }
 
             @Override
@@ -83,6 +87,12 @@ public class VotingTasksListItem {
         return data;
 
     }
+
+
+    public List<VotingTasksListItem> getData(){
+        return data;
+    }
+
 
 
     /**

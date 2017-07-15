@@ -59,7 +59,12 @@ public class FragmentRangerTasks extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i("KATJA","onCreate FrRangerTasks");
         storageRef = FirebaseStorage.getInstance().getReference();
+
+        Bundle bund = getArguments();
+        tasksListItem = (RangerTasksListItem) bund.getSerializable(getString(R.string.rangerTasksSerializable));
+
     }
 
     @Override
@@ -67,6 +72,7 @@ public class FragmentRangerTasks extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fr_rangertasks, container, false);
         rootView.setTag(TAG);
+        Log.i("KATJA","onCreateView FrRangerTasks");
 
         // 1. Get a reference to recyclerView & set the onClickListener
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewRT);
@@ -74,12 +80,6 @@ public class FragmentRangerTasks extends Fragment {
                 new RecyclerItemClickListener(getContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-
-                        /*
-                         Intent intent = new Intent(getActivity(), ActivityDetailContainer.class);
-                        intent.putExtra(String.valueOf(R.string.activityDetailContainer_targetFr), "FragmentDetailRangerTask");
-                        startActivity(intent);
-                         */
 
                         //  show FragmentDetailRangerTask
                         FragmentDetailRangerTask fragmentDetailRangerTask = new FragmentDetailRangerTask();
@@ -117,11 +117,10 @@ public class FragmentRangerTasks extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        // will be filled with data
-        tasksListItem = new RangerTasksListItem();
-
         // 3. Create an adapter
-        mAdapter = new Recycler_View_Adapter(tasksListItem.fill_with_data(), getContext());
+        Log.i("KATJA","befor getData");
+        mAdapter = new Recycler_View_Adapter(tasksListItem.getData(), getContext());
+        Log.i("KATJA","after getData");
 
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);
@@ -160,7 +159,6 @@ public class FragmentRangerTasks extends Fragment {
             holder.title.setText(listItem.get(position).title);
             holder.location.setText(listItem.get(position).city + ", " + listItem.get(position).country);
             holder.comment.setText(listItem.get(position).comment);
-            //holder.image.setImageResource(listItem.get(position).imageId);
 
             String taskImageUrlDB = listItem.get(position).taskImageUrlDB;
             Log.v("FragmentRangerTasks", "taskImageUrlDB: " + taskImageUrlDB);

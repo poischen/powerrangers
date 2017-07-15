@@ -51,6 +51,8 @@ public class FragmentVotingTasks extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Bundle bund = getArguments();
+        votingTasksListItem = (VotingTasksListItem) bund.getSerializable(getString(R.string.votingTasksSerializable));
 
     }
 
@@ -68,14 +70,8 @@ public class FragmentVotingTasks extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        // test data
-        //List<VotingTasksListItem> data = VotingTasksListItem.fill_with_data();
-
-        // will be filled with data
-        votingTasksListItem = new VotingTasksListItem();
-
         // 3. Create an adapter and fill
-        mAdapter = new FragmentVotingTasks.Recycler_View_Adapter(votingTasksListItem.fill_with_data(), getContext());
+        mAdapter = new FragmentVotingTasks.Recycler_View_Adapter(votingTasksListItem.getData(), getContext());
 
         // 3. Create an adapter
        // mAdapter = new Recycler_View_Adapter(data, getContext());

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import msp.powerrangers.R;
+import msp.powerrangers.ui.FragmentWait;
 
 /**
  * == Data
