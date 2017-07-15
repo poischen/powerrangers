@@ -84,7 +84,6 @@ public class FragmentDetailConfirmerCase extends Fragment {
 
     private int position;
 
-
     // firebase storage Ref
     private StorageReference storageRef;
 

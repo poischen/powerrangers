@@ -80,6 +80,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     TextView nReportedCases;
     TextView nConfirmedCases;
     TextView nCompletedTasks;
+    TextView nDonation;
 
     FirebaseUser firebaseUser;
     private User u;
@@ -117,6 +118,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         nReportedCases = (TextView) view.findViewById(R.id.numberReportedCases);
         nConfirmedCases = (TextView) view.findViewById(R.id.numberConfirmedCases);
         nCompletedTasks = (TextView) view.findViewById(R.id.numberCompletedTasks);
+        nDonation = (TextView) view.findViewById(R.id.numberDonatedPower);
 
         // call to action buttons
         donateButton = (Button) view.findViewById(R.id.donateButton);
@@ -219,6 +221,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
             nReportedCases.setText(extras.getString("nRepCases"));
             nConfirmedCases.setText(extras.getString("nConfCases"));
             nCompletedTasks.setText(extras.getString("nCompCases"));
+            nDonation.setText(extras.getString("nDonPower"));
             //Toast.makeText(getContext(),value , Toast.LENGTH_LONG).show();
         }
 
@@ -236,6 +239,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         extras.putString("nRepCases", nReportedCases.getText().toString());
         extras.putString("nConfCases", nConfirmedCases.getText().toString());
         extras.putString("nCompCases", nCompletedTasks.getText().toString());
+        extras.putString("nDonPower", nDonation.getText().toString());
 
         getActivity().getIntent().putExtras(extras);
     }
@@ -311,6 +315,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         nConfirmedCases.setText(String.valueOf(ds.child("numberConfirmedCases").getValue()));
         nReportedCases.setText(String.valueOf(ds.child("numberReportedCases").getValue()));
         nCompletedTasks.setText(String.valueOf(ds.child("numberCompletedTasks").getValue()));
+        nDonation.setText(String.valueOf(ds.child("numberDonatedPower").getValue()));
     }
 
     /**

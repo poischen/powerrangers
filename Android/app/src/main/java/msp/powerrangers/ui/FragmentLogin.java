@@ -147,7 +147,7 @@ public class FragmentLogin extends Fragment {
                             editor.putString(getResources().getString(R.string.sharedPrefs_userDbId), dbId);
                             editor.commit();
                             //create new user object
-                            user = new User(dbId, userId, currentName, currentMail, null);
+                            user = new User(dbId, userId, currentName, currentMail);
                             // pushing firebaseUser to 'users' node using the userId
                             database.child(dbId).setValue(user);
                             Log.i("THE USER ID" , user.getId());

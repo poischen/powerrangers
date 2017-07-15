@@ -1,5 +1,7 @@
 package msp.powerrangers.ui.listitems;
 
+import android.graphics.Bitmap;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,7 +24,10 @@ public class RangerTasksListItem {
     public String city;
     public  String country;
     public String comment;
-    public int imageId;
+    //public int imageId;
+    public String taskImageUrlDB;
+    public String caseImageUrlDB;
+    public Bitmap taskImage;
 
     List<RangerTasksListItem> data = new ArrayList<>();
     private DatabaseReference dbRefTasks;
@@ -33,17 +38,34 @@ public class RangerTasksListItem {
     String commentDB;
     int imageIdDB;
 
-    public RangerTasksListItem(String title, String city, String country, String comment, int imageID) {
+    //public RangerTasksListItem(String title, String city, String country, String comment, int imageID) {
+    public RangerTasksListItem(String title, String city, String country, String comment, String taskImageUrlDB, String caseImageUrlDB) {
         this.title = title;
         this.city = city;
         this.country = country;
         this.comment = comment;
-        this.imageId = imageId;
+        //this.imageId = imageId;
+        this.taskImageUrlDB = taskImageUrlDB;
+        this.caseImageUrlDB = caseImageUrlDB;
     }
     public RangerTasksListItem(){
     }
 
+    public void setTaskBitmap(Bitmap image){
+        this.taskImage = image;
+    }
 
+    public Bitmap getTaskBitmap(){
+        return taskImage;
+    }
+
+    public String getCaseUrl(){
+        return caseImageUrlDB;
+    }
+
+    public String getTaskUrl(){
+        return taskImageUrlDB;
+    }
 
     /**
      * Generates RT-Objects for RecyclerView's adapter.
@@ -64,9 +86,10 @@ public class RangerTasksListItem {
                     cityDB = (String) singleSnapshot.child("city").getValue();
                     countryDB = (String) singleSnapshot.child("country").getValue();
                     commentDB = (String) singleSnapshot.child("comment").getValue();
-                    // TODO: get first image for task from db
-                    imageIdDB = R.drawable.placeholder_case;
-                    data.add(new RangerTasksListItem(titleDB, cityDB, countryDB, commentDB, imageIdDB));
+                    //imageIdDB = R.drawable.placeholder_case;
+                    taskImageUrlDB = (String) singleSnapshot.child("taskPicture").getValue();
+                    caseImageUrlDB = (String) singleSnapshot.child("casePicture").getValue();
+                    data.add(new RangerTasksListItem(titleDB, cityDB, countryDB, commentDB, taskImageUrlDB, caseImageUrlDB));
 
                 }
 
