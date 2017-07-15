@@ -161,11 +161,14 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                             String userId = userInfo.getId();
                             String mail = userInfo.getEmail();
 
+                            // set all bubbles
                             setUserInfos(dataSnapshot);
+
                             // create user object (user is registered)
                             u = new User(dbId, userId, name, mail);
                             // set user pic
                             downloadUserPic();
+
                         } catch (Exception e) {
                             Log.d("FragmentStart", "An error occured, user has to be signed out");
                             FirebaseAuth.getInstance().signOut();
@@ -315,7 +318,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         nConfirmedCases.setText(String.valueOf(ds.child("numberConfirmedCases").getValue()));
         nReportedCases.setText(String.valueOf(ds.child("numberReportedCases").getValue()));
         nCompletedTasks.setText(String.valueOf(ds.child("numberCompletedTasks").getValue()));
-        nDonation.setText(String.valueOf(ds.child("numberDonatedPower").getValue()));
+        nDonation.setText(String.valueOf(ds.child("donatedValue").getValue()));
     }
 
     /**

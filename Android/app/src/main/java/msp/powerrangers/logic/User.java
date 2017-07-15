@@ -19,16 +19,15 @@ public class User extends Role implements Serializable  {
     private String email;
     private String userPic = "";
     private int balance;
+    private double donatedValue;
     private List<String> reportedCasesIdList;
     private List<String> confirmedCasesIdList;
     private List<String> completedTasksIdList;
     private List<String> openTasksIdList;
     private List<Role> roleList;
-    private List<Double> donationList;
+    //private List<Double> donationList;
 
-    public User(){
-
-    }
+    public User(){}
 
     public User(String dbId, String userId, String userName, String email){
 
@@ -36,6 +35,8 @@ public class User extends Role implements Serializable  {
         this.userId = userId;
         this.userName = userName;
         this.email = email;
+        this.balance = 0;
+        this.donatedValue = 0.0;
 
         reportedCasesIdList = new ArrayList<String>();
         reportedCasesIdList.add("DummyID");
@@ -49,8 +50,8 @@ public class User extends Role implements Serializable  {
         openTasksIdList = new ArrayList<String>();
         openTasksIdList.add("DummyID");
 
-        donationList = new ArrayList<Double>();
-        donationList.add(0.0);
+        //donationList = new ArrayList<Double>();
+        //donationList.add(0.0);
 
         roleList = new ArrayList<Role>();
 
@@ -78,6 +79,10 @@ public class User extends Role implements Serializable  {
         return balance;
     }
 
+    public double getDonatedValue() {
+        return donatedValue;
+    }
+
     public int getNumberReportedCases() {
         return reportedCasesIdList.size()-1;
     }
@@ -102,6 +107,7 @@ public class User extends Role implements Serializable  {
         return openTasksIdList.size()-1;
     }
 
+    /*
     public Double getDonations() {
         Double donatedPower = 0.0;
         for (int i=0; i<donationList.size();i++){
@@ -109,6 +115,7 @@ public class User extends Role implements Serializable  {
         }
         return donatedPower;
     }
+    */
 
     // setter
     public void setName(String userName) {
@@ -127,9 +134,14 @@ public class User extends Role implements Serializable  {
         this.balance = balance;
     }
 
-    public void setDoantedPower(double donation) {
-        this.donationList.add(donation);
+    public void setDonatedValue(double donatedValue) {
+        this.donatedValue = donatedValue;
     }
+
+
+   /* public void setDoantedPower(double donation) {
+        this.donationList.add(donation);
+    }*/
 
     @Override
     public List<Role> getRoles() {
