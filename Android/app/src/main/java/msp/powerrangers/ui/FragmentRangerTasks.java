@@ -46,6 +46,7 @@ public class FragmentRangerTasks extends Fragment {
     protected RecyclerView mRecyclerView;
     protected RecyclerView.LayoutManager mLayoutManager;
     protected Recycler_View_Adapter mAdapter;
+    private RangerTasksListItem tasksListItems;
     private RangerTasksListItem tasksListItem;
     private StorageReference storageRef;
 
@@ -60,6 +61,10 @@ public class FragmentRangerTasks extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         storageRef = FirebaseStorage.getInstance().getReference();
+
+        Bundle bund = getArguments();
+        tasksListItems = (RangerTasksListItem) bund.getSerializable("rangerTaskListItems");
+
     }
 
     @Override
@@ -121,7 +126,7 @@ public class FragmentRangerTasks extends Fragment {
         tasksListItem = new RangerTasksListItem();
 
         // 3. Create an adapter
-        mAdapter = new Recycler_View_Adapter(tasksListItem.getData(), getContext());
+        mAdapter = new Recycler_View_Adapter(tasksListItems.getData(), getContext());
 
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);
