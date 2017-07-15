@@ -47,8 +47,6 @@ public class FragmentRangerTasks extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Set action bar menu
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -201,12 +199,6 @@ public class FragmentRangerTasks extends Fragment {
         }
     }
 
-    // Set action bar
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        super.onCreateOptionsMenu(menu, menuInflater);
-        menuInflater.inflate(R.menu.fragment_details_ranger_tasks, menu);
-    }
 
 }
 

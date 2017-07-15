@@ -13,8 +13,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -117,6 +119,11 @@ public class FragmentDetailConfirmerCase extends Fragment {
         sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
         userDbID = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
         refPathCurrentUser = FirebaseDatabase.getInstance().getReference().child("users").child(userDbID);
+
+        // Set action bar menu
+        setHasOptionsMenu(true);
+
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
@@ -521,6 +528,19 @@ public class FragmentDetailConfirmerCase extends Fragment {
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             ((ViewPager) container).removeView((ImageView) object);
+        }
+    }
+
+    // Get back to activity on back button click
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                return true;
+            default:
+                return false;
         }
     }
 

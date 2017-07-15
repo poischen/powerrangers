@@ -5,10 +5,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -75,6 +78,8 @@ public class FragmentDetailRangerTask extends Fragment {
 
         // Set action bar menu
         setHasOptionsMenu(true);
+
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
@@ -233,6 +238,7 @@ public class FragmentDetailRangerTask extends Fragment {
             }
         });
 
+
         return view;
     }
 
@@ -256,12 +262,18 @@ public class FragmentDetailRangerTask extends Fragment {
         return result;
     }
 
-    // Set action bar
+
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        super.onCreateOptionsMenu(menu, menuInflater);
-        Log.i("MENU", "Menu called");
-        menuInflater.inflate(R.menu.fragment_details_ranger_tasks, menu);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                return true;
+            default:
+                return false;
+        }
     }
+
 
 }
