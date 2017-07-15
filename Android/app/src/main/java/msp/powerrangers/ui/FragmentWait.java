@@ -24,6 +24,11 @@ public class FragmentWait extends Fragment {
     private UsersOpenTasksListItem usersOpenTasksListItem;
     private VotingTasksListItem votingTasksListItem;
 
+    private boolean votingTabClicked = false;
+    private boolean confirmerTabClicked = false;
+    private boolean rangerTabClicked = false;
+
+
     public FragmentWait() {
         // Required empty public constructor
     }
@@ -44,29 +49,60 @@ public class FragmentWait extends Fragment {
         if (tag.equals(votingTag)) {
             votingTasksListItem = new VotingTasksListItem();
             votingTasksListItem.fill_with_data(this);
+            votingTabClicked = true;
 
         } else if (tag.equals(confirmerTag)) {
             casesListItem = new ConfirmerCasesListItem();
             casesListItem.fill_with_data(this);
+            confirmerTabClicked = true;
 
         } else if (tag.equals(rangerTag)) {
             rangerTasksListItem = new RangerTasksListItem();
             rangerTasksListItem.fill_with_data(this);
+            rangerTabClicked = true;
         }
 
 
     }
 
     public void changeToContentView() {
-        FragmentConfirmerCases confirmerCasesFragment = new FragmentConfirmerCases();
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        Bundle bundles = new Bundle();
-        bundles.putSerializable("caseListItems", casesListItem);
-        confirmerCasesFragment.setArguments(bundles);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        ft.replace(R.id.activity_main_fragment_container, confirmerCasesFragment);
-        ft.addToBackStack(null);
-        ft.commit();
+
+        if (confirmerTabClicked){
+            FragmentConfirmerCases confirmerCasesFragment = new FragmentConfirmerCases();
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            Bundle bundles = new Bundle();
+            bundles.putSerializable("caseListItems", casesListItem);
+            confirmerCasesFragment.setArguments(bundles);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            ft.replace(R.id.activity_main_fragment_container, confirmerCasesFragment);
+            ft.addToBackStack(null);
+            ft.commit();
+
+        } else if (votingTabClicked){
+            FragmentVotingTasks fragmentVotingTasks = new FragmentVotingTasks();
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            Bundle bundles = new Bundle();
+            bundles.putSerializable("votingTaskListItems", votingTasksListItem);
+            fragmentVotingTasks.setArguments(bundles);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            ft.replace(R.id.activity_main_fragment_container, fragmentVotingTasks);
+            ft.addToBackStack(null);
+            ft.commit();
+
+        } else if (rangerTabClicked){
+            FragmentRangerTasks fragmentRangerTasks = new FragmentRangerTasks();
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            Bundle bundles = new Bundle();
+            bundles.putSerializable("rangerTaskListItems", rangerTasksListItem);
+            fragmentRangerTasks.setArguments(bundles);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            ft.replace(R.id.activity_main_fragment_container, fragmentRangerTasks);
+            ft.addToBackStack(null);
+            ft.commit();
+
+        }
+
+
 
     }
 

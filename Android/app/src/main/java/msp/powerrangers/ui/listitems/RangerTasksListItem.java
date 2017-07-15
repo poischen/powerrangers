@@ -8,6 +8,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ import msp.powerrangers.ui.FragmentWait;
  * Tutorial: https://www.sitepoint.com/mastering-complex-lists-with-the-android-recyclerview/
  *
  */
-public class RangerTasksListItem {
+public class RangerTasksListItem implements Serializable {
 
     public String title;
     public String city;
@@ -93,6 +94,8 @@ public class RangerTasksListItem {
                     data.add(new RangerTasksListItem(titleDB, cityDB, countryDB, commentDB, taskImageUrlDB, caseImageUrlDB));
 
                 }
+
+                fragmentWait.changeToContentView();
 
             }
 

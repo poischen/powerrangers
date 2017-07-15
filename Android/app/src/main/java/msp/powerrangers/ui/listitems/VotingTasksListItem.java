@@ -9,6 +9,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ import static android.content.ContentValues.TAG;
  * Tutorial: https://www.sitepoint.com/mastering-complex-lists-with-the-android-recyclerview/
  *
  */
-public class VotingTasksListItem {
+public class VotingTasksListItem implements Serializable {
 
     public String title;
     public String location;
@@ -66,6 +67,8 @@ public class VotingTasksListItem {
                     data.add(new VotingTasksListItem(titleDB, locationDB, R.drawable.polluted_beach1, R.drawable.clean_beach));
                     //Log.i("Data Top", "This is the data: " + data);
                 }
+
+                fragmentWait.changeToContentView();
             }
 
             @Override
