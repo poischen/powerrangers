@@ -20,10 +20,12 @@ public class Case {
     private String confirmerId;
 
 
+    public Case(){
+        // Needed for Firebase
+    };
 
     public Case(String dbId, String detectiveId, String caseId, String name, String city, String country,
-                int scale, int areaX, int areaY, List<String> pictureURLs,
-                String comment){
+                int scale, int areaX, int areaY, List<String> pictureURLs, String comment){
         this.dbId = dbId;
         this.detectiveId = detectiveId;
         this.name = name;

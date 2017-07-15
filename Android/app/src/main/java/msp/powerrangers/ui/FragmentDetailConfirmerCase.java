@@ -354,7 +354,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
 
                                     @Override
                                     public void onCancelled(DatabaseError databaseError) {
-
+                                        Log.e("FrDetailConfirmerCase", "The currentUser read failed: " + databaseError.getMessage());
                                     }
 
                                 });
@@ -364,7 +364,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-
+                            Log.e("FrDetailConfirmerCase", "The currentCase read failed: " + databaseError.getMessage());
                         }
                     });
 
