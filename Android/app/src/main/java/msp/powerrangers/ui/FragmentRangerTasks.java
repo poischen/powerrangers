@@ -9,6 +9,8 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -45,7 +47,8 @@ public class FragmentRangerTasks extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        // Set action bar menu
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -198,7 +201,12 @@ public class FragmentRangerTasks extends Fragment {
         }
     }
 
-
+    // Set action bar
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        super.onCreateOptionsMenu(menu, menuInflater);
+        menuInflater.inflate(R.menu.fragment_details_ranger_tasks, menu);
+    }
 
 }
 
