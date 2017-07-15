@@ -49,6 +49,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import android.Manifest;
 
 import msp.powerrangers.R;
+import msp.powerrangers.logic.Global;
 import msp.powerrangers.logic.User;
 
 import static android.app.Activity.RESULT_OK;
@@ -437,7 +438,8 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                         final File localFile = File.createTempFile("images", "jpg");
                         try {
                             String picUrlFromDB = dataSnapshot.getValue(String.class);
-                            StorageReference riversRef = storageRef.child(picUrlFromDB);
+                            //StorageReference riversRef = storageRef.child(picUrlFromDB);
+                            StorageReference riversRef = storageRef.child(Global.getThumbUrl(picUrlFromDB));
                             riversRef.getFile(localFile)
                                     .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                         @Override
