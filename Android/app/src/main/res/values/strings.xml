@@ -15,6 +15,12 @@
     <string name="confirmCases">confirm</string>
     <string name="findYorJob">get a job</string>
 
+    <!-- Tabnames-->
+    <string name="startTag">startTag</string>
+    <string name="confirmTasksTag">votingTag</string>
+    <string name="confirmCasesTag">confirmTag</string>
+    <string name="findYorJobTag">jobTag</string>
+
     <!-- FragmentStart-->
     <string name="balance">earned</string>
     <string name="openTasks_2">open tasks</string>

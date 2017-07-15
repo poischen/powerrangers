@@ -40,7 +40,7 @@ public class FragmentTabs extends Fragment {
             arg3.putInt("Arg for Frag3", 3);
             /*tabHost.addTab(tabHost.newTabSpec(getString(R.string.confirmCases)).setIndicator(getString(R.string.confirmCases)),
                     FragmentConfirmerCases.class, arg3);*/
-            tabHost.addTab(tabHost.newTabSpec(getString(R.string.confirmCases)).setIndicator(getString(R.string.confirmCases)),
+            tabHost.addTab(tabHost.newTabSpec("bla").setIndicator(getString(R.string.confirmCases)),
                     FragmentWait.class, arg3);
 
             Bundle arg4 = new Bundle();

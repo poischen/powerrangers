@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ public class FragmentWait extends Fragment {
         super.onCreate(savedInstanceState);
 
         String tag = getTag();
+        Log.i("KATJA", "tag: "+tag);
         casesListItem = new ConfirmerCasesListItem();
         casesListItem.fill_with_data(this);
 
