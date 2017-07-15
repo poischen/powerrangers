@@ -47,6 +47,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import msp.powerrangers.R;
+import msp.powerrangers.logic.Global;
 import msp.powerrangers.logic.User;
 
 
@@ -216,7 +217,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
 
                             try {
                                 final File localFile = File.createTempFile("images", "jpg");
-                                StorageReference riversRef = storageRef.child(url);
+                                StorageReference riversRef = storageRef.child(Global.getThumbUrl(url));
                                 riversRef.getFile(localFile)
                                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                             @Override
