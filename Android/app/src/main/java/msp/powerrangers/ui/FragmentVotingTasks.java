@@ -75,7 +75,7 @@ public class FragmentVotingTasks extends Fragment {
         votingTasksListItem = new VotingTasksListItem();
 
         // 3. Create an adapter and fill
-        mAdapter = new FragmentVotingTasks.Recycler_View_Adapter(votingTasksListItem.fill_with_data(), getContext());
+        mAdapter = new FragmentVotingTasks.Recycler_View_Adapter(votingTasksListItem.getData(), getContext());
 
         // 3. Create an adapter
        // mAdapter = new Recycler_View_Adapter(data, getContext());

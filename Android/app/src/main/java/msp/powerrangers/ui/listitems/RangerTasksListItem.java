@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import msp.powerrangers.R;
+import msp.powerrangers.ui.FragmentWait;
 
 /**
  * == Data
@@ -70,7 +71,7 @@ public class RangerTasksListItem {
     /**
      * Generates RT-Objects for RecyclerView's adapter.
      */
-    public List<RangerTasksListItem> fill_with_data() {
+    public List<RangerTasksListItem> fill_with_data(final FragmentWait fragmentWait) {
 
         // get the reference to the db cases
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
@@ -110,6 +111,10 @@ public class RangerTasksListItem {
         data.add(new RangerTasksListItem("Kemer, Turkey", "Summary of the case in Kemer....", R.drawable.placeholder_task));
         */
 
+        return data;
+    }
+
+    public List<RangerTasksListItem> getData(){
         return data;
     }
 

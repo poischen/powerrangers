@@ -12,11 +12,17 @@ import android.view.ViewGroup;
 
 import msp.powerrangers.R;
 import msp.powerrangers.ui.listitems.ConfirmerCasesListItem;
+import msp.powerrangers.ui.listitems.RangerTasksListItem;
+import msp.powerrangers.ui.listitems.UsersOpenTasksListItem;
+import msp.powerrangers.ui.listitems.VotingTasksListItem;
 
 
 public class FragmentWait extends Fragment {
 
     private ConfirmerCasesListItem casesListItem;
+    private RangerTasksListItem rangerTasksListItem;
+    private UsersOpenTasksListItem usersOpenTasksListItem;
+    private VotingTasksListItem votingTasksListItem;
 
     public FragmentWait() {
         // Required empty public constructor
@@ -27,13 +33,31 @@ public class FragmentWait extends Fragment {
         super.onCreate(savedInstanceState);
 
         String tag = getTag();
-        Log.i("KATJA", "tag: "+tag);
-        casesListItem = new ConfirmerCasesListItem();
-        casesListItem.fill_with_data(this);
+        Log.i("KATJA", "tag: " + tag);
+
+        String startTag = getString(R.string.startTag);
+        String votingTag = getString(R.string.votingTasksTag);
+        String confirmerTag = getString(R.string.confirmCasesTag);
+        String rangerTag = getString(R.string.rangerTasksTag);
+
+        // check which tab was clicked and get the data from the db
+        if (tag.equals(votingTag)) {
+            votingTasksListItem = new VotingTasksListItem();
+            votingTasksListItem.fill_with_data(this);
+
+        } else if (tag.equals(confirmerTag)) {
+            casesListItem = new ConfirmerCasesListItem();
+            casesListItem.fill_with_data(this);
+
+        } else if (tag.equals(rangerTag)) {
+            rangerTasksListItem = new RangerTasksListItem();
+            rangerTasksListItem.fill_with_data(this);
+        }
+
 
     }
 
-    public void changeToContentView(){
+    public void changeToContentView() {
         FragmentConfirmerCases confirmerCasesFragment = new FragmentConfirmerCases();
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         Bundle bundles = new Bundle();

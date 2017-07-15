@@ -121,7 +121,7 @@ public class FragmentRangerTasks extends Fragment {
         tasksListItem = new RangerTasksListItem();
 
         // 3. Create an adapter
-        mAdapter = new Recycler_View_Adapter(tasksListItem.fill_with_data(), getContext());
+        mAdapter = new Recycler_View_Adapter(tasksListItem.getData(), getContext());
 
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import msp.powerrangers.R;
+import msp.powerrangers.ui.FragmentWait;
 
 import static android.content.ContentValues.TAG;
 
@@ -48,7 +49,7 @@ public class VotingTasksListItem {
     /**
      * Generates Voting Task Objects for RecyclerView's adapter.
      */
-    public List<VotingTasksListItem> fill_with_data() {
+    public List<VotingTasksListItem> fill_with_data(final FragmentWait fragmentWait) {
 
         // get the reference to the db tasks
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
@@ -83,6 +84,12 @@ public class VotingTasksListItem {
         return data;
 
     }
+
+
+    public List<VotingTasksListItem> getData(){
+        return data;
+    }
+
 
 
     /**
