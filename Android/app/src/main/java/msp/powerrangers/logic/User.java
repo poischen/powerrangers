@@ -18,7 +18,7 @@ public class User extends Role implements Serializable  {
     private String userName;
     private String email;
     private String userPic = "";
-    private double balance;
+    private int balance;
     private List<String> reportedCasesIdList;
     private List<String> confirmedCasesIdList;
     private List<String> completedTasksIdList;
@@ -116,7 +116,7 @@ public class User extends Role implements Serializable  {
         this.email = email;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(int balance) {
         this.balance = balance;
     }
 

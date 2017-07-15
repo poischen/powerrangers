@@ -56,7 +56,7 @@ public class ConfirmerCasesListItem {
         // get the reference to the db cases
         dbRefCases = FirebaseDatabase.getInstance().getReference("cases");
 
-        dbRefCases.addValueEventListener(new ValueEventListener() {
+        dbRefCases.orderByChild("confirmed").equalTo(false).addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -76,6 +76,7 @@ public class ConfirmerCasesListItem {
             public void onCancelled(DatabaseError databaseError) {
 
             }
+
         });
 
       /*  data.add(new ConfirmerCasesListItem("Munich, Germany", "English Garden, 25.06.2017 ...", R.drawable.placeholder_case));
@@ -86,6 +87,7 @@ public class ConfirmerCasesListItem {
         */
 
         return data;
+
     }
 
 }

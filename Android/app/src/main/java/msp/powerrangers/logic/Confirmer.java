@@ -3,12 +3,17 @@ package msp.powerrangers.logic;
 
 public class Confirmer extends RoleForwarding {
 
-    double fixedReward;
-    int caseId;
+    long fixedReward = 5;
+    String caseId;
 
-    public Confirmer(User user, double fixedReward, int caseId) {
-        this.fixedReward = fixedReward;
+    public Confirmer(User user, String caseId) {
         this.caseId = caseId;
         this.user = user;
     }
+
+    public long getFixedReward(){
+        return fixedReward;
+    }
+
+
 }

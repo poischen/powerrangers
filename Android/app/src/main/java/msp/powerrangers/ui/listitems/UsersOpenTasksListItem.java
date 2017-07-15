@@ -1,5 +1,11 @@
 package msp.powerrangers.ui.listitems;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,23 +22,62 @@ public class UsersOpenTasksListItem {
     public String desc;
     public int imageID;
 
-    private UsersOpenTasksListItem(String title, String desc, int imageID) {
+
+    String titleDB;
+    String cityDB;
+    String countryDB;
+    String commentDB;
+    int imageIdDB;
+
+    List<UsersOpenTasksListItem> data = new ArrayList<>();
+    private DatabaseReference dbRefTasks;
+
+    public UsersOpenTasksListItem(String title, String desc, int imageID) {
         this.title = title;
         this.desc = desc;
         this.imageID = imageID;
     }
 
-    /**
-     * Generates UOT-Objects for RecyclerView's adapter.
-     */
-    public static List<UsersOpenTasksListItem> fill_with_data() {
-        List<UsersOpenTasksListItem> data = new ArrayList<>();
-        data.add(new UsersOpenTasksListItem("Kathmandu, Nepal", "Summary of the case in Kathmandu....", R.drawable.placeholder_task));
-        data.add(new UsersOpenTasksListItem("Munich, Germany", "Summary of the case in Munich....", R.drawable.placeholder_task));
-        data.add(new UsersOpenTasksListItem("Chennai, India", "Summary of the case in Chennai....", R.drawable.placeholder_task));
-        data.add(new UsersOpenTasksListItem("Pattaya, Thailand", "Summary of the case in Pattaya....", R.drawable.placeholder_task));
+    public UsersOpenTasksListItem(){
+
+    }
+
+    public List<UsersOpenTasksListItem> fill_with_data() {
+
+        // get the reference to the db tasks
+        dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
+
+        dbRefTasks.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                // get data for each task from the db
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+
+                    cityDB = (String) singleSnapshot.child("city").getValue();
+                    countryDB = (String) singleSnapshot.child("country").getValue();
+
+                    titleDB = cityDB + " , " + countryDB;
+
+                    commentDB = (String) singleSnapshot.child("comment").getValue();
+                    // TODO: get first image for task from db
+                    imageIdDB = R.drawable.placeholder_case;
+                    data.add(new UsersOpenTasksListItem(titleDB, commentDB, imageIdDB));
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
         return data;
     }
+
 
 }

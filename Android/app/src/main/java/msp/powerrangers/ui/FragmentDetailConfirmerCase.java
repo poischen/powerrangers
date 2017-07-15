@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -29,6 +30,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -40,6 +44,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import msp.powerrangers.R;
+import msp.powerrangers.logic.User;
 
 
 public class FragmentDetailConfirmerCase extends Fragment {
@@ -86,6 +91,12 @@ public class FragmentDetailConfirmerCase extends Fragment {
     // firebase db instances
     private DatabaseReference dbRefCases;
 
+    // current user from shared preferences
+    SharedPreferences sharedPrefs;
+    DatabaseReference refPathCurrentUser;
+    String userDbID;  // CONFIRMER
+    String detectiveID; // DETECTIVE
+
     public FragmentDetailConfirmerCase() {
         // Required empty public constructor
     }
@@ -95,12 +106,17 @@ public class FragmentDetailConfirmerCase extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bund = getArguments();
-        position = bund.getInt("Position");
+        position = bund.getInt("PositionConfirm");
         storageRef = FirebaseStorage.getInstance().getReference();
         pictureURLs = new ArrayList<>();
         pictureBitmapList = new ArrayList<>();
         Bitmap defaultPic = BitmapFactory.decodeResource(getResources(), R.drawable.nopicyet);
         pictureBitmapList.add(defaultPic);
+
+        // get the current user [role: Confirmer]
+        sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
+        userDbID = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
+        refPathCurrentUser = FirebaseDatabase.getInstance().getReference().child("users").child(userDbID);
 
     }
 
@@ -152,15 +168,12 @@ public class FragmentDetailConfirmerCase extends Fragment {
 
         // eventuell todo ActionBar
 
-
         // fill in information from detective case in EditTexts
         dbRefCases = FirebaseDatabase.getInstance().getReference("cases");
 
-        // get attributes from a case
-        // final String dbId = dbRefCases.push().getKey();
-
-        //dbRefCases.addListenerForSingleValueEvent(
-        dbRefCases.addValueEventListener(
+        // get attributes from a case as default values to edit
+        Query filteredCases = dbRefCases.orderByChild("confirmed").equalTo(false);
+        filteredCases.addValueEventListener(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -180,7 +193,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
                         String caseYCoord = String.valueOf(singleSnapshot.child("areaY").getValue());
                         String caseScale = String.valueOf(singleSnapshot.child("scale").getValue());
 
-                        //get cases picture urls from db, download pictures from stroage and show them
+                        //get cases picture urls from db, download pictures from storage and show them
                         Iterator<DataSnapshot> dsPictureURLs = singleSnapshot.child("pictureURL").getChildren().iterator();
                         Log.v("DetailConfirmerCase", "dsPictureURLS: " + dsPictureURLs);
 
@@ -192,7 +205,8 @@ public class FragmentDetailConfirmerCase extends Fragment {
                             String url = dataSnapshotChild.getValue(String.class);
                             pictureURLs.add(url);
 
-                            try {final File localFile = File.createTempFile("images", "jpg");
+                            try {
+                                final File localFile = File.createTempFile("images", "jpg");
                                 StorageReference riversRef = storageRef.child(url);
                                 riversRef.getFile(localFile)
                                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
@@ -289,33 +303,70 @@ public class FragmentDetailConfirmerCase extends Fragment {
         {
             @Override
             public void onClick(View v) {
-              //  Toast.makeText(getContext(), "to be implemented ;-)", Toast.LENGTH_SHORT).show();
 
-                dbRefCases.addValueEventListener(
+                Query filteredCases = dbRefCases.orderByChild("confirmed").equalTo(false);
+                filteredCases.addListenerForSingleValueEvent(
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
                                 Iterator iter = dataSnapshot.getChildren().iterator();
 
+                                Log.i("KATJA", "position in DCC:" + position);
                                 for (int i = 0; i < position; i++) {
                                     iter.next();
                                 }
 
                                 DataSnapshot singleSnapshot = (DataSnapshot) iter.next();
 
+                                detectiveID = String.valueOf(singleSnapshot.child("detectiveID").getValue());
+                                Log.i("KATJA","Detective id:"+detectiveID);
+                                Log.i("KATJA","User id:"+userDbID);
+
+                                // detective can`t confirme his own case :)
+                                if (detectiveID.equals(userDbID)) {
+                                    Log.i("KATJA","Detective is the confirmer!");
+                                    Toast.makeText(getContext(), R.string.detailConfirmerCaseDectiveError, Toast.LENGTH_LONG).show();
+                                }
 
                                 // fill in new values
-                                singleSnapshot.child("name").getRef().setValue(editTextConfirmCaseTitle.getText().toString());
-                                singleSnapshot.child("city").getRef().setValue(editTextConfirmCaseCity.getText().toString());
-                                singleSnapshot.child("country").getRef().setValue(editTextConfirmCaseCountry.getText().toString());
-                                singleSnapshot.child("comment").getRef().setValue(editTextConfirmCaseInformation.getText().toString());
-                                singleSnapshot.child("areaX").getRef().setValue(editTextConfirmCaseXCoordinate.getText().toString());
-                                singleSnapshot.child("areaY").getRef().setValue(editTextConfirmCaseYCoordinate.getText().toString());
-                                singleSnapshot.child("scale").getRef().setValue(getScaleValue(radioButtonConfirmCaseLow, radioButtonConfirmCaseMiddle, radioButtonConfirmCaseHigh));
-                                singleSnapshot.child("confirmed").getRef().setValue(true);
+                                else {
+                                    Log.i("KATJA","Detective is not the the confirmer!");
+                                    singleSnapshot.child("name").getRef().setValue(editTextConfirmCaseTitle.getText().toString());
+                                    singleSnapshot.child("city").getRef().setValue(editTextConfirmCaseCity.getText().toString());
+                                    singleSnapshot.child("country").getRef().setValue(editTextConfirmCaseCountry.getText().toString());
+                                    singleSnapshot.child("comment").getRef().setValue(editTextConfirmCaseInformation.getText().toString());
+                                    singleSnapshot.child("areaX").getRef().setValue(editTextConfirmCaseXCoordinate.getText().toString());
+                                    singleSnapshot.child("areaY").getRef().setValue(editTextConfirmCaseYCoordinate.getText().toString());
+                                    singleSnapshot.child("scale").getRef().setValue(getScaleValue(radioButtonConfirmCaseLow, radioButtonConfirmCaseMiddle, radioButtonConfirmCaseHigh));
+                                    singleSnapshot.child("confirmed").getRef().setValue(true);
+                                    // add the confirmer id to the childs
+                                    singleSnapshot.child("confirmerId").getRef().setValue(userDbID);
 
 
+                                    // update user balance & number confirmed cases
+                                    refPathCurrentUser.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                            // TODO eigentlich sollte der fixedReward in der Confirmer-Instanz gesetzt werden. Zurzeit gibt es keinen Confimer objekt..
+                                            // [getFixedReward vom Confirmer benutzen]
+                                            int fixedReward = 5;
+                                            long currentBalance = (long) dataSnapshot.child("balance").getValue();
+                                            dataSnapshot.getRef().child("balance").setValue(currentBalance + fixedReward);
+
+                                            String currentCount = String.valueOf(dataSnapshot.child("numberConfirmedCases").getValue());
+                                            int newCount = Integer.valueOf(currentCount)+1;
+                                            dataSnapshot.getRef().child("numberConfirmedCases").setValue(String.valueOf(newCount));
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+
+                                    });
+                                }
 
                             }
 
@@ -325,28 +376,6 @@ public class FragmentDetailConfirmerCase extends Fragment {
                             }
                         });
 
-
-                ///TODO: update Confirmed Cases Bubble on Start
-                //TextView confirmedCases = (TextView) view.findViewById(R.id.numberConfirmedCases);
-
-                // int n = Integer.parseInt(confirmedCases.getText().toString());
-                //Toast.makeText(getActivity(), "cases: "+confirmedCases.getText(), Toast.LENGTH_SHORT).show();
-                //n++;
-
-                View startView = new View(getActivity());
-                startView = inflater.inflate(R.layout.fragment_start, container, false);
-
-                if (startView == null) {
-                    Toast.makeText(getActivity(), "fucked up", Toast.LENGTH_SHORT).show();
-                }
-
-                TextView confirmedCases = (TextView) startView.findViewById(R.id.numberConfirmedCases);
-                int nCases = Integer.parseInt(confirmedCases.getText().toString());
-                // Toast.makeText(getActivity(), "cases: "+txt, Toast.LENGTH_SHORT).show();
-                nCases++;
-                // TODO: write the incremented value in the db (user)
-                // TODO: all bubble values should be added to user!
-                // -->  by clicking on the fragment start the values should be pulled and inserted!
 
                 // go back to FragmentStart
                 Intent i = new Intent(getActivity(), MainActivity.class);

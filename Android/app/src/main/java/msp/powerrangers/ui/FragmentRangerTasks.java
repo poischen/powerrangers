@@ -71,7 +71,7 @@ public class FragmentRangerTasks extends Fragment {
                         FragmentDetailRangerTask fragmentDetailRangerTask = new FragmentDetailRangerTask();
                         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                         Bundle bundles = new Bundle();
-                        bundles.putInt("Position", position);
+                        bundles.putInt("PositionRanger", position);
                         fragmentDetailRangerTask.setArguments(bundles);
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                         ft.replace(R.id.activity_main_fragment_container, fragmentDetailRangerTask);

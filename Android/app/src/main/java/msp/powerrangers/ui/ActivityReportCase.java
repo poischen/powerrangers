@@ -1,18 +1,14 @@
 package msp.powerrangers.ui;
 
-import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -27,22 +23,24 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +51,7 @@ import msp.powerrangers.logic.Case;
 import msp.powerrangers.logic.Detective;
 import msp.powerrangers.logic.User;
 
+
 public class ActivityReportCase extends AppCompatActivity {
 
     private static final int CHOOSE_IMAGE_REQUEST = 123;
@@ -60,18 +59,6 @@ public class ActivityReportCase extends AppCompatActivity {
     final long ONE_MEGABYTE = 1024 * 1024;
 
     // TODO: set all fields in res to requiered!
-    // text Views
-    /*private TextView textViewCaseTitle;
-    private TextView textViewCaseCity;
-    private TextView textViewCaseCountry;
-    private TextView textViewCaseScala;
-    private TextView textViewCaseAreaCoordinates;
-    private TextView textViewCaseXCoordinate;
-    private TextView textViewCaseYCoordinate;
-    private TextView textViewCasePicture;
-    private TextView textViewCaseInformation;
-    private TextView textViewUploadedPictures;*/
-
     // edit Texts
     private EditText editTextCaseTitle;
     private EditText editTextCaseCity;
@@ -80,7 +67,7 @@ public class ActivityReportCase extends AppCompatActivity {
     private EditText editTextCaseYCoordinate;
     private EditText editTextCaseInformation;
 
-    // TODO: only one radio button should be selectable
+    //TODO: only one button should be selectable!!
     // radio buttons scale
     private RadioButton radioButtonCaseLow;
     private RadioButton radioButtonCaseMiddle;
@@ -98,13 +85,10 @@ public class ActivityReportCase extends AppCompatActivity {
 
     // firebase db instances
     private DatabaseReference dbRefCases;
-    private DatabaseReference dbRefUsers;
-
-
-    // current firebaseUser
-    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+    private DatabaseReference refPathCurrentUser;
 
     private User us;
+    String userDbId;
 
     private Case c;
 
@@ -121,31 +105,25 @@ public class ActivityReportCase extends AppCompatActivity {
         //stuff for pic upload
         pictureUrisList = new ArrayList<>();
         pictureBitmapList = new ArrayList<>();
+
         Bitmap defaultPic = BitmapFactory.decodeResource(getResources(), R.drawable.nopicyet);
         pictureBitmapList.add(defaultPic);
+
         casePictures = new ArrayList<>();
         isDefaultPic = true;
 
         //Firebase stuff
         storageRef = FirebaseStorage.getInstance().getReference();
         dbRefCases = FirebaseDatabase.getInstance().getReference("cases");
-        dbRefUsers = FirebaseDatabase.getInstance().getReference("users");
 
         //get current User Object from Intent
         Intent myIntent = getIntent();
         us = (User) myIntent.getSerializableExtra("USER");
+        userDbId = us.getDbId();
+        refPathCurrentUser = FirebaseDatabase.getInstance().getReference().child("users").child(userDbId);
+
 
         // find UI elements
-        /*textViewCaseTitle = (TextView) findViewById(R.id.textViewCaseTitle);
-        textViewCaseCity = (TextView) findViewById(R.id.textViewCaseCity);
-        textViewCaseCountry = (TextView) findViewById(R.id.textViewCaseCountry);
-        textViewCaseScala = (TextView) findViewById(R.id.textViewCaseScala);
-        textViewCaseAreaCoordinates = (TextView) findViewById(R.id.textViewCaseAreaCoordinates);
-        textViewCaseXCoordinate = (TextView) findViewById(R.id.textViewCaseXCoordinate);
-        textViewCaseYCoordinate = (TextView) findViewById(R.id.textViewCaseYCoordinate);
-        textViewCasePicture = (TextView) findViewById(R.id.textViewCasePicture);
-        textViewCaseInformation = (TextView) findViewById(R.id.textViewCaseInformation);
-        textViewUploadedPictures = (TextView) findViewById(R.id.textViewUploadedPictures);*/
         editTextCaseTitle = (EditText) findViewById(R.id.editTextCaseTitle);
         editTextCaseCity = (EditText) findViewById(R.id.editTextCaseCity);
         editTextCaseCountry = (EditText) findViewById(R.id.editTextCaseCountry);
@@ -156,7 +134,6 @@ public class ActivityReportCase extends AppCompatActivity {
         radioButtonCaseMiddle = (RadioButton) findViewById(R.id.radioButtonCaseMiddle);
         radioButtonCaseHigh = (RadioButton) findViewById(R.id.radioButtonCaseHigh);
         imageButtonUploadPicture = (ImageButton) findViewById(R.id.imageButtonUploadPicture);
-        //imageViewUploadedPicture = (ImageView) findViewById(R.id.imageViewUploadedPicture);
         buttonCaseReport = (Button) findViewById(R.id.buttonCaseReport);
         viewPager = (ViewPager) findViewById(R.id.aReportCaseViewPager);
         ActivityReportCase.ImageAdapter adapter = new ActivityReportCase.ImageAdapter(this);
@@ -180,6 +157,46 @@ public class ActivityReportCase extends AppCompatActivity {
                 showFileChooser();
             }
         });
+
+
+
+        // allow only one radio button to be checked!
+        radioButtonCaseLow.setOnClickListener(new View.OnClickListener()
+
+        {
+            @Override
+            public void onClick(View v) {
+                radioButtonCaseHigh.setChecked(false);
+                radioButtonCaseMiddle.setChecked(false);
+                radioButtonCaseLow.setChecked(true);
+            }
+        });
+
+
+        radioButtonCaseMiddle.setOnClickListener(new View.OnClickListener()
+
+        {
+            @Override
+            public void onClick(View v) {
+                radioButtonCaseLow.setChecked(false);
+                radioButtonCaseHigh.setChecked(false);
+                radioButtonCaseMiddle.setChecked(true);
+            }
+        });
+
+
+        radioButtonCaseHigh.setOnClickListener(new View.OnClickListener()
+
+        {
+            @Override
+            public void onClick(View v) {
+                radioButtonCaseLow.setChecked(false);
+                radioButtonCaseMiddle.setChecked(false);
+                radioButtonCaseHigh.setChecked(true);
+            }
+        });
+
+
 
         // report a case
         buttonCaseReport.setOnClickListener(new View.OnClickListener() {
@@ -206,7 +223,9 @@ public class ActivityReportCase extends AppCompatActivity {
                     casePictures = uploadFiles(caseId, pictureUrisList);
 
                     //Create Case
-                    c = new Case(dbId, us.getId(), caseId,
+                    c = new Case(dbId,
+                            us.getDbId(),
+                            caseId,
                             caseTitle,
                             caseCity,
                             caseCountry,
@@ -217,17 +236,33 @@ public class ActivityReportCase extends AppCompatActivity {
                             caseInformation
                     );
 
+                    // create a detective
+                    Detective detective = new Detective(us, caseId);
+                    final int rewardForCase = detective.getRewardPerCase();
 
                     // write case to in database cases
                     dbRefCases.child(dbId).setValue(c);
 
-                    Detective detective = new Detective(us, caseId);
-                    // TODO: add case id in function!!!!! [Julia]
-                    us.addCaseIDToReportedCases(caseId);
-                    Log.i("ES IST PASSIERT" , Integer.toString(us.getNumberReportedCases()));
+                    // update user balance & number reported cases
+                    refPathCurrentUser.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            long currentBalance = (long) dataSnapshot.child("balance").getValue();
+                            dataSnapshot.getRef().child("balance").setValue(currentBalance + rewardForCase);
+
+                            String currentCount = String.valueOf(dataSnapshot.child("numberReportedCases").getValue());
+                            int newCount = Integer.valueOf(currentCount)+1;
+                            dataSnapshot.getRef().child("numberReportedCases").setValue(String.valueOf(newCount));
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+
+                    });
 
                     Toast.makeText(getApplicationContext(), R.string.reportCaseSuccess, Toast.LENGTH_LONG).show();
-
                     finish();
 
                 } else {
@@ -319,13 +354,13 @@ public class ActivityReportCase extends AppCompatActivity {
 
         for (int i = 0; i < pictureUrisList.size(); i++) {
             final String storageAndDBPath;
-            if (i == 0) {
+            /*if (i == 0) {
                 storageAndDBPath = "images/cases/" + caseID + "/case.jpg";
-            } else {
+            } else {*/
                 storageAndDBPath = "images/cases/" + caseID + "/" + i + ".jpg";
-            }
+            //}
 
-            Toast.makeText(getApplicationContext(), R.string.uploadPicture, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.uploadPicture, Toast.LENGTH_SHORT).show();
 
 
             //write path from storage into list for case-db

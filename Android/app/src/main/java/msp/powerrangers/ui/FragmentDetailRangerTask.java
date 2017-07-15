@@ -1,8 +1,11 @@
 package msp.powerrangers.ui;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +18,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
@@ -23,6 +27,8 @@ import org.w3c.dom.Text;
 import java.util.Iterator;
 
 import msp.powerrangers.R;
+import msp.powerrangers.logic.Ranger;
+import msp.powerrangers.logic.User;
 
 public class FragmentDetailRangerTask extends Fragment {
 
@@ -38,11 +44,21 @@ public class FragmentDetailRangerTask extends Fragment {
     private Button buttonJoin;
     private int position;
 
+
     // firebase storage Ref
     private StorageReference storageRef;
 
     // firebase db instances
     private DatabaseReference dbRefTasks;
+
+    // task ID
+    private String taskID;
+    private  String taskDBId;
+
+    SharedPreferences sharedPrefs;
+    String userDbID;
+    DatabaseReference refPathCurrentUser;
+    String currentCount;
 
 
     public FragmentDetailRangerTask() {
@@ -53,7 +69,7 @@ public class FragmentDetailRangerTask extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bund = getArguments();
-        position = bund.getInt("Position");
+        position = bund.getInt("PositionRanger");
 
     }
 
@@ -85,7 +101,11 @@ public class FragmentDetailRangerTask extends Fragment {
         // fill in information from task
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
 
-        dbRefTasks.addListenerForSingleValueEvent(new ValueEventListener() {
+        Query filteredTasks = dbRefTasks.orderByChild("assigned").equalTo(false);
+        filteredTasks.addValueEventListener( new ValueEventListener() {
+
+
+        //dbRefTasks.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -93,6 +113,7 @@ public class FragmentDetailRangerTask extends Fragment {
                 Iterator iter = dataSnapshot.getChildren().iterator();
 
                 for(int i = 0; i < position; i++) {
+
                     iter.next();
                 }
 
@@ -107,11 +128,14 @@ public class FragmentDetailRangerTask extends Fragment {
                 String scale = String.valueOf(singleSnapshot.child("scale").getValue());
                 String taskInfo = (String) singleSnapshot.child("comment").getValue();
 
-
+                // get the task id
+                taskID =  (String) singleSnapshot.child("taskId").getValue();
+                taskDBId = (String) singleSnapshot.child("taskDbId").getValue();
                 rangerTaskName.setText( city + " , " + country);
                 textRangerReward.setText(reward);
-                // here hard coded because we decided, that 1 task 1 ranger
-                textNumberRangers.setText("1");
+                String numberRangers = String.valueOf(singleSnapshot.child("numberRangers").getValue());
+                textNumberRangers.setText(numberRangers);
+
                 textPollutionLevel.setText(convertScaleToText(scale));
                 rangerTaskDescription.setText(taskInfo + "\nWe need you! ;-)");
 
@@ -159,10 +183,42 @@ public class FragmentDetailRangerTask extends Fragment {
         buttonJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(), "You have joined the task! \n", Toast.LENGTH_LONG).show();
                 // TODO: Ranger erstellen
                 // TODO: task zuweisen und in die db eintragen (users, tasks)
                 // TODO: Anzeige in FragmentStart andern (nOpenTasks +1 )
+
+                Toast.makeText(v.getContext(), "You have joined the task :-)!", Toast.LENGTH_LONG).show();
+                sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
+                userDbID = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
+
+                DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+                refPathCurrentUser = db.child("users").child(userDbID);
+
+                refPathCurrentUser.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        User userInfo = dataSnapshot.getValue(User.class);
+                        currentCount = String.valueOf(dataSnapshot.child("numberOpenTasks").getValue());
+
+                        // Create a new Ranger and fill additional information in the DB Tasks
+                        Ranger ranger = new Ranger(userInfo, taskID);
+                        dbRefTasks.child(taskDBId).child("rangerID").setValue(ranger.getId());
+                        dbRefTasks.child(taskDBId).child("assigned").setValue(true);
+
+                        // update the number of rangers open tasks
+                        int newCount = Integer.valueOf(currentCount) + 1;
+                        refPathCurrentUser.child("numberOpenTasks").setValue(String.valueOf(newCount));
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
 
                 // move to Main Activity (FragmentStart)
                 Intent i = new Intent(getActivity(), MainActivity.class);

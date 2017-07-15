@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +15,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.Collections;
 import java.util.List;
 
 import msp.powerrangers.R;
+import msp.powerrangers.ui.listitems.ConfirmerCasesListItem;
 import msp.powerrangers.ui.listitems.VotingTasksListItem;
 
 
@@ -30,7 +35,10 @@ public class FragmentVotingTasks extends Fragment {
     protected RecyclerView mRecyclerView;
     protected RecyclerView.LayoutManager mLayoutManager;
     protected Recycler_View_Adapter mAdapter;
+    private VotingTasksListItem  votingTasksListItem;
 
+    // Firebase db instance
+    private DatabaseReference dbRefTasks;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -56,16 +64,21 @@ public class FragmentVotingTasks extends Fragment {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewVT);
 
 
-
         // 2. Set layoutManager (defines how the elements are laid out)
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // test data
-        List<VotingTasksListItem> data = VotingTasksListItem.fill_with_data();
+        //List<VotingTasksListItem> data = VotingTasksListItem.fill_with_data();
+
+        // will be filled with data
+        votingTasksListItem = new VotingTasksListItem();
+
+        // 3. Create an adapter and fill
+        mAdapter = new FragmentVotingTasks.Recycler_View_Adapter(votingTasksListItem.fill_with_data(), getContext());
 
         // 3. Create an adapter
-        mAdapter = new Recycler_View_Adapter(data, getContext());
+       // mAdapter = new Recycler_View_Adapter(data, getContext());
 
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);
@@ -105,6 +118,8 @@ public class FragmentVotingTasks extends Fragment {
 
         @Override
         public void onBindViewHolder(final View_Holder holder, final int position) {
+
+            dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
 
             // TODO: set real values from db tasks
             // title and location
@@ -157,9 +172,11 @@ public class FragmentVotingTasks extends Fragment {
                         remove(listItem.get(position));
                         Toast.makeText(getContext(), "Thanks! \nThe ranger will get his reward!", Toast.LENGTH_LONG).show();
                         // TODO: set the isConfirmed for the task in db to true. Ranger should get his reward.
+
                     } else {
                         // TODO: on data update write in db
                         holder.nLikes.setText(String.valueOf(positive + 1));
+                        dbRefTasks.child("numberUpvotes").setValue(positive + 1);
                         //prevent clicking multiple times
                         holder.up.setEnabled(false);
                     }
@@ -184,6 +201,7 @@ public class FragmentVotingTasks extends Fragment {
                     else {
                         // TODO: on data update write in db
                         holder.nDislikes.setText(String.valueOf(negative + 1));
+                        dbRefTasks.child("numberDownvotes").setValue(negative + 1);
                         //prevent clicking multiple times
                         holder.down.setEnabled(false);
                     }

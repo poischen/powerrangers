@@ -32,6 +32,8 @@ public class FragmentUsersOpenTasks extends Fragment {
     protected RecyclerView.LayoutManager mLayoutManager;
     protected Recycler_View_Adapter mAdapter;
 
+    private UsersOpenTasksListItem usersOpenTasksListItem;
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -77,11 +79,11 @@ public class FragmentUsersOpenTasks extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        // test data
-        List<UsersOpenTasksListItem> data = UsersOpenTasksListItem.fill_with_data();
+        // will be filled with data
+        usersOpenTasksListItem = new UsersOpenTasksListItem();
 
         // 3. Create an adapter
-        mAdapter = new Recycler_View_Adapter(data, getContext());
+        mAdapter = new Recycler_View_Adapter(usersOpenTasksListItem.fill_with_data(), getContext());
 
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);
