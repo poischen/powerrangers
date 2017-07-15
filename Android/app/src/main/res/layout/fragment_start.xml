@@ -90,7 +90,7 @@
                     android:layout_width="60dp"
                     android:textColor="@color/colorWhite"
                     android:textSize="20sp"
-                    android:background="@drawable/startcircle"
+                    android:background="@drawable/startcircle_balance"
                     android:gravity="center_vertical|center_horizontal"
                     />
                 <TextView
@@ -142,10 +142,9 @@
                     android:id="@+id/numberDonatedPower"
                     android:layout_height="60dp"
                     android:layout_width="60dp"
-                    android:text="0 €"
                     android:textColor="@color/colorWhite"
                     android:textSize="20sp"
-                    android:background="@drawable/startcircle"
+                    android:background="@drawable/startcircle_donated"
                     android:gravity="center_vertical|center_horizontal"
                     />
                 <TextView
@@ -167,7 +166,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="15dp">
 
-            <!-- gemeldete Fälle -->
+            <!-- reported cases -->
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
@@ -194,7 +193,7 @@
                     android:text="@string/reportesCases" />
             </LinearLayout>
 
-            <!-- confirmte Fälle -->
+            <!-- confirmed cases -->
             <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -221,7 +220,7 @@
                 android:text="@string/confirmedCases" />
         </LinearLayout>
 
-            <!-- abgeschlossene Taks -->
+            <!-- completed tasks -->
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
@@ -249,6 +248,7 @@
             </LinearLayout>
         </LinearLayout>
 
+        <!-- buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -260,7 +260,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:theme="@style/AppTheme.Button"
+                android:theme="@style/AppTheme.ButtonDonate"
                 android:text="@string/donate" />
 
             <Button
