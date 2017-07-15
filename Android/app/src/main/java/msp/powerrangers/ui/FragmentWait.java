@@ -47,11 +47,12 @@ public class FragmentWait extends Fragment {
         String rangerTag = getString(R.string.rangerTasksTag);
 
         // check which tab was clicked and get the data from the db
+
+
         if (tag.equals(votingTag)) {
             votingTasksListItem = new VotingTasksListItem();
             votingTasksListItem.fill_with_data(this);
             votingTabClicked = true;
-
         }
 
         if (tag.equals(confirmerTag)) {
