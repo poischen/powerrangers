@@ -19,15 +19,11 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -146,7 +142,7 @@ public class FragmentConfirmerCases extends Fragment {
             holder.location.setText(listItem.get(position).city + ", " + listItem.get(position).country);
             holder.comment.setText(listItem.get(position).comment);
 
-            String imageURL = listItem.get(position).imageUrlDB;
+            String imageURL = listItem.get(position).caseImageUrlDB;
             Log.v("FragmentConfirmerCases", "imageURL: " + imageURL);
 
             try {

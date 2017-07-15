@@ -1,8 +1,5 @@
 package msp.powerrangers.ui.listitems;
 
-import android.graphics.Bitmap;
-import android.util.Log;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -10,10 +7,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
-import msp.powerrangers.R;
 
 /**
  * == Data
@@ -26,7 +20,7 @@ public class ConfirmerCasesListItem {
     public String country;
     public String comment;
     public int imageId;
-    public String imageUrlDB;
+    public String caseImageUrlDB;
 
     String titleDB;
     String cityDB;
@@ -42,7 +36,7 @@ public class ConfirmerCasesListItem {
         this.city = city;
         this.country = country;
         this.comment = comment;
-        this.imageUrlDB = imageURL;
+        this.caseImageUrlDB = imageURL;
     }
 
     public ConfirmerCasesListItem() {
@@ -67,8 +61,8 @@ public class ConfirmerCasesListItem {
                     cityDB = (String) singleSnapshot.child("city").getValue();
                     countryDB = (String) singleSnapshot.child("country").getValue();
                     commentDB = (String) singleSnapshot.child("comment").getValue();
-                    imageUrlDB = (String) singleSnapshot.child("pictureURL").child("0").getValue();
-                    data.add(new ConfirmerCasesListItem(titleDB, cityDB, countryDB, commentDB, imageUrlDB));
+                    caseImageUrlDB = (String) singleSnapshot.child("pictureURL").child("0").getValue();
+                    data.add(new ConfirmerCasesListItem(titleDB, cityDB, countryDB, commentDB, caseImageUrlDB));
                 }
             }
 
