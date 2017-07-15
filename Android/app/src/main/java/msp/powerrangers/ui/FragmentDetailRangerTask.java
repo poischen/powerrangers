@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -70,6 +72,9 @@ public class FragmentDetailRangerTask extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle bund = getArguments();
         position = bund.getInt("PositionRanger");
+
+        // Set action bar menu
+        setHasOptionsMenu(true);
 
     }
 
@@ -166,8 +171,8 @@ public class FragmentDetailRangerTask extends Fragment {
 
             }
 
-        });
 
+        });
 
 
         // TODO: get & set image for this task from the db
@@ -251,5 +256,12 @@ public class FragmentDetailRangerTask extends Fragment {
         return result;
     }
 
+    // Set action bar
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        super.onCreateOptionsMenu(menu, menuInflater);
+        Log.i("MENU", "Menu called");
+        menuInflater.inflate(R.menu.fragment_details_ranger_tasks, menu);
+    }
 
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
@@ -104,6 +105,10 @@ public class ActivityReportCase extends AppCompatActivity {
         //stuff for pic upload
         pictureUrisList = new ArrayList<>();
         pictureBitmapList = new ArrayList<>();
+
+        Bitmap defaultPic = BitmapFactory.decodeResource(getResources(), R.drawable.nopicyet);
+        pictureBitmapList.add(defaultPic);
+
         casePictures = new ArrayList<>();
         isDefaultPic = true;
 
@@ -143,6 +148,12 @@ public class ActivityReportCase extends AppCompatActivity {
         imageButtonUploadPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (isDefaultPic) {
+                    isDefaultPic = false;
+                    pictureBitmapList.clear();
+                    updateImageViews();
+                }
+
                 showFileChooser();
             }
         });
@@ -426,6 +437,15 @@ public class ActivityReportCase extends AppCompatActivity {
         @Override
         public int getCount() {
             return pictureBitmapList.size();
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            if (pictureBitmapList.contains((View) object)){
+                return pictureBitmapList.indexOf((View) object);
+            } else {
+                return POSITION_NONE;
+            }
         }
 
         @Override

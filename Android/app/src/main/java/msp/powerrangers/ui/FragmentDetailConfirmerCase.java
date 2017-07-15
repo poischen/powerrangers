@@ -502,7 +502,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
         public Object instantiateItem(ViewGroup container, int position) {
             ImageView imageView = new ImageView(context);
             //int padding = 10;
-            //mageView.setPadding(padding, padding, padding, padding);
+            //imageView.setPadding(padding, padding, padding, padding);
             imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             imageView.setImageBitmap(pictureBitmapList.get(position));
             ((ViewPager) container).addView(imageView, 0);

@@ -2,6 +2,7 @@ package msp.powerrangers.ui;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -20,6 +21,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,6 +63,9 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     private static final int STORAGE_PERMISSION_REQUEST = 234;
     private static final String TAG = "StartFragment";
 
+    private ProgressBar progressBar;
+    private ScrollView scrollView;
+
     CircleImageView userImage;
     TextView tvUserName;
     Button donateButton;
@@ -89,6 +95,9 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_start, container, false);
+        progressBar = (ProgressBar) view.findViewById(R.id.fStart_progressBar);
+        scrollView = (ScrollView) view.findViewById(R.id.fStart_ScrollView);
+        scrollView.setVisibility(View.GONE);
 
         //find View elements
         //logout button
@@ -122,7 +131,6 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         //Firebase stuff
         storageRef = FirebaseStorage.getInstance().getReference();
@@ -169,8 +177,8 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        Toast.makeText(getContext(), getResources().getString(R.string.fStart_closeAppError), Toast.LENGTH_LONG).show();
-                        getActivity().finish();
+                        //Toast.makeText(getContext(), getResources().getString(R.string.fStart_closeAppError), Toast.LENGTH_LONG).show();
+                        //getActivity().finish();
                     }
                 });
 
@@ -187,6 +195,8 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     public void onStart() {
         super.onStart();
         Bundle args = getArguments();
+        progressBar.setVisibility(View.GONE);
+        scrollView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -279,6 +289,11 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                 fragmentTransaction.replace(R.id.activity_main_fragment_container, fl);
                 fragmentTransaction.commit();
                 break;
+
+            case R.id.donateButton:
+                Intent intentDonate = new Intent(getActivity(), ActivityDonate.class);
+                intentDonate.putExtra("USER", u);
+                startActivity(intentDonate);
         }
     }
 
