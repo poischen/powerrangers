@@ -49,7 +49,6 @@ public class User extends Role implements Serializable  {
         openTasksIdList = new ArrayList<String>();
         openTasksIdList.add("DummyID");
 
-
         donationList = new ArrayList<Double>();
         donationList.add(0.0);
 
@@ -103,6 +102,14 @@ public class User extends Role implements Serializable  {
         return openTasksIdList.size()-1;
     }
 
+    public Double getDonations() {
+        Double donatedPower = 0.0;
+        for (int i=0; i<donationList.size();i++){
+            donatedPower = donatedPower + donationList.get(i);
+        }
+        return donatedPower;
+    }
+
     // setter
     public void setName(String userName) {
         this.userName = userName;
@@ -118,6 +125,10 @@ public class User extends Role implements Serializable  {
 
     public void setBalance(int balance) {
         this.balance = balance;
+    }
+
+    public void setDoantedPower(double donation) {
+        this.donationList.add(donation);
     }
 
     @Override

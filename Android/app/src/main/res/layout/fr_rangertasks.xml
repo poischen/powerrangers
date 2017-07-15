@@ -24,22 +24,11 @@
             android:gravity="center"
             android:text="@string/titleRangerTasks" />
 
-        <SearchView
-            android:id="@+id/searchView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/titleRangerTasks"
-            android:layout_marginTop="10dp"
-            android:gravity="end"
-            android:orientation="horizontal"
-            android:visibility="visible"
-            app:defaultQueryHint="@string/searchView" />
-
         <!-- Recycler View -->
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewRT"
             android:name="msp.powerrangers.ui.FragmentRangerTask"
-            android:layout_below="@+id/searchView"
+            android:layout_below="@+id/titleRangerTasks"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="LinearLayoutManager"

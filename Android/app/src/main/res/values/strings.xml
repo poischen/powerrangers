@@ -1,117 +1,117 @@
 <resources>
-  <string name="app_name">powerrangers</string>
+    <string name="app_name">powerrangers</string>
 
-  <!-- communication part -->
-  <string name="activityDetailContainer_targetFr">Target Fragment </string>
-  <string name="targetFrDetailRangerTask">FragmentDetailRangerTask</string>
-  <string name="targetFrDetailConfirmerCase">FragmentDetailConfirmerCase</string>
-  <string name="targetFrDetailUsersOpenTask">FragmentDetailUsersOpenTask</string>
-  <string name="sharedPrefs_userDbIdPrefname">userDbId</string>
-  <string name="sharedPrefs_userDbId">sharedPrefs_userDbId</string>
+    <!-- communication part -->
+    <string name="activityDetailContainer_targetFr">Target Fragment </string>
+    <string name="targetFrDetailRangerTask">FragmentDetailRangerTask</string>
+    <string name="targetFrDetailConfirmerCase">FragmentDetailConfirmerCase</string>
+    <string name="targetFrDetailUsersOpenTask">FragmentDetailUsersOpenTask</string>
+    <string name="sharedPrefs_userDbIdPrefname">userDbId</string>
+    <string name="sharedPrefs_userDbId">sharedPrefs_userDbId</string>
 
-  <!-- Tabnames-->
-  <string name="start">start</string>
-  <string name="confirmTasks">voting</string>
-  <string name="confirmCases">confirm</string>
-  <string name="findYorJob">get a job</string>
+    <!-- Tabnames-->
+    <string name="start">start</string>
+    <string name="confirmTasks">voting</string>
+    <string name="confirmCases">confirm</string>
+    <string name="findYorJob">get a job</string>
 
-  <!-- FragmentStart-->
-  <string name="balance">earned</string>
-  <string name="openTasks_2">open tasks</string>
-  <string name="reportesCases">reported\ncases</string>
-  <string name="fStart_donatedPower">donated\npower</string>
-  <string name="confirmedCases">confirmed\ncases</string>
-  <string name="completedTasks">completed\ntasks</string>
-  <string name="chooseProfilePicture">Wähle neues Profilbild</string>
-  <string name="uploadPicture">Bild wird hochgeladen...</string>
-  <string name="errorSignUpFirst">Logge dich erst ein, bevor du ein Fotos hochlädst.</string>
-  <string name="errorUpload">Ups, das hat nicht geklappt. Probiers nochmal.</string>
-  <string name="uploaded">% uploaded...</string>
-  <string name="title_activity_detail_container">ActivityDetailContainer</string>
-  <string name="fStart_closeAppError">Sorry, an error occured.</string>
-  <string name="frStart_logout">Logout</string>
+    <!-- FragmentStart-->
+    <string name="balance">earned</string>
+    <string name="openTasks_2">open tasks</string>
+    <string name="reportesCases">reported\ncases</string>
+    <string name="fStart_donatedPower">donated\npower</string>
+    <string name="confirmedCases">confirmed\ncases</string>
+    <string name="completedTasks">completed\ntasks</string>
+    <string name="chooseProfilePicture">Wähle neues Profilbild</string>
+    <string name="uploadPicture">Bild wird hochgeladen...</string>
+    <string name="errorSignUpFirst">Logge dich erst ein, bevor du ein Fotos hochlädst.</string>
+    <string name="errorUpload">Ups, das hat nicht geklappt. Probiers nochmal.</string>
+    <string name="uploaded">% uploaded...</string>
+    <string name="title_activity_detail_container">ActivityDetailContainer</string>
+    <string name="fStart_closeAppError">Sorry, an error occured.</string>
+    <string name="frStart_logout">Logout</string>
 
     <!-- Intent Strings-->
     <string name="intent_current_user">Current User</string>
 
-  <!-- FragmentLogin-->
-  <string name="fLogin_Signin">Sign in</string>
-  <string name="fLogin_Register">Register</string>
-  <string name="fLogin_AlreadyRegistered">Already registered? Sign in!</string>
-  <string name="fLogin_NotRegisteredYet">Do not have an account? Register now!</string>
-  <string name="fLogin_EnterPassword">Enter your password</string>
-  <string name="fLogin_EnterName">Enter your name</string>
-  <string name="fLogin_EnterEmail">Enter your email</string>
-  <string name="fLogin_Slogan">POWERS COMBINED!</string>
+    <!-- FragmentLogin-->
+    <string name="fLogin_Signin">Sign in</string>
+    <string name="fLogin_Register">Register</string>
+    <string name="fLogin_AlreadyRegistered">Already registered? Sign in!</string>
+    <string name="fLogin_NotRegisteredYet">Do not have an account? Register now!</string>
+    <string name="fLogin_EnterPassword">Enter your password</string>
+    <string name="fLogin_EnterName">Enter your name</string>
+    <string name="fLogin_EnterEmail">Enter your email</string>
+    <string name="fLogin_Slogan">POWERS COMBINED!</string>
 
-  <!-- Buttonnames in Start Screen-->
-  <string name="donate">donate</string>
-  <string name="reportACase">report</string>
-  <string name="frStart_permissionNeeded">Permission is needed to upload profile picture.</string>
+    <!-- Buttonnames in Start Screen-->
+    <string name="donate">donate</string>
+    <string name="reportACase">report</string>
+    <string name="frStart_permissionNeeded">Permission is needed to upload profile picture.</string>
 
-  <!-- ActivityReportCase-->
-  <string name="reportCaseActivityTitle">Report a case</string>
-  <string name="reportTitleOfCase">Title</string>
-  <string name="reportCityOfCase">City</string>
-  <string name="reportCountryOfCase">Country</string>
-  <string name="reportScalaOfCase">Pollution Scale:</string>
-  <string name="reportAreaCoordinates">Area coordinates:</string>
-  <string name="reportXCoordinateOfCase">X Coordinate *</string>
-  <string name="reportYCoordinateOfCase">Y Coordinate *</string>
-  <string name="reportPictureOfCase">Upload picture</string>
-  <string name="reportInformationOfCase">Comment</string>
-  <string name="reportCaseButton">Report Case</string>
-  <string name="reportCaseCheckboxLow">Low</string>
-  <string name="reportCaseCheckboxMiddle">Medium</string>
-  <string name="reportCaseCheckboxHigh">High</string>
-  <string name="reportUploadedPicture">Uploaded pictures: </string>
-  <string name="reportCanNotShowUploadedPicture">Sorry can not show the picture you uploaded</string>
-  <string name="reportException">Something went wrong!</string>
-  <string name="reportCaseSuccess">Case was reported successfully</string>
-  <string name="reportCaseFillFields">Please give all necessary inforamtion!</string>
-  <string name="reportInstructionManualUploadPics">Show us some pictures! First load up an image of the hole trashy area, then seperate the area in equal parts and load a picture for each.</string>
-  <string name="uploadPictureFailed">Uploading of picture failed! Sorry</string>
+    <!-- ActivityReportCase-->
+    <string name="reportCaseActivityTitle">Report a case</string>
+    <string name="reportTitleOfCase">Title</string>
+    <string name="reportCityOfCase">City</string>
+    <string name="reportCountryOfCase">Country</string>
+    <string name="reportScalaOfCase">Pollution Scale:</string>
+    <string name="reportAreaCoordinates">Area coordinates:</string>
+    <string name="reportXCoordinateOfCase">X Coordinate *</string>
+    <string name="reportYCoordinateOfCase">Y Coordinate *</string>
+    <string name="reportPictureOfCase">Upload picture</string>
+    <string name="reportInformationOfCase">Comment</string>
+    <string name="reportCaseButton">Report Case</string>
+    <string name="reportCaseCheckboxLow">Low</string>
+    <string name="reportCaseCheckboxMiddle">Medium</string>
+    <string name="reportCaseCheckboxHigh">High</string>
+    <string name="reportUploadedPicture">Uploaded pictures: </string>
+    <string name="reportCanNotShowUploadedPicture">Sorry can not show the picture you uploaded</string>
+    <string name="reportException">Something went wrong!</string>
+    <string name="reportCaseSuccess">Case was reported successfully</string>
+    <string name="reportCaseFillFields">Please give all necessary inforamtion!</string>
+    <string name="reportInstructionManualUploadPics">Show us some pictures! First load up an image of the hole trashy area, then seperate the area in equal parts and load a picture for each.</string>
+    <string name="uploadPictureFailed">Uploading of picture failed! Sorry</string>
 
-  <!-- FragmentDetailConfirmerCase-->
+    <!-- FragmentDetailConfirmerCase-->
     <string name="detailConfirmerCaseFragmentTitle">Confirm case</string>
     <string name="detailConfirmerCaseCaseTitle">Confirm a case</string>
     <string name="detailConfirmerCaseConfirmButton">Confirm this case</string>
-   <string name="detailConfirmerCaseDectiveError">Sorry, you can\'t confirm your own case! </string>
+    <string name="detailConfirmerCaseDectiveError">Sorry, you can\'t confirm your own case! </string>
 
 
-  <!-- FragmentRangerTasks & DetailRangerTask-->
-  <string name="titleRangerTasks">Ranger Tasks</string>
-  <string name="searchView">Search...</string>
-  <string name="taskDescriptionDetail">Here comes the task description</string>
-  <string name="pollutionDetail">Pollution</string>
-  <string name="buttonJoinAsRanger">Join as Ranger</string>
+    <!-- FragmentRangerTasks & DetailRangerTask-->
+    <string name="titleRangerTasks">Ranger Tasks</string>
+    <string name="searchView">Search...</string>
+    <string name="taskDescriptionDetail">Here comes the task description</string>
+    <string name="pollutionDetail">Pollution</string>
+    <string name="buttonJoinAsRanger">Join as Ranger</string>
 
 
-  <!-- FragmentConfirmerCases-->
-  <string name="titleConfirmerCases">Cases to confirm</string>
+    <!-- FragmentConfirmerCases-->
+    <string name="titleConfirmerCases">Cases to confirm</string>
 
-  <!-- FragmentUsersOpenTasks & DetailUsersOpenTask-->
-  <string name="titleUsersOpenTasks">Open Tasks</string>
+    <!-- FragmentUsersOpenTasks & DetailUsersOpenTask-->
+    <string name="titleUsersOpenTasks">Open Tasks</string>
     <string name="buttonUploadImage">Upload image</string>
     <string name="completeTask">Complete Task</string>
     <string name="textToUpload">You should upload an image of your job before you complete the task.</string>
 
-  <!-- FragmentVotingTasks-->
-  <string name="titleVotingTasks">Voting Tasks</string>
+    <!-- FragmentVotingTasks-->
+    <string name="titleVotingTasks">Voting Tasks</string>
 
-  <!-- ListItems-->
-  <string name="placeholderTitle">Title Placeholder</string>
-  <string name="placeholderDesc">Description Placeholder</string>
-  <string name="placeholderLocation">Location Placeholder</string>
+    <!-- ListItems-->
+    <string name="placeholderTitle">Title Placeholder</string>
+    <string name="placeholderDesc">Description Placeholder</string>
+    <string name="placeholderLocation">Location Placeholder</string>
 
-  <!-- ActivityDonate-->
-  <string name="aDonate_donateIntro">Woho! Thanks, you wanna share your power and combine them with the rest of the world to save our planet! \n\nHow much you can effort?</string>
-  <string name="aDonate_buttonDonate">Combine Powers</string>
-  <string name="aDonate_toastSuccessDonate">Powers combined successfully</string>
-  <string name="aDonate_toastFailDonate">Something went wrong, please try again.</string>
-  <string name="aDonate_currency">€</string>
-  <string name="aDonate_prefixValue">Spende </string>
+    <!-- ActivityDonate-->
+    <string name="aDonate_donateIntro">Woho! Thanks, you wanna share your power and combine them with the rest of the world to save our planet! \n\nHow much you can effort?</string>
+    <string name="aDonate_buttonDonate">Combine Powers</string>
+    <string name="aDonate_toastSuccessDonate">Powers combined successfully</string>
+    <string name="aDonate_toastFailDonate">Something went wrong, please try again.</string>
+    <string name="aDonate_currency">€</string>
+    <string name="aDonate_prefixValue">Spende </string>
 
-  <!-- TODO: Remove or change this placeholder text -->
-  <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

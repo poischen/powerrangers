@@ -9,8 +9,11 @@ import android.util.Log;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.List;
+
 import msp.powerrangers.R;
 import msp.powerrangers.logic.User;
+import msp.powerrangers.ui.listitems.ConfirmerCasesListItem;
 import msp.powerrangers.ui.listitems.UsersOpenTasksListItem;
 
 
@@ -20,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener authListener;
     private FirebaseUser currentUser = null;
     private User user;
+
+    private List<ConfirmerCasesListItem> dataConfirmerCases;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -45,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
 }
 
+
     private void changeToLoggedInView() {
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -53,6 +59,14 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+
+    public void setDataConfirmerCases(List<ConfirmerCasesListItem> data){
+        this.dataConfirmerCases = data;
+    }
+
+    public List<ConfirmerCasesListItem> getDataConfirmerCases(){
+        return dataConfirmerCases;
+    }
 
     @Override
     public void onStart() {
