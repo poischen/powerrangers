@@ -10,4 +10,82 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="msp.powerrangers.ui.ActivityDonate">
 
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:weightSum="10" >
+
+        <TextView
+            android:text="@string/aDonate_donateIntro"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"
+            android:id="@+id/aDonate_textViewIntroDonate"
+            android:background="@color/colorAccent"
+            android:gravity="center"
+            android:textSize="15dp"
+            android:padding="10dp"
+            android:textStyle="bold"
+            android:textColor="@color/colorWhite"
+            android:fontFamily="casual"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:layout_weight="3" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/aDonate_textViewPrefixValue"
+                android:text="@string/aDonate_prefixValue"
+                android:gravity="center"
+                android:textSize="30dp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
+                android:fontFamily="casual"
+                android:layout_marginRight="5dp"/>
+
+            <EditText
+                android:layout_width="100dp"
+                android:layout_height="80dp"
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                android:background="@color/colorAccent"
+                android:textSize="30dp"
+                android:hint="0,00"
+                android:layout_marginRight="5dp"
+                android:textColor="@color/colorWhite"
+                android:id="@+id/aDonate_donateValue" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewCurrency"
+                android:text="@string/aDonate_currency"
+                android:gravity="center"
+                android:textSize="30dp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
+                android:fontFamily="casual"/>
+        </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/aDonate_buttonDonate"
+            android:text="@string/aDonate_buttonDonate"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="20dp"
+            android:theme="@style/AppTheme.Button" />
+    </LinearLayout>
 </RelativeLayout>

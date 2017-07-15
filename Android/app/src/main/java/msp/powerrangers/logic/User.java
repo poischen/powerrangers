@@ -24,6 +24,7 @@ public class User extends Role implements Serializable  {
     private List<String> completedTasksIdList;
     private List<String> openTasksIdList;
     private List<Role> roleList;
+    private List<Double> donationList;
 
     public User(){
 
@@ -47,6 +48,10 @@ public class User extends Role implements Serializable  {
 
         openTasksIdList = new ArrayList<String>();
         openTasksIdList.add("DummyID");
+
+
+        donationList = new ArrayList<Double>();
+        donationList.add(0.0);
 
         roleList = new ArrayList<Role>();
 
@@ -97,7 +102,6 @@ public class User extends Role implements Serializable  {
     public int getNumberOpenTasks() {
         return openTasksIdList.size()-1;
     }
-
 
     // setter
     public void setName(String userName) {
