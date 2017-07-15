@@ -8,11 +8,12 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -87,6 +88,7 @@ public class FragmentDetailRangerTask extends Fragment {
         storageRef = FirebaseStorage.getInstance().getReference();
         Bundle bund = getArguments();
         position = bund.getInt("PositionRanger");
+
         caseImageUrl = bund.getString("caseImageUrl");
         pictureBitmapList = new ArrayList<>();
 
@@ -96,6 +98,12 @@ public class FragmentDetailRangerTask extends Fragment {
                     bund.getByteArray("taskImageByteArray"),0,bund.getByteArray("taskImageByteArray").length);
             pictureBitmapList.add(taskPictureBitmap);
         }
+
+        // Set action bar menu
+        setHasOptionsMenu(true);
+
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
     @Override
@@ -189,8 +197,8 @@ public class FragmentDetailRangerTask extends Fragment {
 
             }
 
-        });
 
+        });
 
         if (taskImageUrl!=null){
             try {
@@ -291,6 +299,7 @@ public class FragmentDetailRangerTask extends Fragment {
             }
         });
 
+
         return view;
     }
 
@@ -361,4 +370,15 @@ public class FragmentDetailRangerTask extends Fragment {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                return true;
+            default:
+                return false;
+        }
+    }
 }

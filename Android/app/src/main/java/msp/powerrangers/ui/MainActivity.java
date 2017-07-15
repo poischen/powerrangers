@@ -3,6 +3,7 @@ package msp.powerrangers.ui;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -13,7 +14,7 @@ import msp.powerrangers.logic.User;
 import msp.powerrangers.ui.listitems.UsersOpenTasksListItem;
 
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authListener;
