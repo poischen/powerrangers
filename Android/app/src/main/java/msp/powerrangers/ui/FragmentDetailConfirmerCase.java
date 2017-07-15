@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -179,8 +180,8 @@ public class FragmentDetailConfirmerCase extends Fragment {
         dbRefCases = FirebaseDatabase.getInstance().getReference("cases");
 
         // get attributes from a case as default values to edit
-        Query filteredCases = dbRefCases.orderByChild("confirmed").equalTo(false);
-        filteredCases.addValueEventListener(
+        final Query filteredCases = dbRefCases.orderByChild("confirmed").equalTo(false);
+        filteredCases.addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -305,92 +306,82 @@ public class FragmentDetailConfirmerCase extends Fragment {
             }
         });
 
-        buttonConfirmCaseReport.setOnClickListener(new View.OnClickListener()
-
-        {
+        buttonConfirmCaseReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Query filteredCases = dbRefCases.orderByChild("confirmed").equalTo(false);
+                //Query filteredCases = dbRefCases.orderByChild("confirmed").equalTo(false);
                 filteredCases.addListenerForSingleValueEvent(
                         new ValueEventListener() {
                             @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
+                        public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                Iterator iter = dataSnapshot.getChildren().iterator();
+                            Iterator iter = dataSnapshot.getChildren().iterator();
+                            for (int i = 0; i < position; i++) {
+                                iter.next();
+                            }
+                            DataSnapshot singleSnapshot = (DataSnapshot) iter.next();
 
-                                Log.i("KATJA", "position in DCC:" + position);
-                                for (int i = 0; i < position; i++) {
-                                    iter.next();
-                                }
+                            detectiveID = String.valueOf(singleSnapshot.child("detectiveID").getValue());
 
-                                DataSnapshot singleSnapshot = (DataSnapshot) iter.next();
-
-                                detectiveID = String.valueOf(singleSnapshot.child("detectiveID").getValue());
-                                Log.i("KATJA","Detective id:"+detectiveID);
-                                Log.i("KATJA","User id:"+userDbID);
-
-                                // detective can`t confirme his own case :)
-                                if (detectiveID.equals(userDbID)) {
-                                    Log.i("KATJA","Detective is the confirmer!");
-                                    Toast.makeText(getContext(), R.string.detailConfirmerCaseDectiveError, Toast.LENGTH_LONG).show();
-                                }
-
-                                // fill in new values
-                                else {
-                                    Log.i("KATJA","Detective is not the the confirmer!");
-                                    singleSnapshot.child("name").getRef().setValue(editTextConfirmCaseTitle.getText().toString());
-                                    singleSnapshot.child("city").getRef().setValue(editTextConfirmCaseCity.getText().toString());
-                                    singleSnapshot.child("country").getRef().setValue(editTextConfirmCaseCountry.getText().toString());
-                                    singleSnapshot.child("comment").getRef().setValue(editTextConfirmCaseInformation.getText().toString());
-                                    singleSnapshot.child("areaX").getRef().setValue(editTextConfirmCaseXCoordinate.getText().toString());
-                                    singleSnapshot.child("areaY").getRef().setValue(editTextConfirmCaseYCoordinate.getText().toString());
-                                    singleSnapshot.child("scale").getRef().setValue(getScaleValue(radioButtonConfirmCaseLow, radioButtonConfirmCaseMiddle, radioButtonConfirmCaseHigh));
-                                    singleSnapshot.child("confirmed").getRef().setValue(true);
-                                    // add the confirmer id to the childs
-                                    singleSnapshot.child("confirmerId").getRef().setValue(userDbID);
-
-
-                                    // update user balance & number confirmed cases
-                                    refPathCurrentUser.addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                            // TODO eigentlich sollte der fixedReward in der Confirmer-Instanz gesetzt werden. Zurzeit gibt es keinen Confimer objekt..
-                                            // [getFixedReward vom Confirmer benutzen]
-                                            int fixedReward = 5;
-                                            long currentBalance = (long) dataSnapshot.child("balance").getValue();
-                                            dataSnapshot.getRef().child("balance").setValue(currentBalance + fixedReward);
-
-                                            String currentCount = String.valueOf(dataSnapshot.child("numberConfirmedCases").getValue());
-                                            int newCount = Integer.valueOf(currentCount)+1;
-                                            dataSnapshot.getRef().child("numberConfirmedCases").setValue(String.valueOf(newCount));
-                                        }
-
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-
-                                        }
-
-                                    });
-                                }
-
+                            // detective can`t confirme his own case :)
+                            if (detectiveID.equals(userDbID)) {
+                                Toast.makeText(getContext(), R.string.detailConfirmerCaseDectiveError, Toast.LENGTH_LONG).show();
                             }
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
+                            // fill in new values
+                            else {
+                                singleSnapshot.child("name").getRef().setValue(editTextConfirmCaseTitle.getText().toString());
+                                singleSnapshot.child("city").getRef().setValue(editTextConfirmCaseCity.getText().toString());
+                                singleSnapshot.child("country").getRef().setValue(editTextConfirmCaseCountry.getText().toString());
+                                singleSnapshot.child("comment").getRef().setValue(editTextConfirmCaseInformation.getText().toString());
+                                singleSnapshot.child("areaX").getRef().setValue(editTextConfirmCaseXCoordinate.getText().toString());
+                                singleSnapshot.child("areaY").getRef().setValue(editTextConfirmCaseYCoordinate.getText().toString());
+                                singleSnapshot.child("scale").getRef().setValue(getScaleValue(radioButtonConfirmCaseLow, radioButtonConfirmCaseMiddle, radioButtonConfirmCaseHigh));
+                                singleSnapshot.child("confirmed").getRef().setValue(true);
+                                // add the confirmer id to the childs
+                                singleSnapshot.child("confirmerId").getRef().setValue(userDbID);
 
+                                // update user balance & number confirmed cases
+                                refPathCurrentUser.addListenerForSingleValueEvent(
+                                        new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnap) {
+                                        // TODO eigentlich sollte der fixedReward in der Confirmer-Instanz gesetzt werden. Zurzeit gibt es keinen Confimer objekt..
+                                        // [getFixedReward vom Confirmer benutzen]
+                                        int fixedReward = 5;
+                                        String currentBalance = String.valueOf(dataSnap.child("balance").getValue());
+                                        int newBalance =Integer.parseInt(currentBalance)+fixedReward;
+                                        dataSnap.getRef().child("balance").setValue(newBalance);
+
+                                        String currentCount = String.valueOf(dataSnap.child("numberConfirmedCases").getValue());
+                                        int newCount = Integer.parseInt(currentCount)+1;
+                                        dataSnap.getRef().child("numberConfirmedCases").setValue(newCount);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+
+                                });
                             }
-                        });
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
 
 
                 // go back to FragmentStart
                 Intent i = new Intent(getActivity(), MainActivity.class);
                 startActivity(i);
                 ((Activity) getActivity()).overridePendingTransition(0, 0);
+
             }
-
-
         });
 
         progressDialog.cancel();
