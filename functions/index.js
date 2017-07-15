@@ -28,8 +28,8 @@ const functions = require('firebase-functions');
 
 const mkdirp = require('mkdirp-promise');
 // Include a Service Account Key to use a Signed URL
-const gcs = require('@google-cloud/storage')({keyFilename: 'service-account-credentials.json'});
-//const gcs = require('@google-cloud/storage')({keyFilename: 'Powerrangers-6634a19a50d7.json'});
+//const gcs = require('@google-cloud/storage')({keyFilename: 'service-account-credentials.json'});
+const gcs = require('@google-cloud/storage')({keyFilename: 'power-rangers-811fe-firebase-adminsdk-eftqe-567eed8ddc.json'});
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 const spawn = require('child-process-promise').spawn;
@@ -85,7 +85,7 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
   // Create the temp directory where the storage file will be downloaded.
   return mkdirp(tempLocalDir).then(() => {
     // Download file from bucket.
-	//return file.download({destination: tempLocalFile});
+	return file.download({destination: tempLocalFile});
 	return null;
   }).then(() => {
     console.log('The file has been downloaded to', tempLocalFile);

@@ -439,7 +439,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                                     .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                         @Override
                                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                            Log.v("Download", "download erfolgreich");
+                                            Log.v("FragmentStart", "download erfolgreich");
                                             userPicBmp = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                                             userImage.setImageBitmap(userPicBmp);
                                         }
@@ -450,7 +450,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                                 }
                             });
                         } catch (Exception e) {
-                            Log.d("Fail", "no image available or some other error occured");
+                            Log.d("FragmentStart", "no image available or some other error occured");
                         }
                     } catch (IOException e) {
                         e.printStackTrace();

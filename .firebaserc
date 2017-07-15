@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "powerrangers-b4dcf"
+    "default": "powerrangers-b4dcf",
+    "power-rangers": "power-rangers-811fe"
   }
 }

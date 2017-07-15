@@ -6,14 +6,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import msp.powerrangers.ui.FragmentConfirmerCases;
+import msp.powerrangers.ui.FragmentWait;
 
 /**
  * == Data
  * Tutorial: https://www.sitepoint.com/mastering-complex-lists-with-the-android-recyclerview/
  */
-public class ConfirmerCasesListItem {
+public class ConfirmerCasesListItem implements Serializable {
 
     public String title;
     public String city;
@@ -43,10 +47,15 @@ public class ConfirmerCasesListItem {
 
     }
 
+
+    public List<ConfirmerCasesListItem> getData(){
+        return data;
+    }
+
     /**
      * Generates Confirmer Cases Objects for RecyclerView's adapter.
      */
-    public List<ConfirmerCasesListItem> fill_with_data() {
+    public List<ConfirmerCasesListItem> fill_with_data(final FragmentWait fragmentWait) {
         // get the reference to the db cases
         dbRefCases = FirebaseDatabase.getInstance().getReference("cases");
 
@@ -64,6 +73,8 @@ public class ConfirmerCasesListItem {
                     caseImageUrlDB = (String) singleSnapshot.child("pictureURL").child("0").getValue();
                     data.add(new ConfirmerCasesListItem(titleDB, cityDB, countryDB, commentDB, caseImageUrlDB));
                 }
+
+                fragmentWait.changeToContentView();
             }
 
             @Override

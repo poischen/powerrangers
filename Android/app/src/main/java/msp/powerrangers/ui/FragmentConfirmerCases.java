@@ -1,6 +1,7 @@
 package msp.powerrangers.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import java.util.Collections;
 import java.util.List;
 
 import msp.powerrangers.R;
+import msp.powerrangers.logic.User;
 import msp.powerrangers.ui.listitems.ConfirmerCasesListItem;
 
 
@@ -43,6 +45,7 @@ public class FragmentConfirmerCases extends Fragment {
     private ConfirmerCasesListItem casesListItem;
     private StorageReference storageRef;
 
+    private ConfirmerCasesListItem confirmerCasesListItems;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -56,12 +59,14 @@ public class FragmentConfirmerCases extends Fragment {
         super.onCreate(savedInstanceState);
         storageRef = FirebaseStorage.getInstance().getReference();
 
-
+        Bundle bund = getArguments();
+        confirmerCasesListItems = (ConfirmerCasesListItem) bund.getSerializable("caseListItems");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View rootView = inflater.inflate(R.layout.fr_confirmercases, container, false);
         rootView.setTag(TAG);
 
@@ -101,7 +106,7 @@ public class FragmentConfirmerCases extends Fragment {
         casesListItem = new ConfirmerCasesListItem();
 
         // 3. Create an adapter and fill
-        mAdapter = new Recycler_View_Adapter(casesListItem.fill_with_data(), getContext());
+        mAdapter = new Recycler_View_Adapter(confirmerCasesListItems.getData(), getContext());
 
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);
