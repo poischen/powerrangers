@@ -143,6 +143,7 @@ public class ActivityReportCase extends AppCompatActivity {
 
         // add action bar going back to parent
         // TODO: im Moment geht man zurück zur MainActivity, trotzdem zur FragmentStart, abchecken wie man das sauber macht
+        //https://stackoverflow.com/questions/18120510/dynamically-changing-the-fragments-inside-a-fragment-tab-host
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 

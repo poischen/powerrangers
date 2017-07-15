@@ -57,8 +57,8 @@ public class FragmentConfirmerCases extends Fragment {
         super.onCreate(savedInstanceState);
         storageRef = FirebaseStorage.getInstance().getReference();
 
-        Bundle bund = getArguments();
-        confirmerCasesListItem = (ConfirmerCasesListItem) bund.getSerializable(getString(R.string.confirmCasesSerializable));
+        Bundle bundle = getArguments();
+        confirmerCasesListItem = (ConfirmerCasesListItem) bundle.getSerializable(getString(R.string.confirmCasesSerializable));
     }
 
     @Override

@@ -19,6 +19,7 @@ import msp.powerrangers.ui.listitems.VotingTasksListItem;
 
 public class FragmentWait extends Fragment {
 
+
     private ConfirmerCasesListItem casesListItem;
     private RangerTasksListItem rangerTasksListItem;
     private UsersOpenTasksListItem usersOpenTasksListItem;
@@ -28,6 +29,7 @@ public class FragmentWait extends Fragment {
     private boolean confirmerTabClicked = false;
     private boolean rangerTabClicked = false;
 
+    private FragmentTabs fragmentTabs;
 
     public FragmentWait() {
         // Required empty public constructor
@@ -36,6 +38,9 @@ public class FragmentWait extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Bundle bundle = getArguments();
+        fragmentTabs = (FragmentTabs) bundle.getSerializable("tabhost");
 
         String tag = getTag();
         Log.i("KATJA", "**********************   new tag  ********************* ");
@@ -76,11 +81,15 @@ public class FragmentWait extends Fragment {
     }
 
     public void changeToContentView() {
+        String tag = getTag();
+        fragmentTabs.replaceFragment(tag, true, this);
 
-        if (confirmerTabClicked){
+        /*if (confirmerTabClicked){
             Log.i("KATJA","confirmerTabClicked in FragmentWait");
-            FragmentConfirmerCases confirmerCasesFragment = new FragmentConfirmerCases();
-            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            confirmerTabClicked = false;
+            fragmentTabs.replaceFragment(tag, true, this);
+
+           FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
 
             Bundle bundles = new Bundle();
             bundles.putSerializable(getString(R.string.confirmCasesSerializable), casesListItem);
@@ -93,6 +102,9 @@ public class FragmentWait extends Fragment {
             ft.commit();
 
         } else if (votingTabClicked){
+            votingTabClicked = false;
+            fragmentTabs.replaceFragment(tag, true, this);
+
             FragmentVotingTasks fragmentVotingTasks = new FragmentVotingTasks();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
 
@@ -120,10 +132,7 @@ public class FragmentWait extends Fragment {
             ft.addToBackStack(null);
             ft.commit();
 
-        }
-
-
-
+        }*/
     }
 
     @Override
@@ -133,4 +142,19 @@ public class FragmentWait extends Fragment {
         return inflater.inflate(R.layout.fr_wait, container, false);
     }
 
+    public ConfirmerCasesListItem getCasesListItem() {
+        return casesListItem;
+    }
+
+    public RangerTasksListItem getRangerTasksListItem() {
+        return rangerTasksListItem;
+    }
+
+    public UsersOpenTasksListItem getUsersOpenTasksListItem() {
+        return usersOpenTasksListItem;
+    }
+
+    public VotingTasksListItem getVotingTasksListItem() {
+        return votingTasksListItem;
+    }
 }

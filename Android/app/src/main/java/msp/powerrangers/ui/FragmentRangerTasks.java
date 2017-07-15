@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.List;
 
 import msp.powerrangers.R;
+import msp.powerrangers.logic.Global;
 import msp.powerrangers.ui.listitems.ConfirmerCasesListItem;
 import msp.powerrangers.ui.listitems.RangerTasksListItem;
 
@@ -62,8 +63,8 @@ public class FragmentRangerTasks extends Fragment {
         Log.i("KATJA","onCreate FrRangerTasks");
         storageRef = FirebaseStorage.getInstance().getReference();
 
-        Bundle bund = getArguments();
-        tasksListItem = (RangerTasksListItem) bund.getSerializable(getString(R.string.rangerTasksSerializable));
+        Bundle bundle = getArguments();
+        tasksListItem = (RangerTasksListItem) bundle.getSerializable(getString(R.string.rangerTasksSerializable));
 
     }
 
@@ -164,7 +165,7 @@ public class FragmentRangerTasks extends Fragment {
             Log.v("FragmentRangerTasks", "taskImageUrlDB: " + taskImageUrlDB);
             try {
                 final File localFile = File.createTempFile("images", "jpg");
-                StorageReference riversRef = storageRef.child(taskImageUrlDB);
+                StorageReference riversRef = storageRef.child(Global.getThumbUrl(taskImageUrlDB));
                 riversRef.getFile(localFile)
                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                             @Override

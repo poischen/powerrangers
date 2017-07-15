@@ -41,6 +41,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import msp.powerrangers.R;
+import msp.powerrangers.logic.Global;
 import msp.powerrangers.logic.Ranger;
 import msp.powerrangers.logic.User;
 
@@ -203,7 +204,7 @@ public class FragmentDetailRangerTask extends Fragment {
         if (taskImageUrl!=null){
             try {
                 final File localFile = File.createTempFile("images", "jpg");
-                StorageReference riversRef = storageRef.child(taskImageUrl);
+                StorageReference riversRef = storageRef.child(Global.getThumbUrl(taskImageUrl));
                 riversRef.getFile(localFile)
                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                             @Override
@@ -226,7 +227,7 @@ public class FragmentDetailRangerTask extends Fragment {
 
         try {
             final File localFile = File.createTempFile("images", "jpg");
-            StorageReference riversRef = storageRef.child(caseImageUrl);
+            StorageReference riversRef = storageRef.child(Global.getThumbUrl(caseImageUrl));
             riversRef.getFile(localFile)
                     .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                         @Override

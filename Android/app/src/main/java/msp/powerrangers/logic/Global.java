@@ -30,18 +30,15 @@ public final class Global {
 
     public static String getThumbUrl (String stringUrl) {
         try {
-            //URI sourceUrl = new URI("https://firebasestorage.googleapis.com" + stringUrl);
-            //File file = new File(stringUrl);
-            //String path = file.getPath();
-            //String fileAndExtension = file.getName();
 
             String file = stringUrl.substring(stringUrl.lastIndexOf('/')+1, stringUrl.length());
             String path = stringUrl.substring(0, stringUrl.lastIndexOf('/')+1);
 
             String StringThumbUrl = path + "thumb_" + file;
+            Log.v("Global", "string Url: " + StringThumbUrl);
             return StringThumbUrl;
         } catch (Exception e){
-            Log.v("Global", "stringUrl: " + stringUrl);
+            Log.v("Global", "string Url: " + stringUrl);
             return stringUrl;
         }
     }
