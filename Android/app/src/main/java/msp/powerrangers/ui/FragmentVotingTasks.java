@@ -1,8 +1,11 @@
 package msp.powerrangers.ui;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,13 +18,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
 import msp.powerrangers.R;
+import msp.powerrangers.logic.Global;
 import msp.powerrangers.ui.listitems.ConfirmerCasesListItem;
 import msp.powerrangers.ui.listitems.VotingTasksListItem;
 
@@ -35,6 +45,7 @@ public class FragmentVotingTasks extends Fragment {
     protected RecyclerView mRecyclerView;
     protected RecyclerView.LayoutManager mLayoutManager;
     protected Recycler_View_Adapter mAdapter;
+    private StorageReference storageRef;
     private VotingTasksListItem  votingTasksListItem;
 
     // Firebase db instance
@@ -50,6 +61,7 @@ public class FragmentVotingTasks extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        storageRef = FirebaseStorage.getInstance().getReference();
 
         Bundle bund = getArguments();
         votingTasksListItem = (VotingTasksListItem) bund.getSerializable(getString(R.string.votingTasksSerializable));
@@ -117,17 +129,39 @@ public class FragmentVotingTasks extends Fragment {
 
             dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
 
-            // TODO: set real values from db tasks
             // title and location
             holder.title.setText(listItem.get(position).title);
             holder.location.setText(listItem.get(position).location);
             holder.locationIcon.setImageResource(R.drawable.location);
 
             // before/after images
-            holder.imageView1.setImageResource(listItem.get(position).imageID1);
+            String imageBeforeUrl = listItem.get(position).imageBeforeURL;
+            try {
+                final File localFile = File.createTempFile("images", "jpg");
+                StorageReference riversRef = storageRef.child(Global.getThumbUrl(imageBeforeUrl));
+                riversRef.getFile(localFile)
+                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                Log.v("FragmentVotingTask", "download erfolgreich");
+                                Bitmap beforeImage = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                holder.imageView1.setImageBitmap(beforeImage);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Log.d("FragmentVotingTask", "download nicht erfolgreich");
+                        holder.imageView1.setImageResource(listItem.get(position).imageID1);
+                    }
+                });
+            } catch (Exception e) {
+                Log.d("FragmentVotingTask", "download nicht erfolgreich");
+                holder.imageView1.setImageResource(listItem.get(position).imageID1);
+            }
+            //TODO: get after image from storage
             holder.imageView2.setImageResource(listItem.get(position).imageID2);
 
-            //  thumbs up/down
+            // thumbs up/down
             holder.up.setImageResource(R.drawable.up);
             holder.down.setImageResource(R.drawable.down);
             holder.nLikes.setText("4");           // dummy values

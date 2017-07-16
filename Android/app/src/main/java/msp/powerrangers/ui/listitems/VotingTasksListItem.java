@@ -28,6 +28,7 @@ public class VotingTasksListItem implements Serializable {
     public String title;
     public String location;
     public int imageID1;
+    public String imageBeforeURL;
     public int imageID2;
 
     String locationDB;
@@ -36,10 +37,11 @@ public class VotingTasksListItem implements Serializable {
     List<VotingTasksListItem> data = new ArrayList<>();
     private DatabaseReference dbRefTasks;
 
-    public VotingTasksListItem(String title, String location, int imageID1, int imageID2) {
+    public VotingTasksListItem(String title, String location, String imageBeforeURL, int imageID2) {
         this.title = title;
         this.location = location;
-        this.imageID1 = imageID1;
+        this.imageID1 = R.drawable.placeholder_task;
+        this.imageBeforeURL = imageBeforeURL;
         this.imageID2 = imageID2;
     }
 
@@ -64,7 +66,9 @@ public class VotingTasksListItem implements Serializable {
                     // Get the task data from snapshot
                     locationDB = (String) singleSnapshot.child("city").getValue();
                     titleDB = (String) singleSnapshot.child("city").getValue();
-                    data.add(new VotingTasksListItem(titleDB, locationDB, R.drawable.polluted_beach1, R.drawable.clean_beach));
+                    imageBeforeURL = (String) singleSnapshot.child("taskPicture").getValue();
+                    //TODO: add after image as ranger and get here
+                    data.add(new VotingTasksListItem(titleDB, locationDB, imageBeforeURL, R.drawable.clean_beach));
                     //Log.i("Data Top", "This is the data: " + data);
                 }
 
