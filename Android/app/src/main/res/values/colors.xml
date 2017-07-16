@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#00695C</color>
+    <color name="colorPrimaryGreen">#7DA559</color>
     <color name="colorPrimaryOpacity55">#8C00695C</color>
     <color name="colorPrimaryDark">#003d33</color>
     <color name="colorAccent">#439889</color>
@@ -9,6 +10,8 @@
     <color name="colorBubbleBalance">#388E3C</color>
     <!-- from material design (for anita with love) -->
     <color name="colorCardViewBackground">#E0F2F1</color>
-
+    <color name="colorPrimaryBackground">#F5F3EE</color>
+    <color name="colorPink">#E65C70</color>
+    <color name="colorGrey">#6E6E6E</color>
 
 </resources>
