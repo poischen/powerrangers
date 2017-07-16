@@ -84,8 +84,8 @@
                 android:layout_weight="0.4"
                 />
 
-
         </LinearLayout>
+
 
         <!-- Button Complete Task -->
         <Button

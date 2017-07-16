@@ -1,15 +1,14 @@
 package msp.powerrangers.ui;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import msp.powerrangers.R;
+import msp.powerrangers.logic.Global;
+
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Screen to show details of a user's open task and complete it
  */
@@ -35,8 +53,15 @@ public class FragmentDetailUsersOpenTask extends Fragment {
     private int position;
     private String taskTitle;
     private String taskDescription;
-    private Bitmap taskImage;
+    private Bitmap taskImageBefore;
+    private String taskImageUrl;
     private boolean isTaskAlreadyCompleted;
+    private String taskID;
+    private String caseID;
+
+    private Bitmap taskImageAfter;
+    private Uri uriAfterImage;
+    private static final int CHOOSE_IMAGE_REQUEST = 123;
 
     public FragmentDetailUsersOpenTask() {
         // Required empty public constructor
@@ -47,16 +72,18 @@ public class FragmentDetailUsersOpenTask extends Fragment {
         super.onCreate(savedInstanceState);
 
         Bundle bundle = getArguments();
-        //TODO: get right position tag from FragmentUsersOpenTasks
-        //TODO: get right task title tag from FragmentUsersOpenTasks
-        //TODO: get right image tag from FragmentUsersOpenTasks
-        //TODO: get right description tag from FragmentUsersOpenTasks
-        //TODO: get status from FragmentUsersOpenTasks
         position = bundle.getInt("PositionUsersOpenTask");
         taskTitle = bundle.getString("TitleUsersOpenTask");
+        //TODO: key anpassen
+        taskID = bundle.getString("TaskID");
+        caseID = bundle.getString("CaseID");
         taskDescription = bundle.getString("DescriptionUsersOpenTask");
-        taskImage = BitmapFactory.decodeByteArray(
-                bundle.getByteArray("ImageUsersOpenTask"),0,bundle.getByteArray("ImageUsersOpenTask").length);
+        try {
+            taskImageBefore = BitmapFactory.decodeByteArray(
+                    bundle.getByteArray("ImageUsersOpenTask"),0,bundle.getByteArray("ImageUsersOpenTask").length);
+        } catch(Exception e){
+            taskImageUrl = bundle.getString("taskImageUrl");
+        }
         isTaskAlreadyCompleted = bundle.getBoolean("StatusUsersOpenTask");
     }
 
@@ -71,10 +98,33 @@ public class FragmentDetailUsersOpenTask extends Fragment {
         tvTaskName.setText(taskTitle);
 
         ivTaskImage = (ImageView) view.findViewById(R.id.taskImageUOT);
-        if (taskImage!=null){
-            ivTaskImage.setImageBitmap(taskImage);
+        if (taskImageBefore !=null){
+            ivTaskImage.setImageBitmap(taskImageBefore);
         } else {
-            ivTaskImage.setImageResource(R.drawable.placeholder_task);
+            try {
+                final File localFile = File.createTempFile("images", "jpg");
+                StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                StorageReference riversRef = storageRef.child(Global.getThumbUrl(taskImageUrl));
+                riversRef.getFile(localFile)
+                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                Log.v("FragmentStart", "download erfolgreich");
+                                Bitmap bmp = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                ivTaskImage.setImageBitmap(bmp);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Log.d("FragmentStart", exception.getMessage());
+                        ivTaskImage.setImageResource(R.drawable.placeholder_task);
+
+                    }
+                });
+            } catch (Exception e) {
+                Log.d("FragmentStart", "no image available or some other error occured");
+                ivTaskImage.setImageResource(R.drawable.placeholder_task);
+            }
         }
 
         tvTaskDesc = (TextView) view.findViewById(R.id.taskDescUOT);
@@ -84,36 +134,109 @@ public class FragmentDetailUsersOpenTask extends Fragment {
         tvActionToUpload = (TextView) view.findViewById(R.id.textImagesToUpload);
         ivUploadedImage = (ImageView) view.findViewById(R.id.taskUploadedImageRanger);
 
-        // TODO: implement uploading images (like in ActivityReportCase)
         buttonUploadImages = (Button) view.findViewById(R.id.buttonUploadImageUOT);
         buttonUploadImages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(), "To implement: upload images", Toast.LENGTH_SHORT).show();
-                ivUploadedImage.setImageResource(R.drawable.defaultuser);
-                tvActionToUpload.setVisibility(View.GONE);
-                ivUploadedImage.setVisibility(View.VISIBLE);
+                showFileChooser();
             }
         });
 
-
-        // TODO: write to db (tasks to confirm from community)
         buttonCompleteTask = (Button) view.findViewById(R.id.buttonCompleteTask);
         buttonCompleteTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(), "Task completed! " +
-                    "You will get your reward after task confirmation.", Toast.LENGTH_LONG).show();
-
-           // move to Main Activity (FragmentStart)
-            Intent i = new Intent(getActivity(), MainActivity.class);
-            startActivity(i);
-            ((Activity) getActivity()).overridePendingTransition(0,0);
-
+                completeTask();
             }
         });
 
+        //give feedback, when task is already completed
+        if (isTaskAlreadyCompleted){
+            buttonUploadImages.setEnabled(false);
+            buttonCompleteTask.setEnabled(false);
+            tvActionToUpload.setText(getString(R.string.textNoNeedToUpload));
+        }
+
         return view;
+    }
+
+
+    /**
+     * method to show file chooser for images
+     */
+    private void showFileChooser() {
+        Intent getimageintent = new Intent();
+        getimageintent.setType("image/*");
+        getimageintent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        getimageintent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(getimageintent, getResources().getString(R.string.chooseProfilePicture)), CHOOSE_IMAGE_REQUEST);
+
+    }
+
+    /**
+     * method to handle the image chooser activity result:
+     * get the picture and upload it
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CHOOSE_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            try {
+                uriAfterImage = data.getData();
+                taskImageAfter = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uriAfterImage);
+                ivUploadedImage.setVisibility(View.VISIBLE);
+                ivTaskImage.setImageBitmap(taskImageAfter);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    /**
+     * method to upload case pictures via firebase
+     */
+    private void completeTask() {
+        Toast.makeText(getContext(), "Please wait, while picture is uploaded.", Toast.LENGTH_LONG).show();
+
+        //upload picture
+        final String storageAndDBPath;
+        //TODO: pictureName anpassen: Position?!
+        storageAndDBPath = "images/cases/" + caseID + "/" + position + "_after.jpg";
+
+        //upload to Firebase Storage
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference riversRef = storageRef.child(storageAndDBPath);
+        riversRef.putFile(uriAfterImage)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        //write picture into db and change taskstatus
+                        DatabaseReference db = FirebaseDatabase.getInstance().getReference("tasks").child(taskID);
+                        db.child("taskCompleted").setValue(true);
+                        db.child("taskPictureAfter").setValue(storageAndDBPath);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Toast.makeText(getContext(), R.string.errorUpload, Toast.LENGTH_LONG).show();
+                        Log.d("DetailUsersOpenTask", exception.getMessage());
+                    }
+                })
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    }
+                });
+
+        Toast.makeText(getContext(), "Task completed! " +
+                "You will get your reward after task confirmation.", Toast.LENGTH_LONG).show();
+
+        // move to Main Activity (FragmentStart)
+        Intent i = new Intent(getActivity(), MainActivity.class);
+        startActivity(i);
+        ((Activity) getActivity()).overridePendingTransition(0,0);
     }
 
 

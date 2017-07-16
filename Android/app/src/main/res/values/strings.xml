@@ -108,7 +108,8 @@
     <string name="titleUsersOpenTasks">Open Tasks</string>
     <string name="buttonUploadImage">Upload image</string>
     <string name="completeTask">Complete Task</string>
-    <string name="textToUpload">You should upload an image of your job before you complete the task.</string>
+    <string name="textToUpload">Please take a picture of the same area shown above - BUT CLEAN :).</string>
+    <string name="textNoNeedToUpload">You already completed this task.</string>
 
     <!-- FragmentVotingTasks-->
     <string name="titleVotingTasks">Voting Tasks</string>

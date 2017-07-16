@@ -108,9 +108,6 @@ public class FragmentUsersOpenTasks extends Fragment {
 
                         ft.commit();
 
-
-
-
                         /*
                          Intent intent = new Intent(getActivity(), ActivityDetailContainer.class);
                         intent.putExtra(String.valueOf(R.string.activityDetailContainer_targetFr), "FragmentDetailUsersOpenTask");

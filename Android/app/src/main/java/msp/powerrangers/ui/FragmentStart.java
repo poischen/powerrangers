@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -76,6 +77,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     // bubbles to update
     TextView balance;
     TextView nOpenTasks;
+    LinearLayout usersOpenTasks;
     TextView nReportedCases;
     TextView nConfirmedCases;
     TextView nCompletedTasks;
@@ -113,8 +115,9 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         //interactive elements
         userImage = (CircleImageView) view.findViewById(R.id.userimage);
         nOpenTasks = (TextView) view.findViewById(R.id.numberOpenTasks);
+        usersOpenTasks = (LinearLayout) view.findViewById(R.id.usersOpenTasks);
         userImage.setOnClickListener(this);
-        nOpenTasks.setOnClickListener(this);
+        usersOpenTasks.setOnClickListener(this);
 
         // bubbles to update
         balance = (TextView) view.findViewById(R.id.numberBalance);
@@ -221,7 +224,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                 }
 
                 break;
-            case R.id.numberOpenTasks:
+            case R.id.usersOpenTasks:
                 /*fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentTransaction = fragmentManager.beginTransaction();
                 FragmentUsersOpenTasks fuot = new FragmentUsersOpenTasks();
