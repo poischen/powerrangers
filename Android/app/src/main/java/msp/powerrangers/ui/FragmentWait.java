@@ -82,7 +82,7 @@ public class FragmentWait extends Fragment {
 
         if (tag.equals(openTaskTag)) {
             usersOpenTaksListItem = new UsersOpenTasksListItem();
-            usersOpenTaksListItem.fill_with_data(this);
+            usersOpenTaksListItem.fill_with_data(this, fragmentTabs.getUser().getId());
             openTasksClicked = true;
         }
 
