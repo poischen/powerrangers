@@ -24,13 +24,15 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser currentUser = null;
     private User user;
 
+    FragmentLogin fl;
+
     private List<ConfirmerCasesListItem> dataConfirmerCases;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        FragmentLogin fl = new FragmentLogin();
+        fl = new FragmentLogin();
         fl.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().add(R.id.activity_main_fragment_container, fl).commit();
 
@@ -48,15 +50,23 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-}
+    }
 
 
     private void changeToLoggedInView() {
+        //create the waiting fragment
+        //let LoginFragment instantiate the user -> extra methode, übergebe waiting fragment
+        //hole restliche user daten
+        //lasse login view das waiting fragment benachrichtigen, welches den login macht
+        fl.createNewUserObject(currentUser, null, null, null, null);
+
+
+        /*
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         FragmentTabs ft = new FragmentTabs();
         fragmentTransaction.replace(R.id.activity_main_fragment_container, ft);
-        fragmentTransaction.commit();
+        fragmentTransaction.commit();*/
     }
 
 

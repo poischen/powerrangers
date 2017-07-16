@@ -1,4 +1,5 @@
 package msp.powerrangers.ui;
+
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,17 +15,24 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import msp.powerrangers.R;
 import msp.powerrangers.logic.User;
-/** Login screen, where a firebaseUser can fLogin_Register or login via his email
+
+/**
+ * Login screen, where a firebaseUser can fLogin_Register or login via his email
  * Auth via Firebase
  */
 public class FragmentLogin extends Fragment {
@@ -37,6 +45,7 @@ public class FragmentLogin extends Fragment {
     private FirebaseAuth firebaseAuth;
     private User user;
     private boolean wantsUserToRegister;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -63,19 +72,19 @@ public class FragmentLogin extends Fragment {
                 String mail = editTextMail.getText().toString().trim();
                 String password = editTextPassword.getText().toString();
                 String name = editTextName.getText().toString().trim();
-                if (TextUtils.isEmpty(mail)){
+                if (TextUtils.isEmpty(mail)) {
                     Toast.makeText(getActivity(), "Please enter your mail for da real power! :)", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (TextUtils.isEmpty((password))){
+                if (TextUtils.isEmpty((password))) {
                     Toast.makeText(getActivity(), "Please enter a password", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 //see, if the firebaseUser wants to fLogin_Register or to sign in
-                if (!wantsUserToRegister){
+                if (!wantsUserToRegister) {
                     signIn(mail, password);
                     return;
-                } else if (wantsUserToRegister && TextUtils.isEmpty(name)){
+                } else if (wantsUserToRegister && TextUtils.isEmpty(name)) {
                     Log.v("wantsUserToRegister", wantsUserToRegister + "");
                     Log.v("TextUtils.isEmpty(name)", TextUtils.isEmpty(name) + "");
                     Log.v("name", name + "");
@@ -97,18 +106,22 @@ public class FragmentLogin extends Fragment {
         });
         return view;
     }
+
     @Override
     public void onStart() {
         super.onStart();
         Bundle args = getArguments();
     }
-    /** Method for registering the firebaseUser via Firebase
+
+    /**
+     * Method for registering the firebaseUser via Firebase
      * after the firebaseUser registers, he will be written into the database
-     * @param mail String
+     *
+     * @param mail     String
      * @param password String
-     * @param name String
+     * @param name     String
      **/
-    public void registerUser(String mail, String password, final String name){
+    public void registerUser(String mail, String password, final String name) {
         //receiving progress feedback while registering
         progressDialog.setMessage("Registering the power...");
         progressDialog.show();
@@ -118,7 +131,7 @@ public class FragmentLogin extends Fragment {
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             //firebaseUser is successfully registered
                             Toast.makeText(getActivity(), "Power registered successfully!", Toast.LENGTH_SHORT).show();
                             //store name of the firebaseUser in Firebase Auth
@@ -147,11 +160,9 @@ public class FragmentLogin extends Fragment {
                             editor.putString(getResources().getString(R.string.sharedPrefs_userDbId), dbId);
                             editor.commit();
                             //create new user object
-                            user = new User(dbId, userId, currentName, currentMail);
+                            //user = new User(dbId, userId, currentName, currentMail);
                             // pushing firebaseUser to 'users' node using the userId
-                            database.child(dbId).setValue(user);
-                            Log.i("THE USER ID" , user.getId());
-                            Log.i("The USER" , user.toString());
+                            database.child(dbId).setValue(createNewUserObject(null, dbId, userId, currentName, currentMail));
                             //switch to Start
                             /*FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
@@ -168,18 +179,18 @@ public class FragmentLogin extends Fragment {
                         } else {
                             Toast.makeText(getActivity(), "Noooooooo! Try again!", Toast.LENGTH_SHORT).show();
                         }*/
-                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                            /*FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                             FragmentTabs fragmentTabs = new FragmentTabs();
                             Bundle bundles = new Bundle();
-                            if (user != null){
-                                bundles.putSerializable("USER" , user);
-                                Log.i("USER" , "IS NOT NULL");
+                            if (user != null) {
+                                bundles.putSerializable("USER", user);
+                                Log.i("USER", "IS NOT NULL");
                             } else {
-                                Log.i("USER" , "IS NULL");
+                                Log.i("USER", "IS NULL");
                             }
                             fragmentTabs.setArguments(bundles);
-                            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.activity_main_fragment_container, fragmentTabs).commit();
+                            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.activity_main_fragment_container, fragmentTabs).commit();*/
                         } else {
                             Toast.makeText(getActivity(), "Noooooooo! Try again!", Toast.LENGTH_SHORT).show();
                         }
@@ -187,11 +198,14 @@ public class FragmentLogin extends Fragment {
                     }
                 });
     }
-    /** Method for signing in via email and Firebase
-     * @param mail String
+
+    /**
+     * Method for signing in via email and Firebase
+     *
+     * @param mail     String
      * @param password String
      **/
-    public void signIn(String mail, String password){
+    public void signIn(String mail, String password) {
         final String givenMail = mail;
         //receiving progress feedback while registering
         progressDialog.setMessage("Sign in...");
@@ -200,11 +214,16 @@ public class FragmentLogin extends Fragment {
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             Toast.makeText(getActivity(), "Log in successful!", Toast.LENGTH_SHORT).show();
-                            FragmentTabs ft = new FragmentTabs();
+
+                            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                            createNewUserObject(firebaseUser, null, null, null, null);
+
+                            /*FragmentTabs ft = new FragmentTabs();
                             ft.setArguments(getActivity().getIntent().getExtras());
-                            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.activity_main_fragment_container, ft).commit();
+                            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.activity_main_fragment_container, ft).commit();*/
                         } else {
                             Toast.makeText(getActivity(), "Noooooooo! Try again!", Toast.LENGTH_SHORT).show();
                         }
@@ -212,17 +231,77 @@ public class FragmentLogin extends Fragment {
                     }
                 });
     }
-    /** This method changes the current view between fLogin_Register and fLogin_Signin modus
+
+    /*
+    Create a new user object, create a tabhost and give the user to the tabhost, which stores it for all concerning fragments
+     */
+    public User createNewUserObject(FirebaseUser firebaseUser, String dbId, String userId, String currentName, String currentMail) {
+        //if called by login
+        if (firebaseUser != null) {
+            SharedPreferences sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
+            final String userDbID = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
+            DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+            DatabaseReference refPath = db.child("users").child(userDbID);
+            refPath.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    try {
+                        User userInfo = dataSnapshot.getValue(User.class);
+                        String name = userInfo.getName();
+                        String dbId = userInfo.getDbId();
+                        String userId = userInfo.getId();
+                        String mail = userInfo.getEmail();
+                        user = new User(dbId, userId, name, mail);
+                        FragmentTabs ft = new FragmentTabs();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(getString(R.string.intent_current_user), user);
+                        ft.setArguments(bundle);
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        transaction.replace(R.id.activity_main_fragment_container, ft);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    } catch (Exception e) {
+                        Log.d("FragmentStart", "An error occured, user has to be signed out");
+                        FirebaseAuth.getInstance().signOut();
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+            return user;
+        } else {
+            //if called by register
+            user = new User(dbId, userId, currentName, currentMail);
+            FragmentTabs ft = new FragmentTabs();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(getString(R.string.intent_current_user), user);
+            ft.setArguments(bundle);
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.activity_main_fragment_container, ft);
+            transaction.addToBackStack(null);
+            transaction.commit();
+
+            return user;
+
+        }
+    }
+
+
+    /**
+     * This method changes the current view between fLogin_Register and fLogin_Signin modus
+     *
      * @param command String text value from the textEditSwitchRegisterSignin
      */
-    public void reverseView(String command){
-        if (command.equals(getString(R.string.fLogin_AlreadyRegistered))){
+    public void reverseView(String command) {
+        if (command.equals(getString(R.string.fLogin_AlreadyRegistered))) {
             wantsUserToRegister = false;
             Log.v("FragmentLogin", "switch view to sign in");
             buttonRegisterSignin.setText(R.string.fLogin_Signin);
             editTextName.setVisibility(View.GONE);
             textViewSwitchRegisterSignin.setText(R.string.fLogin_NotRegisteredYet);
-        } else if (command.equals(getString(R.string.fLogin_NotRegisteredYet))){
+        } else if (command.equals(getString(R.string.fLogin_NotRegisteredYet))) {
             wantsUserToRegister = true;
             Log.v("FragmentLogin", "switch view to register");
             buttonRegisterSignin.setText(R.string.fLogin_Register);

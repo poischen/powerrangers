@@ -29,11 +29,11 @@ public class FragmentTabs extends Fragment implements Serializable {
             super.onCreate(savedInstanceState);
 
             Bundle bundle = getArguments();
-            try {user = (User) bundle.getSerializable("user");
-            Log.v("FragmentTabs", "User: " + user);}
-    catch (Exception e){
-        Log.d("FragmentTabs", "no user given");
-    }
+            try {user = (User) bundle.getSerializable(getString(R.string.intent_current_user));
+                Log.v("FragmentTabs", "User: " + user);}
+            catch (Exception e){
+                Log.d("FragmentTabs", "no user given");
+            }
         }
 
         public View onCreateView(LayoutInflater inflater, ViewGroup container,

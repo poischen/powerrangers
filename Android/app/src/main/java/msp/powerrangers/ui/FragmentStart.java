@@ -1,8 +1,6 @@
 package msp.powerrangers.ui;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -89,6 +87,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     private StorageReference storageRef;
 
     private FragmentTabs tabHost;
+    private boolean isInit = false;
 
     public FragmentStart() {
 
@@ -109,6 +108,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         logoutButton.setOnClickListener(this);
         // display user name
         tvUserName = (TextView) view.findViewById(R.id.textViewUserName);
+        tvUserName.setText(u.getName());
 
         //interactive elements
         userImage = (CircleImageView) view.findViewById(R.id.userimage);
@@ -136,74 +136,17 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //Firebase stuff
         storageRef = FirebaseStorage.getInstance().getReference();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
         //get current User Object
         Bundle bundle = getArguments();
-        u = (User) bundle.getSerializable("USER");
+        //u = (User) bundle.getSerializable(getString(R.string.intent_current_user));
         tabHost = (FragmentTabs) bundle.getSerializable(getString(R.string.tabHostSerializable));
-
-        //
-        if (u == null) {
-            if (firebaseUser != null) {
-                //get user infos from database via users db id and instantiate User Object
-                SharedPreferences sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
-                final String userDbID = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
-                DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-                DatabaseReference refPath = db.child("users").child(userDbID);
-                refPath.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        try {
-
-                            User userInfo = dataSnapshot.getValue(User.class);
-                            String name = userInfo.getName();
-                            tvUserName.setText(name);
-                            String dbId = userInfo.getDbId();
-                            String userId = userInfo.getId();
-                            String mail = userInfo.getEmail();
-
-                            // set all bubbles
-                            setUserInfos(dataSnapshot);
-
-                            // create user object (user is registered)
-                            u = new User(dbId, userId, name, mail);
-                            // set user pic
-                            downloadUserPic();
-
-                        } catch (Exception e) {
-                            Log.d("FragmentStart", "An error occured, user has to be signed out");
-                            FirebaseAuth.getInstance().signOut();
-                            android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                            android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                            FragmentLogin fl = new FragmentLogin();
-                            fragmentTransaction.replace(R.id.activity_main_fragment_container, fl);
-                            fragmentTransaction.commit();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        //Toast.makeText(getContext(), getResources().getString(R.string.fStart_closeAppError), Toast.LENGTH_LONG).show();
-                        //getActivity().finish();
-                    }
-                });
-
-            } else {
-
-                Toast.makeText(getContext(), getResources().getString(R.string.fStart_closeAppError), Toast.LENGTH_LONG).show();
-                getActivity().finish();
-            }
-
-            if (tabHost!=null){
-                tabHost.setUser(u);
-            } else {
-                Log.d("FragmentStart", "tabhost is null");
-            }
-        }
+        Log.v(TAG, "tabhost: " + tabHost);
+        u = tabHost.getUser();
+        downloadUserPic();
+        setUserInfos();
     }
 
     @Override
@@ -319,18 +262,36 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     /**
      * Set bubble values in fragment start screen and the user name
      *
-     * @param ds
+     * @param
      */
-    private void setUserInfos(DataSnapshot ds) {
-        // name
-        tvUserName.setText(String.valueOf(ds.child("name").getValue()));
-        // get & set values for bubbles
-        balance.setText(String.valueOf(ds.child("balance").getValue()));
-        nOpenTasks.setText(String.valueOf(ds.child("numberOpenTasks").getValue()));
-        nConfirmedCases.setText(String.valueOf(ds.child("numberConfirmedCases").getValue()));
-        nReportedCases.setText(String.valueOf(ds.child("numberReportedCases").getValue()));
-        nCompletedTasks.setText(String.valueOf(ds.child("numberCompletedTasks").getValue()));
-        nDonation.setText(String.valueOf(ds.child("donatedValue").getValue()));
+    //private void setUserInfos(DataSnapshot ds) {
+    public void setUserInfos() {
+        //set listener
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference refPath = db.child("users").child(u.getDbId());
+        refPath.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                try {
+                    User userInfo = dataSnapshot.getValue(User.class);
+                    // get & set values for bubbles
+                    balance.setText(String.valueOf(dataSnapshot.child("balance").getValue()));
+                    nOpenTasks.setText(String.valueOf(dataSnapshot.child("numberOpenTasks").getValue()));
+                    nConfirmedCases.setText(String.valueOf(dataSnapshot.child("numberConfirmedCases").getValue()));
+                    nReportedCases.setText(String.valueOf(dataSnapshot.child("numberReportedCases").getValue()));
+                    nCompletedTasks.setText(String.valueOf(dataSnapshot.child("numberCompletedTasks").getValue()));
+                    nDonation.setText(String.valueOf(dataSnapshot.child("donatedValue").getValue()));
+
+                } catch (Exception e) {
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //Toast.makeText(getContext(), getResources().getString(R.string.fStart_closeAppError), Toast.LENGTH_LONG).show();
+                //getActivity().finish();
+            }
+        });
     }
 
     /**
