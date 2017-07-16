@@ -1,5 +1,7 @@
 package msp.powerrangers.ui.listitems;
 
+import android.graphics.Bitmap;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,11 +26,16 @@ public class UsersOpenTasksListItem {
     public int imageID;
 
 
+    public Bitmap taskImage;
+    public String taskImageUrlDB;
+
+
     String titleDB;
     String cityDB;
     String countryDB;
     String commentDB;
     int imageIdDB;
+    boolean taskCompletedDB;
 
     List<UsersOpenTasksListItem> data = new ArrayList<>();
     private DatabaseReference dbRefTasks;
@@ -43,12 +50,24 @@ public class UsersOpenTasksListItem {
 
     }
 
-    public void fill_with_data(final FragmentWait fragmentWait) {
+    public void setTaskBitmap(Bitmap image){
+        this.taskImage = image;
+    }
+
+    public Bitmap getTaskBitmap(){
+        return taskImage;
+    }
+
+    public String getTaskUrl(){
+        return taskImageUrlDB;
+    }
+
+    public void fill_with_data(final FragmentWait fragmentWait, String userID) {
 
         // get the reference to the db tasks
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
 
-        dbRefTasks.addListenerForSingleValueEvent(new ValueEventListener() {
+        dbRefTasks.orderByChild("rangerID").equalTo(userID).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -58,10 +77,10 @@ public class UsersOpenTasksListItem {
 
                     cityDB = (String) singleSnapshot.child("city").getValue();
                     countryDB = (String) singleSnapshot.child("country").getValue();
-
                     titleDB = cityDB + " , " + countryDB;
-
                     commentDB = (String) singleSnapshot.child("comment").getValue();
+                    taskCompletedDB = (boolean) singleSnapshot.child("taskCompeted").getValue();
+
                     // TODO: get first image for task from db
                     imageIdDB = R.drawable.placeholder_case;
                     data.add(new UsersOpenTasksListItem(titleDB, commentDB, imageIdDB));
@@ -83,4 +102,16 @@ public class UsersOpenTasksListItem {
         return data;
     }
 
+
+    public String getTitleDB(){
+        return titleDB;
+    }
+
+    public String getDescription(){
+        return commentDB;
+    }
+
+    public boolean getTaskCompeted(){
+        return taskCompletedDB;
+    }
 }

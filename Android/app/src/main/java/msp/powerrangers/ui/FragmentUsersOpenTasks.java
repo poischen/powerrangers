@@ -2,11 +2,14 @@ package msp.powerrangers.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Collections;
 import java.util.List;
 
@@ -36,6 +40,8 @@ public class FragmentUsersOpenTasks extends Fragment {
     private UsersOpenTasksListItem usersOpenTasksListItem;
 
     private FragmentTabs tabHost;
+
+    private String currentUserId;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -72,9 +78,45 @@ public class FragmentUsersOpenTasks extends Fragment {
                     @Override public void onItemClick(View view, int position) {
 
                         // show FragmentDetailUsersOpenTask
-                        Intent intent = new Intent(getActivity(), ActivityDetailContainer.class);
+                        String taskTitle = mAdapter.getItem(position).getTitleDB();
+                        Log.i("TASK TITLEEE", taskTitle);
+                        String taskDescription = mAdapter.getItem(position).getDescription();
+                        boolean isTaskAlreadyCompleted = mAdapter.getItem(position).getTaskCompeted();
+
+                        FragmentDetailUsersOpenTask fragmentDetailUsersOpenTask = new FragmentDetailUsersOpenTask();
+                        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                        Bundle bundles = new Bundle();
+                        bundles.putInt("PositionUsersOpenTask", position);
+                        bundles.putString("TitleUsersOpenTask", taskTitle);
+                        bundles.putString("DescriptionUsersOpenTask", taskDescription);
+                        bundles.putBoolean("StatusUsersOpenTask", isTaskAlreadyCompleted);
+
+                        try{
+                            Bitmap taskImage = mAdapter.getItem(position).getTaskBitmap();
+                            ByteArrayOutputStream bs = new ByteArrayOutputStream();
+                            taskImage.compress(Bitmap.CompressFormat.JPEG, 50, bs);
+                            bundles.putByteArray("ImageUsersOpenTask",bs.toByteArray());
+
+                        } catch (Exception e){
+                            bundles.putString("taskImageUrl", mAdapter.getItem(position).getTaskUrl());
+                        }
+
+                        fragmentDetailUsersOpenTask.setArguments(bundles);
+                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                        ft.replace(R.id.activity_main_fragment_container, fragmentDetailUsersOpenTask);
+                        ft.addToBackStack(null);
+
+                        ft.commit();
+
+
+
+
+                        /*
+                         Intent intent = new Intent(getActivity(), ActivityDetailContainer.class);
                         intent.putExtra(String.valueOf(R.string.activityDetailContainer_targetFr), "FragmentDetailUsersOpenTask");
                         startActivity(intent);
+                         */
+
 
                     }
 
@@ -99,6 +141,12 @@ public class FragmentUsersOpenTasks extends Fragment {
 
         return rootView;
     }
+
+
+    public String getCurrentUserId(){
+        return tabHost.getUser().getId();
+    }
+
 
 
 
@@ -160,7 +208,14 @@ public class FragmentUsersOpenTasks extends Fragment {
             listItem.remove(position);
             notifyItemRemoved(position);
         }
+
+        public UsersOpenTasksListItem getItem(int position) {
+            return listItem.get(position);
+        }
     }
+
+
+
 
     /**
      * ##################################################################################################################
