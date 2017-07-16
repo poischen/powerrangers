@@ -52,7 +52,7 @@ public class VotingTasksListItem implements Serializable {
     /**
      * Generates Voting Task Objects for RecyclerView's adapter.
      */
-    public List<VotingTasksListItem> fill_with_data(final FragmentWait fragmentWait) {
+    public void fill_with_data(final FragmentWait fragmentWait) {
 
         // get the reference to the db tasks
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
@@ -86,9 +86,6 @@ public class VotingTasksListItem implements Serializable {
         data.add(new VotingTasksListItem("Waste on the beach", "Spain, Palma de Mallorca",  R.drawable.polluted_beach2, R.drawable.clean_beach2));
         */
         //Log.i("Data", "This is the data: " + data);
-
-
-        return data;
 
     }
 

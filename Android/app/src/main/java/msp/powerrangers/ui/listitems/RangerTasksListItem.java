@@ -72,7 +72,7 @@ public class RangerTasksListItem implements Serializable {
     /**
      * Generates RT-Objects for RecyclerView's adapter.
      */
-    public List<RangerTasksListItem> fill_with_data(final FragmentWait fragmentWait) {
+    public void fill_with_data(final FragmentWait fragmentWait) {
 
         // get the reference to the db cases
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
@@ -113,8 +113,6 @@ public class RangerTasksListItem implements Serializable {
         data.add(new RangerTasksListItem("Hanoi, Vietnam", "Summary of the case in Hanoi....", R.drawable.placeholder_task));
         data.add(new RangerTasksListItem("Kemer, Turkey", "Summary of the case in Kemer....", R.drawable.placeholder_task));
         */
-
-        return data;
     }
 
     public List<RangerTasksListItem> getData(){

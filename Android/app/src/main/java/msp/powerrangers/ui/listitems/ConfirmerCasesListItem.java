@@ -55,7 +55,7 @@ public class ConfirmerCasesListItem implements Serializable {
     /**
      * Generates Confirmer Cases Objects for RecyclerView's adapter.
      */
-    public List<ConfirmerCasesListItem> fill_with_data(final FragmentWait fragmentWait) {
+    public void fill_with_data(final FragmentWait fragmentWait) {
         // get the reference to the db cases
         dbRefCases = FirebaseDatabase.getInstance().getReference("cases");
 
@@ -83,8 +83,6 @@ public class ConfirmerCasesListItem implements Serializable {
             }
 
         });
-
-        return data;
 
     }
 
