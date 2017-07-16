@@ -36,6 +36,8 @@ public class UsersOpenTasksListItem {
     String commentDB;
     int imageIdDB;
     boolean taskCompletedDB;
+    String taskIdDB;
+    String caseIdDB;
 
     List<UsersOpenTasksListItem> data = new ArrayList<>();
     private DatabaseReference dbRefTasks;
@@ -83,7 +85,13 @@ public class UsersOpenTasksListItem {
 
                     // TODO: get first image for task from db
                     imageIdDB = R.drawable.placeholder_case;
+
+
+                    taskIdDB = (String) singleSnapshot.child("taskId").getValue();
+                    caseIdDB = (String) singleSnapshot.child("caseId").getValue();
+
                     data.add(new UsersOpenTasksListItem(titleDB, commentDB, imageIdDB));
+
 
                 }
 
@@ -113,5 +121,13 @@ public class UsersOpenTasksListItem {
 
     public boolean getTaskCompeted(){
         return taskCompletedDB;
+    }
+
+    public String getTaskid(){
+        return taskIdDB;
+    }
+
+    public String getCaseId(){
+        return caseIdDB;
     }
 }

@@ -82,6 +82,9 @@ public class FragmentUsersOpenTasks extends Fragment {
                         Log.i("TASK TITLEEE", taskTitle);
                         String taskDescription = mAdapter.getItem(position).getDescription();
                         boolean isTaskAlreadyCompleted = mAdapter.getItem(position).getTaskCompeted();
+                        String taskId = mAdapter.getItem(position).getTaskid();
+                        String caseId = mAdapter.getItem(position).getCaseId();
+
 
                         FragmentDetailUsersOpenTask fragmentDetailUsersOpenTask = new FragmentDetailUsersOpenTask();
                         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
@@ -90,6 +93,8 @@ public class FragmentUsersOpenTasks extends Fragment {
                         bundles.putString("TitleUsersOpenTask", taskTitle);
                         bundles.putString("DescriptionUsersOpenTask", taskDescription);
                         bundles.putBoolean("StatusUsersOpenTask", isTaskAlreadyCompleted);
+                        bundles.putString("OpenTaskID", taskId);
+                        bundles.putString("OpenTaskCaseID", caseId);
 
                         try{
                             Bitmap taskImage = mAdapter.getItem(position).getTaskBitmap();

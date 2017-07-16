@@ -56,6 +56,7 @@ public class FragmentDetailUsersOpenTask extends Fragment {
     private Bitmap taskImageBefore;
     private String taskImageUrl;
     private boolean isTaskAlreadyCompleted;
+
     private String taskID;
     private String caseID;
 
@@ -75,8 +76,8 @@ public class FragmentDetailUsersOpenTask extends Fragment {
         position = bundle.getInt("PositionUsersOpenTask");
         taskTitle = bundle.getString("TitleUsersOpenTask");
         //TODO: key anpassen
-        taskID = bundle.getString("TaskID");
-        caseID = bundle.getString("CaseID");
+        taskID = bundle.getString("OpenTaskID");
+        caseID = bundle.getString("OpenTaskCaseID");
         taskDescription = bundle.getString("DescriptionUsersOpenTask");
         try {
             taskImageBefore = BitmapFactory.decodeByteArray(
