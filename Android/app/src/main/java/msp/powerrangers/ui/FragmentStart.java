@@ -88,6 +88,8 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
 
     private StorageReference storageRef;
 
+    private FragmentTabs tabHost;
+
     public FragmentStart() {
 
     }
@@ -142,7 +144,9 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         //get current User Object
         Bundle bundle = getArguments();
         u = (User) bundle.getSerializable("USER");
+        tabHost = (FragmentTabs) bundle.getSerializable(getString(R.string.tabHostSerializable));
 
+        //
         if (u == null) {
             if (firebaseUser != null) {
                 //get user infos from database via users db id and instantiate User Object
@@ -194,6 +198,11 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                 getActivity().finish();
             }
 
+            if (tabHost!=null){
+                tabHost.setUser(u);
+            } else {
+                Log.d("FragmentStart", "tabhost is null");
+            }
         }
     }
 
@@ -270,11 +279,13 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
 
                 break;
             case R.id.numberOpenTasks:
-                fragmentManager = getActivity().getSupportFragmentManager();
+                /*fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentTransaction = fragmentManager.beginTransaction();
                 FragmentUsersOpenTasks fuot = new FragmentUsersOpenTasks();
                 fragmentTransaction.replace(R.id.activity_main_fragment_container, fuot);
-                fragmentTransaction.commit();
+                fragmentTransaction.commit();*/
+                FragmentWait fw = new FragmentWait();
+                tabHost.replaceFragment(getString(R.string.usersOpenTasks), true, fw);
                 break;
 
             case R.id.reportACaseButton:

@@ -72,7 +72,7 @@ public class VotingTasksListItem implements Serializable {
                     //Log.i("Data Top", "This is the data: " + data);
                 }
 
-                fragmentWait.changeToContentView();
+                fragmentWait.changeToContentView(false);
             }
 
             @Override

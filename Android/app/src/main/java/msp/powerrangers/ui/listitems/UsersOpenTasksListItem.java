@@ -43,7 +43,7 @@ public class UsersOpenTasksListItem {
 
     }
 
-    public List<UsersOpenTasksListItem> fill_with_data() {
+    public void fill_with_data(final FragmentWait fragmentWait) {
 
         // get the reference to the db tasks
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
@@ -68,6 +68,7 @@ public class UsersOpenTasksListItem {
 
                 }
 
+                fragmentWait.changeToContentView(true);
             }
 
             @Override
@@ -76,9 +77,10 @@ public class UsersOpenTasksListItem {
             }
         });
 
-
-        return data;
     }
 
+    public List<UsersOpenTasksListItem> getData(){
+        return data;
+    }
 
 }

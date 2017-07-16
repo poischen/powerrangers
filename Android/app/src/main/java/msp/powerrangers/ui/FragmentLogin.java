@@ -153,7 +153,7 @@ public class FragmentLogin extends Fragment {
                             Log.i("THE USER ID" , user.getId());
                             Log.i("The USER" , user.toString());
                             //switch to Start
-                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                            /*FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                             FragmentStart fragmentStart = new FragmentStart();
                             Bundle bundles = new Bundle();
@@ -165,6 +165,21 @@ public class FragmentLogin extends Fragment {
                             }
                             fragmentStart.setArguments(bundles);
                             getActivity().getSupportFragmentManager().beginTransaction().add(R.id.activity_main_fragment_container, fragmentStart).commit();
+                        } else {
+                            Toast.makeText(getActivity(), "Noooooooo! Try again!", Toast.LENGTH_SHORT).show();
+                        }*/
+                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                            FragmentTabs fragmentTabs = new FragmentTabs();
+                            Bundle bundles = new Bundle();
+                            if (user != null){
+                                bundles.putSerializable("USER" , user);
+                                Log.i("USER" , "IS NOT NULL");
+                            } else {
+                                Log.i("USER" , "IS NULL");
+                            }
+                            fragmentTabs.setArguments(bundles);
+                            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.activity_main_fragment_container, fragmentTabs).commit();
                         } else {
                             Toast.makeText(getActivity(), "Noooooooo! Try again!", Toast.LENGTH_SHORT).show();
                         }

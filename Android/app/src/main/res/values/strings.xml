@@ -20,11 +20,14 @@
     <string name="votingTasksTag">votingTag</string>
     <string name="confirmCasesTag">confirmTag</string>
     <string name="rangerTasksTag">jobTag</string>
+    <string name="usersOpenTasks">usersOpenTasksTag</string>
 
     <!-- Serializable tabnames -->
     <string name="votingTasksSerializable">votingListItems</string>
     <string name="confirmCasesSerializable">casesListItems</string>
     <string name="rangerTasksSerializable">tasksListItems</string>
+    <string name="tabHostSerializable">tabhost</string>
+    <string name="openTasksSerializable">openTasksListItems</string>
 
     <!-- FragmentStart-->
     <string name="balance">earned</string>

@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 import msp.powerrangers.R;
+import msp.powerrangers.logic.User;
 import msp.powerrangers.ui.listitems.RangerTasksListItem;
 import msp.powerrangers.ui.listitems.UsersOpenTasksListItem;
 
@@ -34,6 +35,7 @@ public class FragmentUsersOpenTasks extends Fragment {
 
     private UsersOpenTasksListItem usersOpenTasksListItem;
 
+    private FragmentTabs tabHost;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -46,6 +48,13 @@ public class FragmentUsersOpenTasks extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Bundle bundle = getArguments();
+        tabHost = (FragmentTabs) bundle.getSerializable(getString(R.string.tabHostSerializable));
+        usersOpenTasksListItem = (UsersOpenTasksListItem) bundle.getSerializable(getString(R.string.openTasksSerializable));
+
+//***********************************************************************************************************************
+        //@Viki from tabHost you can call getUser() to get the user and from this his id
+//***********************************************************************************************************************
 
     }
 
@@ -83,7 +92,7 @@ public class FragmentUsersOpenTasks extends Fragment {
         usersOpenTasksListItem = new UsersOpenTasksListItem();
 
         // 3. Create an adapter
-        mAdapter = new Recycler_View_Adapter(usersOpenTasksListItem.fill_with_data(), getContext());
+        mAdapter = new Recycler_View_Adapter(usersOpenTasksListItem.getData(), getContext());
 
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);

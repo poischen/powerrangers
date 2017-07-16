@@ -74,7 +74,7 @@ public class ConfirmerCasesListItem implements Serializable {
                     data.add(new ConfirmerCasesListItem(titleDB, cityDB, countryDB, commentDB, caseImageUrlDB));
                 }
 
-                fragmentWait.changeToContentView();
+                fragmentWait.changeToContentView(false);
             }
 
             @Override

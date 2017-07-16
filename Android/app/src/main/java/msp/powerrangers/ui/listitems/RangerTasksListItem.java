@@ -95,7 +95,7 @@ public class RangerTasksListItem implements Serializable {
 
                 }
 
-                fragmentWait.changeToContentView();
+                fragmentWait.changeToContentView(false);
 
             }
 

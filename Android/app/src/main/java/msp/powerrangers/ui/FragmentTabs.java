@@ -14,16 +14,26 @@ import java.io.Serializable;
 import java.util.List;
 
 import msp.powerrangers.R;
+import msp.powerrangers.logic.User;
 import msp.powerrangers.ui.listitems.ConfirmerCasesListItem;
 
 public class FragmentTabs extends Fragment implements Serializable {
     private FragmentTabHost tabHost;
+    private User user;
+
         public FragmentTabs() {
 
         }
 
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+
+            Bundle bundle = getArguments();
+            try {user = (User) bundle.getSerializable("user");
+            Log.v("FragmentTabs", "User: " + user);}
+    catch (Exception e){
+        Log.d("FragmentTabs", "no user given");
+    }
         }
 
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,22 +44,22 @@ public class FragmentTabs extends Fragment implements Serializable {
             tabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
 
             Bundle arg1 = new Bundle();
-            arg1.putSerializable("tabhost", this);
+            arg1.putSerializable(getString(R.string.tabHostSerializable), this);
             tabHost.addTab(tabHost.newTabSpec(getString(R.string.startTag)).setIndicator(getString(R.string.start)),
                     FragmentStart.class, arg1);
 
             Bundle arg2 = new Bundle();
-            arg2.putSerializable("tabhost", this);
+            arg2.putSerializable(getString(R.string.tabHostSerializable), this);
             tabHost.addTab(tabHost.newTabSpec(getString(R.string.votingTasksTag)).setIndicator(getString(R.string.confirmTasks)),
                     FragmentWait.class, arg2);
 
             Bundle arg3 = new Bundle();
-            arg3.putSerializable("tabhost", this);
+            arg3.putSerializable(getString(R.string.tabHostSerializable), this);
             tabHost.addTab(tabHost.newTabSpec(getString(R.string.confirmCasesTag)).setIndicator(getString(R.string.confirmCases)),
                     FragmentWait.class, arg3);
 
             Bundle arg4 = new Bundle();
-            arg4.putSerializable("tabhost", this);
+            arg4.putSerializable(getString(R.string.tabHostSerializable), this);
             tabHost.addTab(tabHost.newTabSpec(getString(R.string.rangerTasksTag)).setIndicator(getString(R.string.findYorJob)),
                     FragmentWait.class, arg4);
 
@@ -62,6 +72,15 @@ public class FragmentTabs extends Fragment implements Serializable {
     public TabHost getTabHost(){
         return tabHost;
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
 
     public void replaceFragment(String tag, boolean addToBackStack, FragmentWait fragmentWait) {
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
@@ -103,6 +122,20 @@ public class FragmentTabs extends Fragment implements Serializable {
             //TODO go back to original fragment instead of creating new?
             FragmentStart fragmentStart = new FragmentStart();
             transaction.replace(android.R.id.tabcontent, fragmentStart);
+            Bundle bundles = new Bundle();
+            bundles.putSerializable(getString(R.string.tabHostSerializable), this);
+            fragmentStart.setArguments(bundles);
+            transaction.commit();
+            getChildFragmentManager().executePendingTransactions();
+        }
+
+        else if (tag.equals(getString(R.string.usersOpenTasks))){
+            //TODO go back to original fragment instead of creating new?
+            FragmentUsersOpenTasks fragmentUsersOpenTasks = new FragmentUsersOpenTasks();
+            transaction.replace(android.R.id.tabcontent, fragmentUsersOpenTasks);
+            Bundle bundles = new Bundle();
+            bundles.putSerializable(getString(R.string.tabHostSerializable), this);
+            fragmentUsersOpenTasks.setArguments(bundles);
             transaction.commit();
             getChildFragmentManager().executePendingTransactions();
         }

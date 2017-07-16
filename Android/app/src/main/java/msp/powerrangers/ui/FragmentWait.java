@@ -24,10 +24,12 @@ public class FragmentWait extends Fragment {
     private RangerTasksListItem rangerTasksListItem;
     private UsersOpenTasksListItem usersOpenTasksListItem;
     private VotingTasksListItem votingTasksListItem;
+    private UsersOpenTasksListItem usersOpenTaksListItem;
 
     private boolean votingTabClicked = false;
     private boolean confirmerTabClicked = false;
     private boolean rangerTabClicked = false;
+    private boolean openTasksClicked = false;
 
     private FragmentTabs fragmentTabs;
 
@@ -50,6 +52,7 @@ public class FragmentWait extends Fragment {
         String votingTag = getString(R.string.votingTasksTag);
         String confirmerTag = getString(R.string.confirmCasesTag);
         String rangerTag = getString(R.string.rangerTasksTag);
+        String openTaskTag = getString(R.string.usersOpenTasks);
 
         // check which tab was clicked and get the data from the db
 
@@ -77,11 +80,21 @@ public class FragmentWait extends Fragment {
             Log.i("KATJA"," rangerTabClicked set to true");
         }
 
+        if (tag.equals(openTaskTag)) {
+            usersOpenTaksListItem = new UsersOpenTasksListItem();
+            usersOpenTaksListItem.fill_with_data(this);
+            openTasksClicked = true;
+        }
 
     }
 
-    public void changeToContentView() {
-        String tag = getTag();
+    public void changeToContentView(boolean isaboutUsersOpenTasks) {
+        String tag;
+        if (isaboutUsersOpenTasks){
+            tag = (getString(R.string.usersOpenTasks));
+        } else {
+            tag = getTag();
+        }
         fragmentTabs.replaceFragment(tag, true, this);
 
         /*if (confirmerTabClicked){
