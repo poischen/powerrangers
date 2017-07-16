@@ -37,6 +37,8 @@ public class FragmentDetailUsersOpenTask extends Fragment {
     private String taskDescription;
     private Bitmap taskImage;
     private boolean isTaskAlreadyCompleted;
+    private String openTaskID;
+    private String openTaskCaseID;
 
     public FragmentDetailUsersOpenTask() {
         // Required empty public constructor
@@ -58,6 +60,9 @@ public class FragmentDetailUsersOpenTask extends Fragment {
         taskImage = BitmapFactory.decodeByteArray(
                 bundle.getByteArray("ImageUsersOpenTask"),0,bundle.getByteArray("ImageUsersOpenTask").length);
         isTaskAlreadyCompleted = bundle.getBoolean("StatusUsersOpenTask");
+        openTaskCaseID = bundle.getString("OpenTaskCaseID");
+        openTaskID = bundle.getString("OpenTaskID");
+
     }
 
     @Override
