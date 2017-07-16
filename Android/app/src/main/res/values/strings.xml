@@ -31,11 +31,11 @@
 
     <!-- FragmentStart-->
     <string name="balance">earned</string>
-    <string name="openTasks_2">open tasks</string>
-    <string name="reportesCases">reported\ncases</string>
-    <string name="fStart_donatedPower">donated\npower</string>
-    <string name="confirmedCases">confirmed\ncases</string>
-    <string name="completedTasks">completed\ntasks</string>
+    <string name="openTasks_2">open tasks to complete</string>
+    <string name="reportesCases">reported cases</string>
+    <string name="fStart_donatedPower">donated power</string>
+    <string name="confirmedCases">confirmed cases</string>
+    <string name="completedTasks">completed tasks</string>
     <string name="chooseProfilePicture">Wähle neues Profilbild</string>
     <string name="uploadPicture">Bild wird hochgeladen...</string>
     <string name="errorSignUpFirst">Logge dich erst ein, bevor du ein Fotos hochlädst.</string>
@@ -60,7 +60,7 @@
 
     <!-- Buttonnames in Start Screen-->
     <string name="donate">donate</string>
-    <string name="reportACase">report</string>
+    <string name="reportACase">report a case</string>
     <string name="frStart_permissionNeeded">Permission is needed to upload profile picture.</string>
 
     <!-- ActivityReportCase-->
