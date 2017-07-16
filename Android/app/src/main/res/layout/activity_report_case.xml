@@ -36,7 +36,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/reportTitleOfCase" />
+                        android:text="@string/reportTitleOfCase"
+                        android:fontFamily="casual"/>
 
                     <EditText
                         android:id="@+id/editTextCaseTitle"
@@ -45,7 +46,7 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:inputType="textPersonName"
-                        android:text="" />
+                        android:text=""/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -58,7 +59,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/reportCityOfCase" />
+                        android:text="@string/reportCityOfCase"
+                        android:fontFamily="casual"/>
 
                     <EditText
                         android:id="@+id/editTextCaseCity"
@@ -80,7 +82,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/reportCountryOfCase" />
+                        android:text="@string/reportCountryOfCase"
+                        android:fontFamily="casual"/>
 
                     <EditText
                         android:id="@+id/editTextCaseCountry"
@@ -102,28 +105,32 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/reportScalaOfCase" />
+                        android:text="@string/reportScalaOfCase"
+                        android:fontFamily="casual"/>
 
                     <RadioButton
                         android:id="@+id/radioButtonCaseLow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/reportCaseCheckboxLow" />
+                        android:text="@string/reportCaseCheckboxLow"
+                        android:fontFamily="casual"/>
 
                     <RadioButton
                         android:id="@+id/radioButtonCaseMiddle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/reportCaseCheckboxMiddle" />
+                        android:text="@string/reportCaseCheckboxMiddle"
+                        android:fontFamily="casual"/>
 
                     <RadioButton
                         android:id="@+id/radioButtonCaseHigh"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/reportCaseCheckboxHigh" />
+                        android:text="@string/reportCaseCheckboxHigh"
+                        android:fontFamily="casual"/>
 
 
                 </LinearLayout>
@@ -138,7 +145,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/reportAreaCoordinates" />
+                        android:text="@string/reportAreaCoordinates"
+                        android:fontFamily="casual"/>
 
                 </LinearLayout>
 
@@ -152,7 +160,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/reportXCoordinateOfCase" />
+                        android:text="@string/reportXCoordinateOfCase"
+                        android:fontFamily="casual"/>
 
                     <EditText
                         android:id="@+id/editTextCaseXCoordinate"
@@ -174,7 +183,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/reportYCoordinateOfCase" />
+                        android:text="@string/reportYCoordinateOfCase"
+                        android:fontFamily="casual"/>
 
                     <EditText
                         android:id="@+id/editTextCaseYCoordinate"
@@ -192,7 +202,8 @@
                    <TextView
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
-                       android:text="@string/reportInstructionManualUploadPics"/>
+                       android:text="@string/reportInstructionManualUploadPics"
+                       android:fontFamily="casual"/>
                </LinearLayout>
 
                 <LinearLayout
@@ -205,7 +216,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/reportPictureOfCase" />
+                        android:text="@string/reportPictureOfCase"
+                        android:fontFamily="casual"/>
 
                     <ImageButton
                         android:id="@+id/imageButtonUploadPicture"
@@ -227,7 +239,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/reportUploadedPicture"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        android:fontFamily="casual"/>
 
                 </LinearLayout>
 
@@ -253,7 +266,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/reportInformationOfCase" />
+                        android:text="@string/reportInformationOfCase"
+                        android:fontFamily="casual"/>
 
                     <EditText
                         android:id="@+id/editTextCaseInformation"
@@ -276,7 +290,7 @@
                         android:layout_height="wrap_content"
                         android:background="@color/colorAccent"
                         android:text="@string/reportACase"
-                        android:textColor="@color/colorWhite" />
+                        android:textColor="@color/colorWhite"/>
                 </LinearLayout>
 
             </LinearLayout>

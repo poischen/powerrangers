@@ -37,8 +37,7 @@
                     android:textSize="13pt"
                     android:textColor="@color/colorPrimaryDark"
                     android:gravity="center"
-                    android:text="Case to Confirm"
-                    />
+                    android:text="Case to Confirm"/>
 
                 <android.support.v4.view.ViewPager
                     android:id="@+id/fConfirmCaseViewPager"
@@ -56,7 +55,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/reportTitleOfCase" />
+                        android:text="@string/reportTitleOfCase"
+                        android:fontFamily="casual"/>
 
                     <EditText
                         android:id="@+id/editTextConfirmCaseTitle"
@@ -65,7 +65,7 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:inputType="textPersonName"
-                        android:text="" />
+                        android:text=""/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -78,7 +78,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/reportCityOfCase" />
+                        android:text="@string/reportCityOfCase"
+                        android:fontFamily="casual"/>
 
                     <EditText
                         android:id="@+id/editTextConfirmCaseCity"
@@ -100,7 +101,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/reportCountryOfCase" />
+                        android:text="@string/reportCountryOfCase"
+                        android:fontFamily="casual"/>
 
                     <EditText
                         android:id="@+id/editTextConfirmCaseCountry"
@@ -122,28 +124,32 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/reportScalaOfCase" />
+                        android:text="@string/reportScalaOfCase"
+                        android:fontFamily="casual"/>
 
                     <RadioButton
                         android:id="@+id/radioButtonConfirmCaseLow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/reportCaseCheckboxLow" />
+                        android:text="@string/reportCaseCheckboxLow"
+                        android:fontFamily="casual"/>
 
                     <RadioButton
                         android:id="@+id/radioButtonConfirmCaseMiddle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/reportCaseCheckboxMiddle" />
+                        android:text="@string/reportCaseCheckboxMiddle"
+                        android:fontFamily="casual"/>
 
                     <RadioButton
                         android:id="@+id/radioButtonConfirmCaseHigh"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/reportCaseCheckboxHigh" />
+                        android:text="@string/reportCaseCheckboxHigh"
+                        android:fontFamily="casual"/>
 
 
                 </LinearLayout>
@@ -158,7 +164,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/reportAreaCoordinates" />
+                        android:text="@string/reportAreaCoordinates"
+                        android:fontFamily="casual"/>
 
                 </LinearLayout>
 
@@ -172,7 +179,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/reportXCoordinateOfCase" />
+                        android:text="@string/reportXCoordinateOfCase"
+                        android:fontFamily="casual"/>
 
                     <EditText
                         android:id="@+id/editTextConfirmCaseXCoordinate"
@@ -194,7 +202,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/reportYCoordinateOfCase" />
+                        android:text="@string/reportYCoordinateOfCase"
+                        android:fontFamily="casual"/>
 
                     <EditText
                         android:id="@+id/editTextConfirmCaseYCoordinate"
@@ -217,7 +226,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/reportUploadedPicture" />
+                        android:text="@string/reportUploadedPicture"
+                        android:fontFamily="casual"/>
 
                 </LinearLayout>
 
@@ -245,7 +255,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/reportInformationOfCase" />
+                        android:text="@string/reportInformationOfCase"
+                        android:fontFamily="casual"/>
 
                     <EditText
                         android:id="@+id/editTextConfirmCaseInformation"
@@ -268,7 +279,7 @@
                         android:layout_height="wrap_content"
                         android:background="@color/colorAccent"
                         android:textColor="@color/colorWhite"
-                        android:text="@string/detailConfirmerCaseConfirmButton" />
+                        android:text="@string/detailConfirmerCaseConfirmButton"/>
                 </LinearLayout>
 
             </LinearLayout>
