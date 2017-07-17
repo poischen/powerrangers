@@ -76,10 +76,15 @@ public class FragmentTabs extends FragmentActivity implements Serializable {
         tabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
         tabHost.setup(getBaseContext(), getSupportFragmentManager(), android.R.id.tabcontent);
 
+        /*Bundle arg1 = new Bundle();
+        arg1.putSerializable(getString(R.string.intent_current_user), user);
+        tabHost.addTab(tabHost.newTabSpec(getString(R.string.startTag)).setIndicator(getString(R.string.start)),
+                FragmentStart.class, arg1);*/
+
         Bundle arg1 = new Bundle();
         arg1.putSerializable(getString(R.string.intent_current_user), user);
         tabHost.addTab(tabHost.newTabSpec(getString(R.string.startTag)).setIndicator(getString(R.string.start)),
-                FragmentStart.class, arg1);
+                FragmentWait.class, arg1);
 
         Bundle arg2 = new Bundle();
         //arg2.putSerializable(getString(R.string.tabHostSerializable), this);

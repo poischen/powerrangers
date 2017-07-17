@@ -35,7 +35,7 @@ public class BaseContainerFragment extends Fragment {
             getChildFragmentManager().executePendingTransactions();
         } else if (tag.equals(getString(R.string.rangerTasksTag))) {
             FragmentRangerTasks fragmentRangerTasks = new FragmentRangerTasks();
-            transaction.replace(R.id.container_framelayout, fragmentRangerTasks);
+            transaction.replace(R.id.container_framelayout, fragmentRangerTasks, getString(R.string.usersOpenTasks));
             Bundle bundles = new Bundle();
             bundles.putSerializable(getString(R.string.rangerTasksSerializable), fragmentWait.getRangerTasksListItem());
             bundles.putString("tag", tag);
@@ -43,7 +43,6 @@ public class BaseContainerFragment extends Fragment {
             transaction.commit();
             getChildFragmentManager().executePendingTransactions();
         } else if (tag.equals(getString(R.string.startTag))) {
-            //TODO go back to original fragment instead of creating new?
             FragmentStart fragmentStart = new FragmentStart();
             transaction.replace(R.id.container_framelayout, fragmentStart);
             Bundle bundles = new Bundle();
@@ -52,7 +51,6 @@ public class BaseContainerFragment extends Fragment {
             transaction.commit();
             getChildFragmentManager().executePendingTransactions();
         } else if (tag.equals(getString(R.string.usersOpenTasks))) {
-            //TODO go back to original fragment instead of creating new?
             FragmentUsersOpenTasks fragmentUsersOpenTasks = new FragmentUsersOpenTasks();
             transaction.replace(R.id.container_framelayout, fragmentUsersOpenTasks);
             Bundle bundles = new Bundle();
@@ -83,6 +81,14 @@ public class BaseContainerFragment extends Fragment {
     }
 
     public void replaceFragmentDetailConfirmer(FragmentDetailConfirmerCase fragment) {
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.container_framelayout, fragment);
+        transaction.commit();
+        getChildFragmentManager().executePendingTransactions();
+    }
+
+    public void replaceFragmentOpenTasks(FragmentUsersOpenTasks fragment) {
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.addToBackStack(null);
         transaction.replace(R.id.container_framelayout, fragment);

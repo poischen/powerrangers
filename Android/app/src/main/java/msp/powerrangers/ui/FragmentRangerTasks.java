@@ -82,7 +82,7 @@ public class FragmentRangerTasks extends Fragment {
                     @Override
                     public void onItemClick(View view, int position) {
 
-                        //  show FragmentDetailRangerTask
+                        //show FragmentDetailRangerTask
                         /*FragmentDetailRangerTask fragmentDetailRangerTask = new FragmentDetailRangerTask();
                         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                         Bundle bundles = new Bundle();

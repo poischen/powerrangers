@@ -41,6 +41,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -145,10 +146,13 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         storageRef = FirebaseStorage.getInstance().getReference();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         //get current User Object
-        Bundle bundle = getArguments();
-        u = (User) bundle.getSerializable(getString(R.string.intent_current_user));
 
-        //u = ((FragmentTabs)getActivity()).getUser();
+
+        //Bundle bundle = getArguments();
+        //u = (User) bundle.getSerializable(getString(R.string.intent_current_user));
+
+        u = ((FragmentTabs)getActivity()).getUser();
+
         Log.v("FragmentStart", "User in onCreate: " + u);
         //tabHost = (FragmentTabs) bundle.getSerializable(getString(R.string.tabHostSerializable));
        //Log.v(TAG, "tabhost: " + tabHost);
@@ -234,14 +238,10 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                 FragmentUsersOpenTasks fuot = new FragmentUsersOpenTasks();
                 fragmentTransaction.replace(R.id.activity_main_fragment_container, fuot);
                 fragmentTransaction.commit();*/
-                //TODO!!!!!!!!!!!!!!!!!!!!!!!1
-                FragmentWait fw = new FragmentWait();
 
+                FragmentUsersOpenTasks fuot = new FragmentUsersOpenTasks();
+                ((BaseContainerFragment)getParentFragment()).replaceFragmentOpenTasks(fuot);
 
-               /* FragmentTabs tabHost = (FragmentTabs) getFragmentManager().findFragmentByTag(getString(R.string.fragmentTabsTag));
-                //FragmentTabs tabHost = (FragmentTabs) getActivity().getSupportFragmentManager().findFragmentByTag(getString(R.string.fragmentTabsTag));
-                  tabHost.replaceFragment(getString(R.string.usersOpenTasks), true, fw);
-                */
                 break;
 
             case R.id.reportACaseButton:

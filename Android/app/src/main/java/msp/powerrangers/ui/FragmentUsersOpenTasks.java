@@ -58,6 +58,9 @@ public class FragmentUsersOpenTasks extends Fragment {
         //tabHost = (FragmentTabs) bundle.getSerializable(getString(R.string.tabHostSerializable));
         //usersOpenTasksListItem = (UsersOpenTasksListItem) bundle.getSerializable(getString(R.string.openTasksSerializable));
 
+        User userTest = ((FragmentTabs)getActivity()).getUser();
+        Log.v("FragmentUsersOpenTasks", "User: " + userTest);
+
 //***********************************************************************************************************************
         //@Viki from tabHost you can call getUser() to get the user and from this his id
 //***********************************************************************************************************************

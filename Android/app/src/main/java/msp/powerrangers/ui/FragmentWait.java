@@ -88,6 +88,10 @@ public class FragmentWait extends BaseContainerFragment {
             openTasksClicked = true;
         }
 
+       if (tag.equals(startTag)) {
+            replaceFragment(startTag, true, this);
+        }
+
     }
 
     public void changeToContentView(boolean isaboutUsersOpenTasks) {
