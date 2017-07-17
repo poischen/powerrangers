@@ -56,7 +56,8 @@ public class FragmentUsersOpenTasks extends Fragment {
 
         Bundle bundle = getArguments();
         //tabHost = (FragmentTabs) bundle.getSerializable(getString(R.string.tabHostSerializable));
-        //usersOpenTasksListItem = (UsersOpenTasksListItem) bundle.getSerializable(getString(R.string.openTasksSerializable));
+        usersOpenTasksListItem = (UsersOpenTasksListItem) bundle.getSerializable(getString(R.string.openTasksSerializable));
+        Log.v("FragmentUsersOpenTasks", "usersOpenTasksListItem: " + usersOpenTasksListItem);
 
         User userTest = ((FragmentTabs)getActivity()).getUser();
         Log.v("FragmentUsersOpenTasks", "User: " + userTest);

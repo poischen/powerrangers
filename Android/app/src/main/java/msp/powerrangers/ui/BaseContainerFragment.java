@@ -5,7 +5,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
+import java.io.Serializable;
+
 import msp.powerrangers.R;
+import msp.powerrangers.ui.listitems.UsersOpenTasksListItem;
 
 public class BaseContainerFragment extends Fragment {
 
@@ -51,10 +54,12 @@ public class BaseContainerFragment extends Fragment {
             transaction.commit();
             getChildFragmentManager().executePendingTransactions();
         } else if (tag.equals(getString(R.string.usersOpenTasks))) {
+            Log.v("BaseContainer", "replace Fragment, UsersOpenTasks");
             FragmentUsersOpenTasks fragmentUsersOpenTasks = new FragmentUsersOpenTasks();
             transaction.replace(R.id.container_framelayout, fragmentUsersOpenTasks);
             Bundle bundles = new Bundle();
-            //bundles.putSerializable(getString(R.string.tabHostSerializable), this);
+            bundles.putSerializable(getString(R.string.openTasksSerializable), fragmentWait.getUsersOpenTasksListItem());
+            Log.v("BaseContainer", "data: " + fragmentWait.getUsersOpenTasksListItem());
             fragmentUsersOpenTasks.setArguments(bundles);
             transaction.commit();
             getChildFragmentManager().executePendingTransactions();
@@ -91,11 +96,18 @@ public class BaseContainerFragment extends Fragment {
     public void replaceFragmentOpenTasks(FragmentUsersOpenTasks fragment) {
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.addToBackStack(null);
-        transaction.replace(R.id.container_framelayout, fragment);
+        transaction.replace(R.id.container_framelayout, fragment, (getString(R.string.usersOpenTasks)));
         transaction.commit();
         getChildFragmentManager().executePendingTransactions();
     }
 
+    public void replaceFragmentWait(FragmentWait fragment) {
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.container_framelayout, fragment, (getString(R.string.fragmentWaitTag)));
+        transaction.commit();
+        getChildFragmentManager().executePendingTransactions();
+    }
 
     public boolean popFragment() {
         Log.e("test", "pop fragment: " + getChildFragmentManager().getBackStackEntryCount());

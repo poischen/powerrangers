@@ -84,7 +84,7 @@ public class FragmentWait extends BaseContainerFragment {
 
         if (tag.equals(openTaskTag)) {
             usersOpenTaksListItem = new UsersOpenTasksListItem();
-            usersOpenTaksListItem.fill_with_data(this, ((MainActivity)getActivity()).getUser().getId());
+            usersOpenTaksListItem.fill_with_data(this, ((FragmentTabs)getActivity()).getUser().getId());
             openTasksClicked = true;
         }
 
@@ -97,6 +97,7 @@ public class FragmentWait extends BaseContainerFragment {
     public void changeToContentView(boolean isaboutUsersOpenTasks) {
         String tag;
         if (isaboutUsersOpenTasks){
+            Log.v("FragmentWait", "it is about UsersOpenTasks!");
             tag = (getString(R.string.usersOpenTasks));
         } else {
             tag = getTag();
@@ -158,6 +159,10 @@ public class FragmentWait extends BaseContainerFragment {
             ft.commit();
 
         }*/
+    }
+
+    public void initReplacingFragmentOpenTasks(UsersOpenTasksListItem fragment, String userID){
+        fragment.fill_with_data(this, userID);
     }
 
     @Override

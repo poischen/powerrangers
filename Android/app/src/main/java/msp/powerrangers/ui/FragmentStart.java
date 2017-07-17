@@ -13,6 +13,7 @@ import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,6 +53,7 @@ import android.Manifest;
 import msp.powerrangers.R;
 import msp.powerrangers.logic.Global;
 import msp.powerrangers.logic.User;
+import msp.powerrangers.ui.listitems.UsersOpenTasksListItem;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -239,8 +241,17 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                 fragmentTransaction.replace(R.id.activity_main_fragment_container, fuot);
                 fragmentTransaction.commit();*/
 
-                FragmentUsersOpenTasks fuot = new FragmentUsersOpenTasks();
-                ((BaseContainerFragment)getParentFragment()).replaceFragmentOpenTasks(fuot);
+                //FragmentUsersOpenTasks fuot = new FragmentUsersOpenTasks();
+                //((BaseContainerFragment)getParentFragment()).replaceFragmentOpenTasks(fuot);
+
+                FragmentWait fw = new FragmentWait();
+                UsersOpenTasksListItem uotList = new UsersOpenTasksListItem();
+
+                //TODO: ggf. erst aus Fragment Wait aufrufen während call von replaceFragmentWait?
+                fw.initReplacingFragmentOpenTasks(uotList, u.getId());
+
+                ((BaseContainerFragment)getParentFragment()).replaceFragmentWait(fw);
+
 
                 break;
 

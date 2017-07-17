@@ -25,6 +25,7 @@
     <string name="usersOpenTasks">usersOpenTasksTag</string>
     <string name="usersOpenTaskDetailTag">usersOpenTaskDetailTag</string>
     <string name="fragmentTabsTag">tabHostTag</string>
+    <string name="fragmentWaitTag">waitTag</string>
 
     <!-- Serializable tabnames -->
     <string name="votingTasksSerializable">votingListItems</string>

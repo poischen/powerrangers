@@ -1,6 +1,7 @@
 package msp.powerrangers.ui.listitems;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -8,6 +9,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +21,7 @@ import msp.powerrangers.ui.FragmentWait;
  * Tutorial: https://www.sitepoint.com/mastering-complex-lists-with-the-android-recyclerview/
  *
  */
-public class UsersOpenTasksListItem {
+public class UsersOpenTasksListItem implements Serializable {
 
     public String title;
     public String desc;
@@ -81,7 +83,7 @@ public class UsersOpenTasksListItem {
                     countryDB = (String) singleSnapshot.child("country").getValue();
                     titleDB = cityDB + " , " + countryDB;
                     commentDB = (String) singleSnapshot.child("comment").getValue();
-                    taskCompletedDB = (boolean) singleSnapshot.child("taskCompeted").getValue();
+                    taskCompletedDB = (Boolean) singleSnapshot.child("taskCompeted").getValue();
 
                     // TODO: get first image for task from db
                     imageIdDB = R.drawable.placeholder_case;
@@ -95,6 +97,7 @@ public class UsersOpenTasksListItem {
 
                 }
 
+                Log.v("UOTListItem", "call fragmentWait.changeToContentView()");
                 fragmentWait.changeToContentView(true);
             }
 
