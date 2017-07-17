@@ -214,36 +214,7 @@
                         android:inputType="number"
                         android:text="" />
                 </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/textViewConfirmUploadedPictures"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/reportUploadedPicture"
-                        android:fontFamily="casual"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:id="@+id/imageViewConfirmUploadedPicture"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_weight="1"
-                        android:visibility="gone"
-                        app:srcCompat="@android:drawable/btn_star" />
-                </LinearLayout>
+                
 
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -61,7 +61,6 @@ public class FragmentDetailConfirmerCase extends Fragment {
     private TextView textViewConfirmCaseAreaCoordinates;
     private TextView textViewConfirmCaseXCoordinate;
     private TextView textViewConfirmCaseYCoordinate;
-    private TextView textViewConfirmUploadedPictures;
     private TextView textViewConfirmCaseInformation;
 
     // edit Texts
@@ -79,7 +78,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
 
     // buttons
     private Button buttonConfirmCaseReport;
-    private ImageView imageViewConfirmUploadedPicture;
+
 
     //swipegallery
     ViewPager viewPager;
@@ -151,7 +150,6 @@ public class FragmentDetailConfirmerCase extends Fragment {
         textViewConfirmCaseAreaCoordinates = (TextView) view.findViewById(R.id.textViewConfirmCaseAreaCoordinates);
         textViewConfirmCaseXCoordinate = (TextView) view.findViewById(R.id.textViewConfirmCaseXCoordinate);
         textViewConfirmCaseYCoordinate = (TextView) view.findViewById(R.id.textViewConfirmCaseYCoordinate);
-        textViewConfirmUploadedPictures = (TextView) view.findViewById(R.id.textViewConfirmUploadedPictures);
         textViewConfirmCaseInformation = (TextView) view.findViewById(R.id.textViewConfirmCaseInformation);
         viewPager = (ViewPager) view.findViewById(R.id.fConfirmCaseViewPager);
         FragmentDetailConfirmerCase.ImageAdapter adapter = new FragmentDetailConfirmerCase.ImageAdapter(this.getContext());
@@ -174,9 +172,6 @@ public class FragmentDetailConfirmerCase extends Fragment {
 
         // buttons
         buttonConfirmCaseReport = (Button) view.findViewById(R.id.buttonConfirmCaseReport);
-        imageViewConfirmUploadedPicture = (ImageView) view.findViewById(R.id.imageViewConfirmUploadedPicture);
-
-        // eventuell todo ActionBar
 
         // fill in information from detective case in EditTexts
         dbRefCases = FirebaseDatabase.getInstance().getReference("cases");
