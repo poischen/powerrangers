@@ -39,7 +39,7 @@ public class FragmentUsersOpenTasks extends Fragment {
 
     private UsersOpenTasksListItem usersOpenTasksListItem;
 
-    private FragmentTabs tabHost;
+    //private FragmentTabs tabHost;
 
     private String currentUserId;
 
@@ -55,8 +55,8 @@ public class FragmentUsersOpenTasks extends Fragment {
         super.onCreate(savedInstanceState);
 
         Bundle bundle = getArguments();
-        tabHost = (FragmentTabs) bundle.getSerializable(getString(R.string.tabHostSerializable));
-        usersOpenTasksListItem = (UsersOpenTasksListItem) bundle.getSerializable(getString(R.string.openTasksSerializable));
+        //tabHost = (FragmentTabs) bundle.getSerializable(getString(R.string.tabHostSerializable));
+        //usersOpenTasksListItem = (UsersOpenTasksListItem) bundle.getSerializable(getString(R.string.openTasksSerializable));
 
 //***********************************************************************************************************************
         //@Viki from tabHost you can call getUser() to get the user and from this his id
@@ -86,7 +86,7 @@ public class FragmentUsersOpenTasks extends Fragment {
                         String caseId = mAdapter.getItem(position).getCaseId();
 
 
-                        FragmentDetailUsersOpenTask fragmentDetailUsersOpenTask = new FragmentDetailUsersOpenTask();
+                        /*FragmentDetailUsersOpenTask fragmentDetailUsersOpenTask = new FragmentDetailUsersOpenTask();
                         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                         Bundle bundles = new Bundle();
                         bundles.putInt("PositionUsersOpenTask", position);
@@ -111,7 +111,29 @@ public class FragmentUsersOpenTasks extends Fragment {
                         ft.replace(R.id.activity_main_fragment_container, fragmentDetailUsersOpenTask);
                         ft.addToBackStack(null);
 
-                        ft.commit();
+                        ft.commit();*/
+
+                        FragmentDetailUsersOpenTask fragmentDetailUsersOpenTask = new FragmentDetailUsersOpenTask();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("PositionUsersOpenTask", position);
+                        bundle.putString("TitleUsersOpenTask", taskTitle);
+                        bundle.putString("DescriptionUsersOpenTask", taskDescription);
+                        bundle.putBoolean("StatusUsersOpenTask", isTaskAlreadyCompleted);
+                        bundle.putString("OpenTaskID", taskId);
+                        bundle.putString("OpenTaskCaseID", caseId);
+
+                        try{
+                            Bitmap taskImage = mAdapter.getItem(position).getTaskBitmap();
+                            ByteArrayOutputStream bs = new ByteArrayOutputStream();
+                            taskImage.compress(Bitmap.CompressFormat.JPEG, 50, bs);
+                            bundle.putByteArray("ImageUsersOpenTask",bs.toByteArray());
+
+                        } catch (Exception e){
+                            bundle.putString("taskImageUrl", mAdapter.getItem(position).getTaskUrl());
+                        }
+
+                        fragmentDetailUsersOpenTask.setArguments(bundle);
+                        ((BaseContainerFragment)getParentFragment()).replaceFragmentDetailOpenTask(fragmentDetailUsersOpenTask);
 
                         /*
                          Intent intent = new Intent(getActivity(), ActivityDetailContainer.class);
@@ -146,7 +168,7 @@ public class FragmentUsersOpenTasks extends Fragment {
 
 
     public String getCurrentUserId(){
-        return tabHost.getUser().getId();
+        return ((MainActivity)getActivity()).getUser().getId();
     }
 
 

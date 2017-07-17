@@ -26,6 +26,9 @@
         <activity android:name=".ui.ActivityDonate"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
+        <activity android:name=".ui.FragmentTabs"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.ActivityReportCase"
             android:label="@string/reportCaseActivityTitle"

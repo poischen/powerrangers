@@ -2,6 +2,7 @@ package msp.powerrangers.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -17,49 +18,46 @@ import msp.powerrangers.R;
 import msp.powerrangers.logic.User;
 import msp.powerrangers.ui.listitems.ConfirmerCasesListItem;
 
-public class FragmentTabs extends Fragment implements Serializable {
+public class FragmentTabs extends FragmentActivity implements Serializable {
     private FragmentTabHost tabHost;
     private User user;
 
-        public FragmentTabs() {
+      /*  public FragmentTabs() {
 
-        }
+        }*/
 
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-
-            Bundle bundle = getArguments();
-            try {user = (User) bundle.getSerializable(getString(R.string.intent_current_user));
-                Log.v("FragmentTabs", "User: " + user);}
-            catch (Exception e){
-                Log.d("FragmentTabs", "no user given");
-            }
+            user = (User) getIntent().getExtras().get(getString(R.string.intent_current_user));
+            setContentView(R.layout.fragment_tabs);
+            initView();
         }
 
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+   /*     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
             View rootView = inflater.inflate(R.layout.fragment_tabs,container, false);
+            Log.v("FragmentTabs", "layout inflated " + rootView.getLayoutParams());
             tabHost = (FragmentTabHost)rootView.findViewById(android.R.id.tabhost);
-            tabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
+            tabHost.setup(getBaseContext(), getSupportFragmentManager(), android.R.id.tabcontent);
 
             Bundle arg1 = new Bundle();
-            arg1.putSerializable(getString(R.string.tabHostSerializable), this);
+            arg1.putSerializable(getString(R.string.intent_current_user), user);
             tabHost.addTab(tabHost.newTabSpec(getString(R.string.startTag)).setIndicator(getString(R.string.start)),
                     FragmentStart.class, arg1);
 
             Bundle arg2 = new Bundle();
-            arg2.putSerializable(getString(R.string.tabHostSerializable), this);
+            //arg2.putSerializable(getString(R.string.tabHostSerializable), this);
             tabHost.addTab(tabHost.newTabSpec(getString(R.string.votingTasksTag)).setIndicator(getString(R.string.confirmTasks)),
                     FragmentWait.class, arg2);
 
             Bundle arg3 = new Bundle();
-            arg3.putSerializable(getString(R.string.tabHostSerializable), this);
+            //arg3.putSerializable(getString(R.string.tabHostSerializable), this);
             tabHost.addTab(tabHost.newTabSpec(getString(R.string.confirmCasesTag)).setIndicator(getString(R.string.confirmCases)),
                     FragmentWait.class, arg3);
 
             Bundle arg4 = new Bundle();
-            arg4.putSerializable(getString(R.string.tabHostSerializable), this);
+            //arg4.putSerializable(getString(R.string.tabHostSerializable), this);
             tabHost.addTab(tabHost.newTabSpec(getString(R.string.rangerTasksTag)).setIndicator(getString(R.string.findYorJob)),
                     FragmentWait.class, arg4);
 
@@ -67,11 +65,42 @@ public class FragmentTabs extends Fragment implements Serializable {
             tabHost.getTabWidget().getChildAt(2).getLayoutParams().width = 80;
 
             return rootView;
-        }
+        }*/
 
-    public TabHost getTabHost(){
+    /*public TabHost getTabHost(){
         return tabHost;
+    }*/
+
+
+    private void initView() {
+        tabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
+        tabHost.setup(getBaseContext(), getSupportFragmentManager(), android.R.id.tabcontent);
+
+        Bundle arg1 = new Bundle();
+        arg1.putSerializable(getString(R.string.intent_current_user), user);
+        tabHost.addTab(tabHost.newTabSpec(getString(R.string.startTag)).setIndicator(getString(R.string.start)),
+                FragmentStart.class, arg1);
+
+        Bundle arg2 = new Bundle();
+        //arg2.putSerializable(getString(R.string.tabHostSerializable), this);
+        tabHost.addTab(tabHost.newTabSpec(getString(R.string.votingTasksTag)).setIndicator(getString(R.string.confirmTasks)),
+                FragmentWait.class, arg2);
+
+        Bundle arg3 = new Bundle();
+        //arg3.putSerializable(getString(R.string.tabHostSerializable), this);
+        tabHost.addTab(tabHost.newTabSpec(getString(R.string.confirmCasesTag)).setIndicator(getString(R.string.confirmCases)),
+                FragmentWait.class, arg3);
+
+        Bundle arg4 = new Bundle();
+        //arg4.putSerializable(getString(R.string.tabHostSerializable), this);
+        tabHost.addTab(tabHost.newTabSpec(getString(R.string.rangerTasksTag)).setIndicator(getString(R.string.findYorJob)),
+                FragmentWait.class, arg4);
+
+        // set the width of Confirm-Tab (else the text appears over two lines)
+        tabHost.getTabWidget().getChildAt(2).getLayoutParams().width = 80;
+
     }
+
 
     public User getUser() {
         return user;
@@ -81,7 +110,7 @@ public class FragmentTabs extends Fragment implements Serializable {
         this.user = user;
     }
 
-
+/*
     public void replaceFragment(String tag, boolean addToBackStack, FragmentWait fragmentWait) {
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         if (addToBackStack) {
@@ -123,7 +152,7 @@ public class FragmentTabs extends Fragment implements Serializable {
             FragmentStart fragmentStart = new FragmentStart();
             transaction.replace(android.R.id.tabcontent, fragmentStart);
             Bundle bundles = new Bundle();
-            bundles.putSerializable(getString(R.string.tabHostSerializable), this);
+            //bundles.putSerializable(getString(R.string.tabHostSerializable), this);
             fragmentStart.setArguments(bundles);
             transaction.commit();
             getChildFragmentManager().executePendingTransactions();
@@ -134,7 +163,7 @@ public class FragmentTabs extends Fragment implements Serializable {
             FragmentUsersOpenTasks fragmentUsersOpenTasks = new FragmentUsersOpenTasks();
             transaction.replace(android.R.id.tabcontent, fragmentUsersOpenTasks);
             Bundle bundles = new Bundle();
-            bundles.putSerializable(getString(R.string.tabHostSerializable), this);
+            //bundles.putSerializable(getString(R.string.tabHostSerializable), this);
             fragmentUsersOpenTasks.setArguments(bundles);
             transaction.commit();
             getChildFragmentManager().executePendingTransactions();
@@ -150,6 +179,6 @@ public class FragmentTabs extends Fragment implements Serializable {
             getChildFragmentManager().popBackStack();
         }
         return isPop;
-    }
+    }*/
 
 }

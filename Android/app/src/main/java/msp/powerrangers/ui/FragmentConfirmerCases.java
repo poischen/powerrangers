@@ -23,6 +23,7 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
@@ -76,7 +77,7 @@ public class FragmentConfirmerCases extends Fragment {
                     public void onItemClick(View view, int position) {
 
                         // switch to FragmentDetailConfirmerCase
-                        FragmentDetailConfirmerCase confirmCaseFragment = new FragmentDetailConfirmerCase();
+                        /*FragmentDetailConfirmerCase confirmCaseFragment = new FragmentDetailConfirmerCase();
                         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
 
                         Bundle bundles = new Bundle();
@@ -85,7 +86,16 @@ public class FragmentConfirmerCases extends Fragment {
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                         ft.replace(R.id.activity_main_fragment_container, confirmCaseFragment);
                         ft.addToBackStack(null);
-                        ft.commit();
+                        ft.commit();*/
+
+                        FragmentDetailConfirmerCase confirmCaseFragment = new FragmentDetailConfirmerCase();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("PositionConfirm", position);
+                        confirmCaseFragment.setArguments(bundle);
+
+                        confirmCaseFragment.setArguments(bundle);
+                        ((BaseContainerFragment)getParentFragment()).replaceFragmentDetailConfirmer(confirmCaseFragment);
+
                     }
 
                     @Override

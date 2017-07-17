@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -84,11 +85,12 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     TextView nDonation;
 
     FirebaseUser firebaseUser;
+
     private User u;
 
     private StorageReference storageRef;
 
-    private FragmentTabs tabHost;
+    //private FragmentTabs tabHost;
     private boolean isInit = false;
 
     public FragmentStart() {
@@ -144,10 +146,12 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         //get current User Object
         Bundle bundle = getArguments();
-        //u = (User) bundle.getSerializable(getString(R.string.intent_current_user));
-        tabHost = (FragmentTabs) bundle.getSerializable(getString(R.string.tabHostSerializable));
-        Log.v(TAG, "tabhost: " + tabHost);
-        u = tabHost.getUser();
+        u = (User) bundle.getSerializable(getString(R.string.intent_current_user));
+
+        //u = ((FragmentTabs)getActivity()).getUser();
+        Log.v("FragmentStart", "User in onCreate: " + u);
+        //tabHost = (FragmentTabs) bundle.getSerializable(getString(R.string.tabHostSerializable));
+       //Log.v(TAG, "tabhost: " + tabHost);
         downloadUserPic();
         setUserInfos();
     }
@@ -230,8 +234,14 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                 FragmentUsersOpenTasks fuot = new FragmentUsersOpenTasks();
                 fragmentTransaction.replace(R.id.activity_main_fragment_container, fuot);
                 fragmentTransaction.commit();*/
+                //TODO!!!!!!!!!!!!!!!!!!!!!!!1
                 FragmentWait fw = new FragmentWait();
-                tabHost.replaceFragment(getString(R.string.usersOpenTasks), true, fw);
+
+
+               /* FragmentTabs tabHost = (FragmentTabs) getFragmentManager().findFragmentByTag(getString(R.string.fragmentTabsTag));
+                //FragmentTabs tabHost = (FragmentTabs) getActivity().getSupportFragmentManager().findFragmentByTag(getString(R.string.fragmentTabsTag));
+                  tabHost.replaceFragment(getString(R.string.usersOpenTasks), true, fw);
+                */
                 break;
 
             case R.id.reportACaseButton:
@@ -385,6 +395,17 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
 
 
     }
+
+
+    public User getUser() {
+        return u;
+    }
+
+    public void setUser(User u) {
+        this.u = u;
+    }
+
+
 
     //https://stackoverflow.com/questions/38017765/retrieving-child-value-firebase
 

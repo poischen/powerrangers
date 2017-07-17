@@ -3,12 +3,14 @@ package msp.powerrangers.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TabHost;
 
 import msp.powerrangers.R;
 import msp.powerrangers.ui.listitems.ConfirmerCasesListItem;
@@ -17,7 +19,7 @@ import msp.powerrangers.ui.listitems.UsersOpenTasksListItem;
 import msp.powerrangers.ui.listitems.VotingTasksListItem;
 
 
-public class FragmentWait extends Fragment {
+public class FragmentWait extends BaseContainerFragment {
 
 
     private ConfirmerCasesListItem casesListItem;
@@ -31,7 +33,7 @@ public class FragmentWait extends Fragment {
     private boolean rangerTabClicked = false;
     private boolean openTasksClicked = false;
 
-    private FragmentTabs fragmentTabs;
+    //private FragmentTabs fragmentTabs;
 
     public FragmentWait() {
         // Required empty public constructor
@@ -41,8 +43,8 @@ public class FragmentWait extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Bundle bundle = getArguments();
-        fragmentTabs = (FragmentTabs) bundle.getSerializable("tabhost");
+        //Bundle bundle = getArguments();
+        //fragmentTabs = (FragmentTabs) bundle.getSerializable("tabhost");
 
         String tag = getTag();
         Log.i("KATJA", "**********************   new tag  ********************* ");
@@ -82,7 +84,7 @@ public class FragmentWait extends Fragment {
 
         if (tag.equals(openTaskTag)) {
             usersOpenTaksListItem = new UsersOpenTasksListItem();
-            usersOpenTaksListItem.fill_with_data(this, fragmentTabs.getUser().getId());
+            usersOpenTaksListItem.fill_with_data(this, ((MainActivity)getActivity()).getUser().getId());
             openTasksClicked = true;
         }
 
@@ -95,7 +97,13 @@ public class FragmentWait extends Fragment {
         } else {
             tag = getTag();
         }
-        fragmentTabs.replaceFragment(tag, true, this);
+
+        /*Log.v("FragmentWait", "Fragments: " + getFragmentManager().getFragments());
+
+        FragmentTabs tabHost = (FragmentTabs) getFragmentManager().findFragmentByTag(getString(R.string.fragmentTabsTag));
+        Log.v("TABHOST ", ""+ tabHost);*/
+
+        replaceFragment(tag, true, this);
 
         /*if (confirmerTabClicked){
             Log.i("KATJA","confirmerTabClicked in FragmentWait");
@@ -152,7 +160,7 @@ public class FragmentWait extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fr_wait, container, false);
+        return inflater.inflate(R.layout.fr_wait, null);
     }
 
     public ConfirmerCasesListItem getCasesListItem() {

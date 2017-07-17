@@ -125,7 +125,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
         // Set action bar menu
         setHasOptionsMenu(true);
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
     }

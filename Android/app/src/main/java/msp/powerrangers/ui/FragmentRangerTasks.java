@@ -83,27 +83,34 @@ public class FragmentRangerTasks extends Fragment {
                     public void onItemClick(View view, int position) {
 
                         //  show FragmentDetailRangerTask
-                        FragmentDetailRangerTask fragmentDetailRangerTask = new FragmentDetailRangerTask();
+                        /*FragmentDetailRangerTask fragmentDetailRangerTask = new FragmentDetailRangerTask();
                         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                         Bundle bundles = new Bundle();
                         bundles.putInt("PositionRanger", position);
-                        bundles.putString("caseImageUrl", mAdapter.getItem(position).getCaseUrl());
+                        bundles.putString("caseImageUrl", mAdapter.getItem(position).getCaseUrl());*/
+
+                        FragmentDetailRangerTask fragmentDetailRangerTask = new FragmentDetailRangerTask();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("PositionRanger", position);
 
                         try{
                             Bitmap taskImage = mAdapter.getItem(position).getTaskBitmap();
                             ByteArrayOutputStream bs = new ByteArrayOutputStream();
                             taskImage.compress(Bitmap.CompressFormat.JPEG, 50, bs);
-                            bundles.putByteArray("taskImageByteArray", bs.toByteArray());
+                            bundle.putByteArray("taskImageByteArray", bs.toByteArray());
                         } catch (Exception e){
-                            bundles.putString("taskImageUrl", mAdapter.getItem(position).getTaskUrl());
+                            bundle.putString("taskImageUrl", mAdapter.getItem(position).getTaskUrl());
                         }
 
-                        fragmentDetailRangerTask.setArguments(bundles);
+                        fragmentDetailRangerTask.setArguments(bundle);
+                        ((BaseContainerFragment)getParentFragment()).replaceFragmentDetailRanger(fragmentDetailRangerTask);
+
+                        /*fragmentDetailRangerTask.setArguments(bundles);
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                         ft.replace(R.id.activity_main_fragment_container, fragmentDetailRangerTask);
                         ft.addToBackStack(null);
 
-                        ft.commit();
+                        ft.commit();*/
 
                     }
 

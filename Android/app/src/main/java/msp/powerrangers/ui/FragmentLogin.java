@@ -1,6 +1,7 @@
 package msp.powerrangers.ui;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -217,7 +218,7 @@ public class FragmentLogin extends Fragment {
                         if (task.isSuccessful()) {
                             Toast.makeText(getActivity(), "Log in successful!", Toast.LENGTH_SHORT).show();
 
-                            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                            FirebaseUser firebaseUser = firebaseAuth.getInstance().getCurrentUser();
 
                             createNewUserObject(firebaseUser, null, null, null, null);
 
@@ -252,14 +253,24 @@ public class FragmentLogin extends Fragment {
                         String userId = userInfo.getId();
                         String mail = userInfo.getEmail();
                         user = new User(dbId, userId, name, mail);
+                        ((MainActivity)getActivity()).setUser(user);
                         FragmentTabs ft = new FragmentTabs();
+                        //Bundle bundle = new Bundle();
+                        //bundle.putSerializable(getString(R.string.intent_current_user), user);
+                        //ft.setArguments(bundle);
+
+                        Intent intent = new Intent(getActivity(), FragmentTabs.class);
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(getString(R.string.intent_current_user), user);
-                        ft.setArguments(bundle);
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                        transaction.replace(R.id.activity_main_fragment_container, ft);
+                        intent.putExtras(bundle);
+                        getActivity().startActivity(intent);
+
+                       /* FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        transaction.replace(R.id.activity_main_fragment_container, ft, "tabHostFragment");
                         transaction.addToBackStack(null);
                         transaction.commit();
+                        Log.v("FragmentLogin", "TAG: " + ft.getTag());*/
+
                     } catch (Exception e) {
                         Log.d("FragmentStart", "An error occured, user has to be signed out");
                         FirebaseAuth.getInstance().signOut();
@@ -274,14 +285,21 @@ public class FragmentLogin extends Fragment {
         } else {
             //if called by register
             user = new User(dbId, userId, currentName, currentMail);
-            FragmentTabs ft = new FragmentTabs();
+
+            Intent intent = new Intent(getActivity(), FragmentTabs.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(getString(R.string.intent_current_user), user);
+            intent.putExtras(bundle);
+            getActivity().startActivity(intent);
+
+            /*FragmentTabs ft = new FragmentTabs();
             Bundle bundle = new Bundle();
             bundle.putSerializable(getString(R.string.intent_current_user), user);
             ft.setArguments(bundle);
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.activity_main_fragment_container, ft);
             transaction.addToBackStack(null);
-            transaction.commit();
+            transaction.commit();*/
 
             return user;
 

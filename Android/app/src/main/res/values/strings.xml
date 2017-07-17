@@ -19,8 +19,12 @@
     <string name="startTag">startTag</string>
     <string name="votingTasksTag">votingTag</string>
     <string name="confirmCasesTag">confirmTag</string>
+    <string name="confirmCaseDetailTag">confirmDetailTag</string>
     <string name="rangerTasksTag">jobTag</string>
+    <string name="rangerTaskDetailTag">rangerDetailTag</string>
     <string name="usersOpenTasks">usersOpenTasksTag</string>
+    <string name="usersOpenTaskDetailTag">usersOpenTaskDetailTag</string>
+    <string name="fragmentTabsTag">tabHostTag</string>
 
     <!-- Serializable tabnames -->
     <string name="votingTasksSerializable">votingListItems</string>
