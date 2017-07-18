@@ -249,6 +249,7 @@ exports.createTasks = functions.database.ref('/cases/{caseId}/confirmed')
             const scale = event.data.adminRef.parent.child('scale').once('value');
             const caseId = event.data.adminRef.parent.child('id').once('value');
             const userId = event.data.adminRef.parent.child('userID').once('value');
+            const name = event.data.adminRef.parent.child('name').once('value');
 
             // Get image URIs for case pictures from the database
             const casePictureList = event.data.adminRef.parent.child('pictureURL').once('value');
@@ -261,7 +262,7 @@ exports.createTasks = functions.database.ref('/cases/{caseId}/confirmed')
             */
             //const caseDbId = event.data.adminRef.parent.once('key');
 
-            return Promise.all([areaX, areaY, city, country, comment, title, scale, caseId, casePictureList, userId]).then(results => {
+            return Promise.all([areaX, areaY, city, country, comment, title, scale, caseId, casePictureList, userId, name]).then(results => {
               // Get list of pictures assigned to a case and remove the first one (main case picture)
               const casePictureList = results[8].val();
               const casePicture = casePictureList[0];
@@ -287,6 +288,7 @@ exports.createTasks = functions.database.ref('/cases/{caseId}/confirmed')
                 const title = results[5].val();
                 const id = results[7].val();
                 const userId = results[9].val();
+                const name = results[10].val();
 
                 // Create a random task id
                 var taskId = Math.random().toString(36).substring(7);
@@ -295,7 +297,8 @@ exports.createTasks = functions.database.ref('/cases/{caseId}/confirmed')
                 casePictureList.forEach(function(uri, index) {
                   var taskRef = event.data.adminRef.root.child('tasks/').push();
                   var taskDbId = taskRef.key;
-                  return taskRef.set({taskDbId: taskDbId, taskId: taskId, city: city, country: country, comment: comment, reward: ranger_reward, scale: scale, taskPicture: uri, casePicture: casePicture, caseId: id, taskCompleted: false, assigned: false, numberRangers: number_rangers});
+                  var taskIndex = index+1
+              return taskRef.set({taskDbId: taskDbId, taskId: taskId, city: city, country: country, comment: comment, reward: ranger_reward, scale: scale, taskPicture: uri, casePicture: casePicture, caseId: id, taskCompleted: false, assigned: false, numberRangers: number_rangers, name: name + " (Area " + (taskIndex) +")"});
                 });
 
                 /*

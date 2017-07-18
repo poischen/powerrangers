@@ -2,7 +2,9 @@ package msp.powerrangers.ui;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,12 +15,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
 import msp.powerrangers.R;
+import msp.powerrangers.logic.Global;
 import msp.powerrangers.logic.User;
 import msp.powerrangers.ui.listitems.UsersOpenTasksListItem;
 
@@ -33,12 +42,13 @@ public class FragmentUsersOpenTasks extends Fragment {
     protected RecyclerView.LayoutManager mLayoutManager;
     protected Recycler_View_Adapter mAdapter;
 
+
     private UsersOpenTasksListItem usersOpenTasksListItem;
 
     //private FragmentTabs tabHost;
 
     private String currentUserId;
-
+    private StorageReference storageRef;
 
 
     String taskTitle;
@@ -67,6 +77,7 @@ public class FragmentUsersOpenTasks extends Fragment {
 
         User userTest = ((FragmentTabs)getActivity()).getUser();
         Log.v("FragmentUsersOpenTasks", "User: " + userTest);
+        storageRef = FirebaseStorage.getInstance().getReference();
 
 //***********************************************************************************************************************
         //@Viki from tabHost you can call getUser() to get the user and from this his id
@@ -99,7 +110,6 @@ public class FragmentUsersOpenTasks extends Fragment {
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);
 
-
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getContext(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
@@ -113,11 +123,29 @@ public class FragmentUsersOpenTasks extends Fragment {
                         FragmentDetailUsersOpenTask fragmentDetailUsersOpenTask = new FragmentDetailUsersOpenTask();
                         Bundle bundle = new Bundle();
                         bundle.putInt("PositionUsersOpenTask", position);
+
+
                         bundle.putString("TitleUsersOpenTask", mAdapter.getItem(position).title);
-                        bundle.putString("DescriptionUsersOpenTask", mAdapter.getItem(position).desc);
+                        bundle.putString("LocationUsersOpenTask", mAdapter.getItem(position).location);
+                        bundle.putString("DescriptionUsersOpenTask", mAdapter.getItem(position).comment);
                         bundle.putBoolean("StatusUsersOpenTask", mAdapter.getItem(position).getTaskCompleted());
+                        //bundle.putString("OpenTaskID", taskId);
                         bundle.putString("OpenTaskID", taskId);
                         bundle.putString("OpenTaskCaseID", caseId);
+
+
+                        try{
+                            Bitmap taskImage = mAdapter.getItem(position).getTaskBitmap();
+                            ByteArrayOutputStream bs = new ByteArrayOutputStream();
+                            taskImage.compress(Bitmap.CompressFormat.JPEG, 50, bs);
+                            bundle.putByteArray("taskImageByteArray", bs.toByteArray());
+                        } catch (Exception e){
+                            bundle.putString("taskImageUrl", mAdapter.getItem(position).getTaskUrl());
+                        }
+
+
+
+
 /*
                         try{
                             Bitmap taskImage = mAdapter.getItem(position).getTaskBitmap();
@@ -190,11 +218,51 @@ public class FragmentUsersOpenTasks extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(final View_Holder holder, int position) {
+        public void onBindViewHolder(final View_Holder holder, final int position) {
             //Use the provided View Holder on the onCreateViewHolder method to populate the current row on the RecyclerView
+            Log.i("Viki", "In onBindViewHolder");
+
             holder.title.setText(listItem.get(position).title);
-            holder.description.setText(listItem.get(position).desc);
+            holder.location.setText(listItem.get(position).location);
+            holder.description.setText(listItem.get(position).comment);
             holder.imageView.setImageResource(listItem.get(position).imageID);
+
+
+
+            String taskImageUrlDB = listItem.get(position).taskImageUrlDB;
+            Log.i("Viki: TaskImageURLDB", taskImageUrlDB);
+
+
+            try{
+                Log.v("Viki", "in try");
+
+                final File localFile = File.createTempFile("images", "jpg");
+                StorageReference riversRef = storageRef.child(Global.getThumbUrl(taskImageUrlDB));
+                riversRef.getFile(localFile)
+                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                Log.v("FragmentUsersOpenTasks", "download erfolgreich");
+                                Bitmap taskImage = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                listItem.get(position).setTaskBitmap(taskImage);
+                                Log.i("Viki", taskImage.toString());
+                                holder.imageView.setImageBitmap(listItem.get(position).getTaskBitmap());
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Log.d("FragmentUsersOpenTasks", "download nicht erfolgreich (1)");
+
+                        holder.imageView.setImageResource(R.drawable.placeholder_task);
+                    }
+                });
+
+            } catch (Exception e){
+                Log.i("Viki", "in catch");
+                holder.imageView.setImageResource(R.drawable.placeholder_task);
+            }
+
+
         }
 
         @Override
@@ -245,6 +313,7 @@ public class FragmentUsersOpenTasks extends Fragment {
 
         CardView cv;
         TextView title;
+        TextView location;
         TextView description;
         ImageView imageView;
 
@@ -252,6 +321,7 @@ public class FragmentUsersOpenTasks extends Fragment {
             super(itemView);
             cv = (CardView) itemView.findViewById(R.id.cvUOT);
             title = (TextView) itemView.findViewById(R.id.titleUOT);
+            location = (TextView) itemView.findViewById(R.id.locationOUT);
             description = (TextView) itemView.findViewById(R.id.descriptionUOT);
             imageView = (ImageView) itemView.findViewById(R.id.ivUOT);
         }

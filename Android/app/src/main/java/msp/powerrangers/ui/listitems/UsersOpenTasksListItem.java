@@ -19,15 +19,16 @@ import msp.powerrangers.ui.FragmentWait;
 /**
  * == Data
  * Tutorial: https://www.sitepoint.com/mastering-complex-lists-with-the-android-recyclerview/
- *
  */
 public class UsersOpenTasksListItem implements Serializable {
 
     public String title;
-    public String desc;
+    public String location;
+    public String comment;
     public int imageID;
 
     public String taskImageUrlDB;
+    public String caseImageUrlDB;
     public Bitmap taskImage;
 
 
@@ -35,7 +36,8 @@ public class UsersOpenTasksListItem implements Serializable {
     String cityDB;
     String countryDB;
     String commentDB;
-    int imageIdDB;
+    String locationDB;
+
     Boolean taskCompletedDB;
     String taskIdDB;
     String caseIdDB;
@@ -43,17 +45,18 @@ public class UsersOpenTasksListItem implements Serializable {
     List<UsersOpenTasksListItem> data = new ArrayList<>();
 
 
-    public UsersOpenTasksListItem(String title, String desc, int imageID, String taskIdDB, String caseIdDB, String taskImageUrlDB, Boolean taskCompletedDB ) {
+    public UsersOpenTasksListItem(String title, String location, String comment,
+                                  String taskIdDB, String caseIdDB, String taskImageUrlDB, Boolean taskCompletedDB) {
         this.title = title;
-        this.desc = desc;
-        this.imageID = imageID;
+        this.location = location;
+        this.comment = comment;
         this.taskIdDB = taskIdDB;
         this.caseIdDB = caseIdDB;
         this.taskCompletedDB = taskCompletedDB;
         this.taskImageUrlDB = taskImageUrlDB;
     }
 
-    public UsersOpenTasksListItem(){
+    public UsersOpenTasksListItem() {
 
     }
 /*
@@ -63,15 +66,15 @@ public void setTaskBitmap(Bitmap image){
  */
 
 
-    public Bitmap getTaskBitmap(){
+    public Bitmap getTaskBitmap() {
         return taskImage;
     }
 
-    public void setTaskBitmap(Bitmap image){
+    public void setTaskBitmap(Bitmap image) {
         this.taskImage = image;
     }
 
-    public String getTaskUrl(){
+    public String getTaskUrl() {
         return taskImageUrlDB;
     }
 
@@ -81,72 +84,84 @@ public void setTaskBitmap(Bitmap image){
         // get the reference to the db tasks
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
 
-        dbRefTasks.orderByChild("rangerID").equalTo(userID).addValueEventListener(new ValueEventListener() {
-       // dbRefTasks.addValueEventListener(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                // get data for each task from the db
-                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-
-                    cityDB = (String) singleSnapshot.child("city").getValue();
-                    countryDB = (String) singleSnapshot.child("country").getValue();
-                    titleDB = cityDB + " , " + countryDB;
-                    commentDB = (String) singleSnapshot.child("comment").getValue();
-                    taskCompletedDB = (Boolean) singleSnapshot.child("taskCompleted").getValue();
-
-                    // TODO: get first image for task from db
-                    imageIdDB = R.drawable.placeholder_case;
-                    taskImageUrlDB = (String) singleSnapshot.child("taskPicture").getValue();
-
-                    taskIdDB = (String) singleSnapshot.child("taskId").getValue();
-                    Log.i("TASK ID IN FILL DATA", taskIdDB);
-
-                    caseIdDB = (String) singleSnapshot.child("caseId").getValue();
-
-                    data.add(new UsersOpenTasksListItem(titleDB, commentDB, imageIdDB, taskIdDB, caseIdDB, taskImageUrlDB, taskCompletedDB));
-                    Log.i("This", this.toString());
-                    Log.i("Data add" , data.toString());
+        dbRefTasks.orderByChild("rangerID").equalTo(userID)
+                .addValueEventListener(
+                        new ValueEventListener() {
 
 
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                }
+                                // get data for each task from the db
+                                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
 
-                Log.v("UOTListItem", "call fragmentWait.changeToContentView()");
-                fragmentWait.changeToContentUOT(fragmentWait.getUsersOpenTasksListItem());
-            }
+                                    taskCompletedDB = (Boolean) singleSnapshot.child("taskCompleted").getValue();
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                                    if (!taskCompletedDB) {
+                                        titleDB = (String) singleSnapshot.child("name").getValue();
 
-            }
-        });
+                                        cityDB = (String) singleSnapshot.child("city").getValue();
+                                        countryDB = (String) singleSnapshot.child("country").getValue();
+                                        locationDB = cityDB + ", " + countryDB;
+
+                                        commentDB = (String) singleSnapshot.child("comment").getValue();
+
+                                        // TODO: get first image for task from db
+                                        taskImageUrlDB = (String) singleSnapshot.child("taskPicture").getValue();
+                                        caseImageUrlDB = (String) singleSnapshot.child("casePicture").getValue();
+
+                                        taskIdDB = (String) singleSnapshot.child("taskDbId").getValue();
+                                        Log.i("TASK ID IN FILL DATA", taskIdDB);
+
+                                        caseIdDB = (String) singleSnapshot.child("caseId").getValue();
+
+
+                                        data.add(new UsersOpenTasksListItem(titleDB, locationDB, commentDB, taskIdDB, caseIdDB, taskImageUrlDB, taskCompletedDB));
+
+                                        Log.i("This", this.toString());
+                                        Log.i("Data add", data.toString());
+
+                                    }
+
+                                    Log.v("UOTListItem", "call fragmentWait.changeToContentView()");
+                                    fragmentWait.changeToContentUOT(fragmentWait.getUsersOpenTasksListItem());
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
 
     }
 
-    public List<UsersOpenTasksListItem> getData(){
+    public List<UsersOpenTasksListItem> getData() {
         Log.i("This", this.toString());
         Log.i("THE DATA", data.toString());
         return data;
     }
 
 
-    public String getTitle(){ return titleDB; }
+    public String getTitle() {
+        return titleDB;
+    }
 
-    public String getDescription(){
+    public String getDescription() {
         return commentDB;
     }
 
-    public boolean getTaskCompleted(){
+    public boolean getTaskCompleted() {
         return taskCompletedDB;
     }
 
-    public String getTaskid(){ return taskIdDB; }
+    public String getTaskid() {
+        return taskIdDB;
+    }
 
-    public String getCaseId(){
+    public String getCaseId() {
         return caseIdDB;
     }
 
-    public int getImageID(){ return imageIdDB; }
+
 }
