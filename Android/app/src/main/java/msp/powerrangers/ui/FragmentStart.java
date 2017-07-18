@@ -116,6 +116,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         logoutButton.setOnClickListener(this);
         // display user name
         tvUserName = (TextView) view.findViewById(R.id.textViewUserName);
+        Log.v("FragmentStart", "userName: " + u.getName());
         tvUserName.setText(u.getName());
 
         //interactive elements
@@ -189,7 +190,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         extras = intent.getExtras();
 
         if (extras != null) {
-            tvUserName.setText(extras.getString("name"));
+            //tvUserName.setText(extras.getString("name"));
             balance.setText(extras.getString("balance"));
             nOpenTasks.setText(extras.getString("nOpTasks"));
             nReportedCases.setText(extras.getString("nRepCases"));

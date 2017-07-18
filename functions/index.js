@@ -7,6 +7,8 @@ const functions = require('firebase-functions');
 //  response.send("Hello from Firebase!");
 // });
 
+// Thumbnail prefix added to file names.
+const DISPLAY_PREFIX = 'prev_';
 
 //firebase-samples generate-thumbnail: https://github.com/firebase/functions-samples/tree/master/generate-thumbnail
 /**
@@ -52,6 +54,10 @@ const THUMB_PREFIX = 'thumb_';
 exports.generateThumbnail = functions.storage.object().onChange(event => {
   // File and directory paths.
   const filePath = event.data.name;
+
+  if (fileName.startsWith(DISPLAY_PREFIX)){
+
+  } else {
   const fileDir = path.dirname(filePath);
   const fileName = path.basename(filePath);
   const thumbFilePath = path.normalize(path.join(fileDir, `${THUMB_PREFIX}${fileName}`));
@@ -118,7 +124,108 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
     // Add the URLs to the Database
     return admin.database().ref('images').push({path: fileUrl, thumbnail: thumbFileUrl});
   });
+  }
 });
+
+/**
+ * Modified version of the generateThumbnail to scale pictures on a proper displaying size
+ */
+'use strict';
+/**
+ * When an image is uploaded in the Storage bucket We generate a thumbnail automatically using
+ * ImageMagick.
+ * After the thumbnail has been generated and uploaded to Cloud Storage,
+ * we write the public URL to the Firebase Realtime Database.
+ */
+   // Max height and width of the thumbnail in pixels.
+   var height;
+   var width;
+
+exports.generateDisplaySize = functions.storage.object().onChange(event => {
+  // File and directory paths.
+  const filePath = event.data.name;
+
+if (fileName.startsWith(THUMB_PREFIX)){
+
+} else {
+  //if witdh > height image is landscape
+  if (event.data.width > event.data.height) {
+  height = 720;
+  width = 1280;
+  } else {
+    height = 2276;
+    width = 1280;
+  }
+
+  const fileDir = path.dirname(filePath);
+  const fileName = path.basename(filePath);
+  const displayFilePath = path.normalize(path.join(fileDir, `${DISPLAY_PREFIX}${fileName}`));
+  const tempLocalFile = path.join(os.tmpdir(), filePath);
+  const tempLocalDir = path.dirname(tempLocalFile);
+  const tempLocalDisplayFile = path.join(os.tmpdir(), displayFilePath);
+
+  // Exit if this is triggered on a file that is not an image.
+  if (!event.data.contentType.startsWith('image/')) {
+    console.log('This is not an image.');
+    return;
+  }
+
+  // Exit if the image is already a thumbnail.
+  if (fileName.startsWith(DISPLAY_PREFIX)) {
+    console.log('Already a Displayimage.');
+    return;
+  }
+
+  // Exit if this is a move or deletion event.
+  if (event.data.resourceState === 'not_exists') {
+    console.log('This is a deletion event.');
+    return;
+  }
+
+  // Cloud Storage files.
+  const bucket = gcs.bucket(event.data.bucket);
+  const file = bucket.file(filePath);
+  const displayFile = bucket.file(displayFilePath);
+
+  // Create the temp directory where the storage file will be downloaded.
+  return mkdirp(tempLocalDir).then(() => {
+    // Download file from bucket.
+	return file.download({destination: tempLocalFile});
+	return null;
+  }).then(() => {
+    console.log('The file has been downloaded to', tempLocalFile);
+    // Generate a thumbnail using ImageMagick.
+    return spawn('convert', [tempLocalFile, '-thumbnail', `${width}x${height}>`, tempLocalDisplayFile]);
+  }).then(() => {
+    console.log('Displayimg created at', tempLocalDisplayFile);
+    // Uploading the Thumbnail.
+    return bucket.upload(tempLocalDisplayFile, {destination: displayFilePath});
+  }).then(() => {
+    console.log('Displayimg uploaded to Storage at', displayFilePath);
+    // Once the image has been uploaded delete the local files to free up disk space.
+    fs.unlinkSync(tempLocalFile);
+    fs.unlinkSync(tempLocalDisplayFile);
+    // Get the Signed URLs for the thumbnail and original image.
+    const config = {
+      action: 'read',
+      expires: '03-01-2500'
+    };
+    return Promise.all([
+      displayFile.getSignedUrl(config),
+      file.getSignedUrl(config)
+    ]);
+  }).then(results => {
+    console.log('Got Signed URLs.');
+    const displayResult = results[0];
+    const originalResult = results[1];
+    const displayFileUrl = displayResult[0];
+    const fileUrl = originalResult[0];
+    // Add the URLs to the Database
+    return admin.database().ref('images').push({path: fileUrl, display: displayFileUrl});
+  });
+  }
+});
+
 
 
 /*
