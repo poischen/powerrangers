@@ -65,8 +65,8 @@ public class ActivityDetailContainer extends AppCompatActivity {
 
         if (getActionBar() != null) {
             getActionBar().setHomeButtonEnabled(false); // disable the button
-            getActionBar().setDisplayHomeAsUpEnabled(false); // remove the left caret
-            getActionBar().setDisplayShowHomeEnabled(false); // remove the icon
+            getActionBar().setDisplayHomeAsUpEnabled(true); // remove the left caret
+            getActionBar().setDisplayShowHomeEnabled(true); // remove the icon
         }
         return true;
     }
