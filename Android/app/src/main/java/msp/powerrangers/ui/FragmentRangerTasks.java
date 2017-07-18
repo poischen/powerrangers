@@ -5,6 +5,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -179,7 +183,7 @@ public class FragmentRangerTasks extends Fragment {
                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                                 Log.v("FragmentRangerTasks", "download erfolgreich");
                                 Bitmap taskImage = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                listItem.get(position).setTaskBitmap(taskImage);
+                                listItem.get(position).setTaskBitmap(blur(taskImage));
                                 holder.image.setImageBitmap(listItem.get(position).getTaskBitmap());
                             }
                         }).addOnFailureListener(new OnFailureListener() {
@@ -254,4 +258,25 @@ public class FragmentRangerTasks extends Fragment {
             image = (ImageView) itemView.findViewById(R.id.ivRT);
         }
     }
+
+    //Set the radius of the Blur. Supported range 0 < radius <= 25
+    private static final float BLUR_RADIUS = 2;
+
+    public Bitmap blur(Bitmap image) {
+        if (null == image) return null;
+
+        Bitmap outputBitmap = Bitmap.createBitmap(image);
+        final RenderScript renderScript = RenderScript.create(getActivity());
+        Allocation tmpIn = Allocation.createFromBitmap(renderScript, image);
+        Allocation tmpOut = Allocation.createFromBitmap(renderScript, outputBitmap);
+
+        //Intrinsic Gausian blur filter
+        ScriptIntrinsicBlur theIntrinsic = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript));
+        theIntrinsic.setRadius(BLUR_RADIUS);
+        theIntrinsic.setInput(tmpIn);
+        theIntrinsic.forEach(tmpOut);
+        tmpOut.copyTo(outputBitmap);
+        return outputBitmap;
+    }
+
 }

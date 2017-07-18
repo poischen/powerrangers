@@ -3,6 +3,7 @@
 <!-- Layout describes one row of ranger tasks list-->
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
     android:id="@+id/cvRT"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,58 +13,75 @@
     app:cardBackgroundColor="@color/colorCardViewBackground"
     app:cardCornerRadius="5dp"
     app:cardElevation="5dp"
-    app:cardUseCompatPadding="true">
+    card_view:cardPreventCornerOverlap="false">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:layout_height="170dp"
+        android:padding="0dp">
 
         <!-- Placeholder for thumbnail of a task (actually case) -->
         <ImageView
             android:id="@+id/ivRT"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginEnd="0dp"
+            android:scaleType="centerCrop"/>
 
-        <!-- Title  -->
-        <TextView
-            android:id="@+id/titleRT"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"
-            android:layout_toEndOf="@+id/ivRT"
-            android:text="@string/placeholderTitle"
-            android:textAppearance="?attr/textAppearanceListItem"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold" />
+        <!-- Image Overlay -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|center_vertical">
+
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/icon_location_white"
+            android:layout_marginBottom="5dp"/>
 
         <!-- Location  -->
         <TextView
             android:id="@+id/locationRT"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/titleRT"
-            android:layout_toEndOf="@+id/ivRT"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="4dp"
+            android:textSize="20dp"
             android:text="@string/placeholderLocation"
-            android:textColor="@color/colorPrimaryDark" />
+            android:textColor="@color/colorWhite"
+            android:layout_gravity="center_horizontal" />
 
+            <!-- Title  -->
+            <TextView
+                android:id="@+id/titleRT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="8dp"
+                android:layout_toEndOf="@+id/ivRT"
+                android:text="@string/placeholderTitle"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold"
+                android:textSize="12dp"
+                android:textAllCaps="true"
+                android:letterSpacing=".1"/>
 
         <!-- Comment -->
         <TextView
             android:id="@+id/descriptionRT"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/locationRT"
-            android:layout_toEndOf="@+id/ivRT"
-            android:layout_marginBottom="16dp"
+            android:textColor="@color/colorWhite"
+            android:layout_marginTop="14dp"
+            android:layout_gravity="center_horizontal"
+            android:textSize="13dp"
             android:text="@string/placeholderDesc" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 
