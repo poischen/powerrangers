@@ -79,12 +79,15 @@ public class FragmentDetailUsersOpenTask extends Fragment {
         taskID = bundle.getString("OpenTaskID");
         caseID = bundle.getString("OpenTaskCaseID");
         taskDescription = bundle.getString("DescriptionUsersOpenTask");
-        try {
+
+        taskImageUrl = bundle.getString("taskImageUrl");
+
+ /*       try {
             taskImageBefore = BitmapFactory.decodeByteArray(
                     bundle.getByteArray("ImageUsersOpenTask"),0,bundle.getByteArray("ImageUsersOpenTask").length);
         } catch(Exception e){
             taskImageUrl = bundle.getString("taskImageUrl");
-        }
+        }*/
      //   isTaskAlreadyCompleted = bundle.getBoolean("StatusUsersOpenTask");
     }
 

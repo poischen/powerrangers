@@ -110,8 +110,6 @@ public class FragmentUsersOpenTasks extends Fragment {
                         taskId = mAdapter.getItem(position).getTaskid();
                         caseId = mAdapter.getItem(position).getCaseId();
 
-
-
                         FragmentDetailUsersOpenTask fragmentDetailUsersOpenTask = new FragmentDetailUsersOpenTask();
                         Bundle bundle = new Bundle();
                         bundle.putInt("PositionUsersOpenTask", position);
@@ -120,7 +118,7 @@ public class FragmentUsersOpenTasks extends Fragment {
                         bundle.putBoolean("StatusUsersOpenTask", mAdapter.getItem(position).getTaskCompleted());
                         bundle.putString("OpenTaskID", taskId);
                         bundle.putString("OpenTaskCaseID", caseId);
-
+/*
                         try{
                             Bitmap taskImage = mAdapter.getItem(position).getTaskBitmap();
                             ByteArrayOutputStream bs = new ByteArrayOutputStream();
@@ -130,10 +128,10 @@ public class FragmentUsersOpenTasks extends Fragment {
                         } catch (Exception e){
                             bundle.putString("taskImageUrl", mAdapter.getItem(position).taskImageUrlDB);
                         }
-
+*/
 
                         Log.i("BUNDLE IN UOT", bundle.toString());
-
+                        bundle.putString("taskImageUrl", mAdapter.getItem(position).taskImageUrlDB);
                         fragmentDetailUsersOpenTask.setArguments(bundle);
                         ((BaseContainerFragment)getParentFragment()).replaceFragmentDetailOpenTask(fragmentDetailUsersOpenTask);
 
