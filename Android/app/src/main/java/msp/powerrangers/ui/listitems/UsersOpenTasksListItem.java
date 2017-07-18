@@ -24,7 +24,8 @@ import msp.powerrangers.ui.FragmentWait;
 public class UsersOpenTasksListItem implements Serializable {
 
     public String title;
-    public String desc;
+    public String location;
+    public String comment;
     public int imageID;
 
     public String taskImageUrlDB;
@@ -36,6 +37,8 @@ public class UsersOpenTasksListItem implements Serializable {
     String cityDB;
     String countryDB;
     String commentDB;
+    String locationDB;
+
     Boolean taskCompletedDB;
     String taskIdDB;
     String caseIdDB;
@@ -43,14 +46,15 @@ public class UsersOpenTasksListItem implements Serializable {
     List<UsersOpenTasksListItem> data = new ArrayList<>();
 
 
-    public UsersOpenTasksListItem(String title, String desc, String taskIdDB, String caseIdDB, String taskImageUrlDB, String caseImageUrlDB, Boolean taskCompletedDB ) {
+    public UsersOpenTasksListItem(String title, String location, String comment,
+                                  String taskIdDB, String caseIdDB, String taskImageUrlDB, Boolean taskCompletedDB ) {
         this.title = title;
-        this.desc = desc;
+        this.location = location;
+        this.comment = comment;
         this.taskIdDB = taskIdDB;
         this.caseIdDB = caseIdDB;
         this.taskCompletedDB = taskCompletedDB;
         this.taskImageUrlDB = taskImageUrlDB;
-        this.caseImageUrlDB = caseImageUrlDB;
     }
 
     public UsersOpenTasksListItem(){
@@ -81,8 +85,9 @@ public void setTaskBitmap(Bitmap image){
         // get the reference to the db tasks
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
 
-        dbRefTasks.orderByChild("rangerID").equalTo(userID).addValueEventListener(new ValueEventListener() {
-       // dbRefTasks.addValueEventListener(new ValueEventListener() {
+        dbRefTasks.orderByChild("rangerID").equalTo(userID)
+                .addValueEventListener(
+                        new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -90,9 +95,12 @@ public void setTaskBitmap(Bitmap image){
                 // get data for each task from the db
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
 
+                    titleDB = (String) singleSnapshot.child("name").getValue();
+
                     cityDB = (String) singleSnapshot.child("city").getValue();
                     countryDB = (String) singleSnapshot.child("country").getValue();
-                    titleDB = cityDB + " , " + countryDB;
+                    locationDB = cityDB + ", " + countryDB;
+
                     commentDB = (String) singleSnapshot.child("comment").getValue();
                     taskCompletedDB = (Boolean) singleSnapshot.child("taskCompleted").getValue();
 
@@ -106,11 +114,10 @@ public void setTaskBitmap(Bitmap image){
 
                     caseIdDB = (String) singleSnapshot.child("caseId").getValue();
 
-                    data.add(new UsersOpenTasksListItem(titleDB, commentDB, taskIdDB, caseIdDB, taskImageUrlDB, caseImageUrlDB, taskCompletedDB));
+                    data.add(new UsersOpenTasksListItem(titleDB, locationDB, commentDB, taskIdDB, caseIdDB, taskImageUrlDB, taskCompletedDB));
+
                     Log.i("This", this.toString());
                     Log.i("Data add" , data.toString());
-
-
 
                 }
 

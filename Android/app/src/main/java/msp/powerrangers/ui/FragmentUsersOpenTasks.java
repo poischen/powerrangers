@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
@@ -127,7 +126,8 @@ public class FragmentUsersOpenTasks extends Fragment {
 
 
                         bundle.putString("TitleUsersOpenTask", mAdapter.getItem(position).title);
-                        bundle.putString("DescriptionUsersOpenTask", mAdapter.getItem(position).desc);
+                        bundle.putString("LocationUsersOpenTask", mAdapter.getItem(position).location);
+                        bundle.putString("DescriptionUsersOpenTask", mAdapter.getItem(position).comment);
                         bundle.putBoolean("StatusUsersOpenTask", mAdapter.getItem(position).getTaskCompleted());
                         //bundle.putString("OpenTaskID", taskId);
                         bundle.putString("OpenTaskID", taskId);
@@ -223,7 +223,8 @@ public class FragmentUsersOpenTasks extends Fragment {
             Log.i("Viki", "In onBindViewHolder");
 
             holder.title.setText(listItem.get(position).title);
-            holder.description.setText(listItem.get(position).desc);
+            holder.location.setText(listItem.get(position).location);
+            holder.description.setText(listItem.get(position).comment);
             holder.imageView.setImageResource(listItem.get(position).imageID);
 
 
@@ -312,6 +313,7 @@ public class FragmentUsersOpenTasks extends Fragment {
 
         CardView cv;
         TextView title;
+        TextView location;
         TextView description;
         ImageView imageView;
 
@@ -319,6 +321,7 @@ public class FragmentUsersOpenTasks extends Fragment {
             super(itemView);
             cv = (CardView) itemView.findViewById(R.id.cvUOT);
             title = (TextView) itemView.findViewById(R.id.titleUOT);
+            location = (TextView) itemView.findViewById(R.id.locationOUT);
             description = (TextView) itemView.findViewById(R.id.descriptionUOT);
             imageView = (ImageView) itemView.findViewById(R.id.ivUOT);
         }
