@@ -83,9 +83,13 @@ public class FragmentWait extends BaseContainerFragment {
         }
 
         if (tag.equals(openTaskTag)) {
+        /*
             usersOpenTaksListItem = new UsersOpenTasksListItem();
             usersOpenTaksListItem.fill_with_data(this, ((FragmentTabs)getActivity()).getUser().getId());
             openTasksClicked = true;
+             */
+
+
         }
 
        if (tag.equals(startTag)) {
@@ -93,6 +97,14 @@ public class FragmentWait extends BaseContainerFragment {
         }
 
     }
+
+
+    public void changeToContentUOT(UsersOpenTasksListItem usersOpenTasksListItem){
+        replaceFragmentUOT(this, usersOpenTasksListItem);
+    }
+
+
+
 
     public void changeToContentView(boolean isaboutUsersOpenTasks) {
         String tag;
@@ -162,7 +174,10 @@ public class FragmentWait extends BaseContainerFragment {
     }
 
     public void initReplacingFragmentOpenTasks(UsersOpenTasksListItem fragment, String userID){
+        usersOpenTaksListItem = fragment;
         fragment.fill_with_data(this, userID);
+
+
     }
 
     @Override
@@ -180,11 +195,12 @@ public class FragmentWait extends BaseContainerFragment {
         return rangerTasksListItem;
     }
 
-    public UsersOpenTasksListItem getUsersOpenTasksListItem() {
-        return usersOpenTasksListItem;
-    }
 
     public VotingTasksListItem getVotingTasksListItem() {
         return votingTasksListItem;
+    }
+
+    public UsersOpenTasksListItem getUsersOpenTasksListItem() {
+        return usersOpenTaksListItem;
     }
 }

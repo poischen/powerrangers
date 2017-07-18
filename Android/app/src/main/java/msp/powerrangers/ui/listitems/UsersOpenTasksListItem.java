@@ -71,7 +71,8 @@ public class UsersOpenTasksListItem implements Serializable {
         // get the reference to the db tasks
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
 
-        dbRefTasks.orderByChild("rangerID").equalTo(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+        dbRefTasks.orderByChild("rangerID").equalTo(userID).addValueEventListener(new ValueEventListener() {
+       // dbRefTasks.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -83,7 +84,7 @@ public class UsersOpenTasksListItem implements Serializable {
                     countryDB = (String) singleSnapshot.child("country").getValue();
                     titleDB = cityDB + " , " + countryDB;
                     commentDB = (String) singleSnapshot.child("comment").getValue();
-                    taskCompletedDB = (Boolean) singleSnapshot.child("taskCompeted").getValue();
+                  //  taskCompletedDB = (Boolean) singleSnapshot.child("taskCompeted").getValue();
 
                     // TODO: get first image for task from db
                     imageIdDB = R.drawable.placeholder_case;
@@ -93,6 +94,9 @@ public class UsersOpenTasksListItem implements Serializable {
                     caseIdDB = (String) singleSnapshot.child("caseId").getValue();
 
                     data.add(new UsersOpenTasksListItem(titleDB, commentDB, imageIdDB));
+                    Log.i("This", this.toString());
+                    Log.i("Data add" , data.toString());
+
 
 
                 }
@@ -110,6 +114,8 @@ public class UsersOpenTasksListItem implements Serializable {
     }
 
     public List<UsersOpenTasksListItem> getData(){
+        Log.i("This", this.toString());
+        Log.i("THE DATA", data.toString());
         return data;
     }
 

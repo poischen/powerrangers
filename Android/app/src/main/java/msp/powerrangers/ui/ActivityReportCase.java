@@ -97,7 +97,6 @@ public class ActivityReportCase extends AppCompatActivity {
     private List<Bitmap> pictureBitmapList;
     List<String> casePictures;
     boolean isDefaultPic;
-    boolean isUploaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,7 +155,6 @@ public class ActivityReportCase extends AppCompatActivity {
                     pictureBitmapList.clear();
                     updateImageViews();
                 }
-
                 showFileChooser();
 
             }
@@ -224,57 +222,49 @@ public class ActivityReportCase extends AppCompatActivity {
                         && pictureUrisList.size() > 1) {
                     casePictures = uploadFiles(caseId, pictureUrisList);
 
-                    if (isUploaded) {
+                    //Create Case
+                    c = new Case(dbId,
+                            us.getDbId(),
+                            caseId,
+                            caseTitle,
+                            caseCity,
+                            caseCountry,
+                            scaleValue,
+                            areaX,
+                            areaY,
+                            casePictures,
+                            caseInformation
+                    );
 
-                        //Create Case
-                        c = new Case(dbId,
-                                us.getDbId(),
-                                caseId,
-                                caseTitle,
-                                caseCity,
-                                caseCountry,
-                                scaleValue,
-                                areaX,
-                                areaY,
-                                casePictures,
-                                caseInformation
-                        );
+                    // create a detective
+                    Detective detective = new Detective(us, caseId);
+                    final int rewardForCase = detective.getRewardPerCase();
 
-                        // create a detective
-                        Detective detective = new Detective(us, caseId);
-                        final int rewardForCase = detective.getRewardPerCase();
+                    // write case to in database cases
+                    dbRefCases.child(dbId).setValue(c);
 
-                        // write case to in database cases
-                        dbRefCases.child(dbId).setValue(c);
+                    // update user balance & number reported cases
+                    refPathCurrentUser.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        // update user balance & number reported cases
-                        refPathCurrentUser.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
+                            long currentBalance = (long) dataSnapshot.child("balance").getValue();
+                            dataSnapshot.getRef().child("balance").setValue(currentBalance + rewardForCase);
 
-                                long currentBalance = (long) dataSnapshot.child("balance").getValue();
-                                dataSnapshot.getRef().child("balance").setValue(currentBalance + rewardForCase);
+                            String currentCount = String.valueOf(dataSnapshot.child("numberReportedCases").getValue());
+                            int newCount = Integer.valueOf(currentCount) + 1;
+                            dataSnapshot.getRef().child("numberReportedCases").setValue(String.valueOf(newCount));
+                        }
 
-                                String currentCount = String.valueOf(dataSnapshot.child("numberReportedCases").getValue());
-                                int newCount = Integer.valueOf(currentCount) + 1;
-                                dataSnapshot.getRef().child("numberReportedCases").setValue(String.valueOf(newCount));
-                            }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
+                        }
 
-                            }
+                    });
 
-                        });
-
-                        Toast.makeText(getApplicationContext(), R.string.reportCaseSuccess, Toast.LENGTH_LONG).show();
-                        finish();
-
-                    } else{
-                        Toast.makeText(getApplicationContext(), R.string.uploadPictureFailed, Toast.LENGTH_LONG).show();
-                        finish();
-                    }
-
+                    Toast.makeText(getApplicationContext(), R.string.reportCaseSuccess, Toast.LENGTH_LONG).show();
+                    finish();
 
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.reportCaseFillFields, Toast.LENGTH_LONG).show();
@@ -380,9 +370,6 @@ public class ActivityReportCase extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            //upload successful
-                            isUploaded = true;
-
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
