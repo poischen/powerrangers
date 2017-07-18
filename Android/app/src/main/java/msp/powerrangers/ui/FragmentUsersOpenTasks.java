@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
@@ -41,6 +42,7 @@ public class FragmentUsersOpenTasks extends Fragment {
     protected RecyclerView mRecyclerView;
     protected RecyclerView.LayoutManager mLayoutManager;
     protected Recycler_View_Adapter mAdapter;
+
 
     private UsersOpenTasksListItem usersOpenTasksListItem;
 
@@ -76,6 +78,7 @@ public class FragmentUsersOpenTasks extends Fragment {
 
         User userTest = ((FragmentTabs)getActivity()).getUser();
         Log.v("FragmentUsersOpenTasks", "User: " + userTest);
+        storageRef = FirebaseStorage.getInstance().getReference();
 
 //***********************************************************************************************************************
         //@Viki from tabHost you can call getUser() to get the user and from this his id
@@ -121,6 +124,8 @@ public class FragmentUsersOpenTasks extends Fragment {
                         FragmentDetailUsersOpenTask fragmentDetailUsersOpenTask = new FragmentDetailUsersOpenTask();
                         Bundle bundle = new Bundle();
                         bundle.putInt("PositionUsersOpenTask", position);
+
+
                         bundle.putString("TitleUsersOpenTask", mAdapter.getItem(position).title);
                         bundle.putString("DescriptionUsersOpenTask", mAdapter.getItem(position).desc);
                         bundle.putBoolean("StatusUsersOpenTask", mAdapter.getItem(position).getTaskCompleted());
@@ -215,6 +220,8 @@ public class FragmentUsersOpenTasks extends Fragment {
         @Override
         public void onBindViewHolder(final View_Holder holder, final int position) {
             //Use the provided View Holder on the onCreateViewHolder method to populate the current row on the RecyclerView
+            Log.i("Viki", "In onBindViewHolder");
+
             holder.title.setText(listItem.get(position).title);
             holder.description.setText(listItem.get(position).desc);
             holder.imageView.setImageResource(listItem.get(position).imageID);
@@ -222,9 +229,11 @@ public class FragmentUsersOpenTasks extends Fragment {
 
 
             String taskImageUrlDB = listItem.get(position).taskImageUrlDB;
+            Log.i("Viki: TaskImageURLDB", taskImageUrlDB);
 
 
             try{
+                Log.v("Viki", "in try");
 
                 final File localFile = File.createTempFile("images", "jpg");
                 StorageReference riversRef = storageRef.child(Global.getThumbUrl(taskImageUrlDB));
@@ -235,18 +244,20 @@ public class FragmentUsersOpenTasks extends Fragment {
                                 Log.v("FragmentUsersOpenTasks", "download erfolgreich");
                                 Bitmap taskImage = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                                 listItem.get(position).setTaskBitmap(taskImage);
+                                Log.i("Viki", taskImage.toString());
                                 holder.imageView.setImageBitmap(listItem.get(position).getTaskBitmap());
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         Log.d("FragmentUsersOpenTasks", "download nicht erfolgreich (1)");
+
                         holder.imageView.setImageResource(R.drawable.placeholder_task);
                     }
                 });
 
             } catch (Exception e){
-
+                Log.i("Viki", "in catch");
                 holder.imageView.setImageResource(R.drawable.placeholder_task);
             }
 

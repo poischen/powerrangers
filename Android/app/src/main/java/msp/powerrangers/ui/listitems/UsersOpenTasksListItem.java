@@ -28,6 +28,7 @@ public class UsersOpenTasksListItem implements Serializable {
     public int imageID;
 
     public String taskImageUrlDB;
+    public String caseImageUrlDB;
     public Bitmap taskImage;
 
 
@@ -35,7 +36,6 @@ public class UsersOpenTasksListItem implements Serializable {
     String cityDB;
     String countryDB;
     String commentDB;
-    int imageIdDB;
     Boolean taskCompletedDB;
     String taskIdDB;
     String caseIdDB;
@@ -43,14 +43,14 @@ public class UsersOpenTasksListItem implements Serializable {
     List<UsersOpenTasksListItem> data = new ArrayList<>();
 
 
-    public UsersOpenTasksListItem(String title, String desc, int imageID, String taskIdDB, String caseIdDB, String taskImageUrlDB, Boolean taskCompletedDB ) {
+    public UsersOpenTasksListItem(String title, String desc, String taskIdDB, String caseIdDB, String taskImageUrlDB, String caseImageUrlDB, Boolean taskCompletedDB ) {
         this.title = title;
         this.desc = desc;
-        this.imageID = imageID;
         this.taskIdDB = taskIdDB;
         this.caseIdDB = caseIdDB;
         this.taskCompletedDB = taskCompletedDB;
         this.taskImageUrlDB = taskImageUrlDB;
+        this.caseImageUrlDB = caseImageUrlDB;
     }
 
     public UsersOpenTasksListItem(){
@@ -97,15 +97,16 @@ public void setTaskBitmap(Bitmap image){
                     taskCompletedDB = (Boolean) singleSnapshot.child("taskCompleted").getValue();
 
                     // TODO: get first image for task from db
-                    imageIdDB = R.drawable.placeholder_case;
+                  //  imageIdDB = R.drawable.placeholder_case;
                     taskImageUrlDB = (String) singleSnapshot.child("taskPicture").getValue();
+                    caseImageUrlDB = (String) singleSnapshot.child("casePicture").getValue();
 
                     taskIdDB = (String) singleSnapshot.child("taskDbId").getValue();
                     Log.i("TASK ID IN FILL DATA", taskIdDB);
 
                     caseIdDB = (String) singleSnapshot.child("caseId").getValue();
 
-                    data.add(new UsersOpenTasksListItem(titleDB, commentDB, imageIdDB, taskIdDB, caseIdDB, taskImageUrlDB, taskCompletedDB));
+                    data.add(new UsersOpenTasksListItem(titleDB, commentDB, taskIdDB, caseIdDB, taskImageUrlDB, caseImageUrlDB, taskCompletedDB));
                     Log.i("This", this.toString());
                     Log.i("Data add" , data.toString());
 
@@ -148,5 +149,5 @@ public void setTaskBitmap(Bitmap image){
         return caseIdDB;
     }
 
-    public int getImageID(){ return imageIdDB; }
+
 }

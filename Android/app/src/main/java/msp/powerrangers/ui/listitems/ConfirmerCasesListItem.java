@@ -33,7 +33,7 @@ public class ConfirmerCasesListItem implements Serializable {
 
 
     List<ConfirmerCasesListItem> data = new ArrayList<>();
-    private DatabaseReference dbRefCases;
+
 
     public ConfirmerCasesListItem(String title, String city, String country, String comment, String imageURL) {
         this.title = title;
@@ -56,6 +56,8 @@ public class ConfirmerCasesListItem implements Serializable {
      * Generates Confirmer Cases Objects for RecyclerView's adapter.
      */
     public void fill_with_data(final FragmentWait fragmentWait) {
+        DatabaseReference dbRefCases;
+
         // get the reference to the db cases
         dbRefCases = FirebaseDatabase.getInstance().getReference("cases");
 
