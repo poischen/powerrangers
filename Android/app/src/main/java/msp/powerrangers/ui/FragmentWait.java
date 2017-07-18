@@ -107,7 +107,7 @@ public class FragmentWait extends BaseContainerFragment {
 
     public void changeToContentView(boolean isaboutVoting) {
         String tag;
-        if (!isaboutVoting){
+        if (isaboutVoting){
             Log.v("FragmentWait", "it is about VotingTasks!");
             tag = (getString(R.string.votingTasksTag));
         } else {

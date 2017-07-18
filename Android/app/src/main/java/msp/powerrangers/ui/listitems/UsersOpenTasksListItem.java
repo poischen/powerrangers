@@ -41,7 +41,7 @@ public class UsersOpenTasksListItem implements Serializable {
     String caseIdDB;
 
     List<UsersOpenTasksListItem> data = new ArrayList<>();
-    private DatabaseReference dbRefTasks;
+
 
     public UsersOpenTasksListItem(String title, String desc, int imageID, String taskIdDB, String caseIdDB, String taskImageUrlDB, Boolean taskCompletedDB ) {
         this.title = title;
@@ -76,6 +76,7 @@ public void setTaskBitmap(Bitmap image){
     }
 
     public void fill_with_data(final FragmentWait fragmentWait, String userID) {
+        DatabaseReference dbRefTasks;
 
         // get the reference to the db tasks
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
