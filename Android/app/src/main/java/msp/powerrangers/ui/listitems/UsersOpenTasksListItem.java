@@ -100,7 +100,7 @@ public void setTaskBitmap(Bitmap image){
                     imageIdDB = R.drawable.placeholder_case;
                     taskImageUrlDB = (String) singleSnapshot.child("taskPicture").getValue();
 
-                    taskIdDB = (String) singleSnapshot.child("taskId").getValue();
+                    taskIdDB = (String) singleSnapshot.child("taskDbId").getValue();
                     Log.i("TASK ID IN FILL DATA", taskIdDB);
 
                     caseIdDB = (String) singleSnapshot.child("caseId").getValue();
