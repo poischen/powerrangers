@@ -119,4 +119,18 @@ public class BaseContainerFragment extends Fragment {
         return isPop;
     }
 
+
+    public void replaceFragmentUOT(FragmentWait fw, UsersOpenTasksListItem usersOpenTasksListItem){
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        Log.v("BaseContainer", "replace Fragment, UsersOpenTasks");
+        FragmentUsersOpenTasks fragmentUsersOpenTasks = new FragmentUsersOpenTasks();
+        transaction.replace(R.id.container_framelayout, fragmentUsersOpenTasks);
+        Bundle bundles = new Bundle();
+        bundles.putSerializable(getString(R.string.openTasksSerializable), usersOpenTasksListItem);
+        Log.v("BaseContainer", "data: " + fw.getUsersOpenTasksListItem());
+        fragmentUsersOpenTasks.setArguments(bundles);
+        transaction.commit();
+        getChildFragmentManager().executePendingTransactions();
+    }
+
 }

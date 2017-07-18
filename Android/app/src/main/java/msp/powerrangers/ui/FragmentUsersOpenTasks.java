@@ -85,7 +85,7 @@ public class FragmentUsersOpenTasks extends Fragment {
                         String taskTitle = mAdapter.getItem(position).getTitleDB();
                         Log.i("TASK TITLEEE", taskTitle);
                         String taskDescription = mAdapter.getItem(position).getDescription();
-                        boolean isTaskAlreadyCompleted = mAdapter.getItem(position).getTaskCompeted();
+                      //  boolean isTaskAlreadyCompleted = mAdapter.getItem(position).getTaskCompeted();
                         String taskId = mAdapter.getItem(position).getTaskid();
                         String caseId = mAdapter.getItem(position).getCaseId();
 
@@ -122,7 +122,7 @@ public class FragmentUsersOpenTasks extends Fragment {
                         bundle.putInt("PositionUsersOpenTask", position);
                         bundle.putString("TitleUsersOpenTask", taskTitle);
                         bundle.putString("DescriptionUsersOpenTask", taskDescription);
-                        bundle.putBoolean("StatusUsersOpenTask", isTaskAlreadyCompleted);
+                       // bundle.putBoolean("StatusUsersOpenTask", isTaskAlreadyCompleted);
                         bundle.putString("OpenTaskID", taskId);
                         bundle.putString("OpenTaskCaseID", caseId);
 
@@ -159,7 +159,7 @@ public class FragmentUsersOpenTasks extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // will be filled with data
-        usersOpenTasksListItem = new UsersOpenTasksListItem();
+        //usersOpenTasksListItem = new UsersOpenTasksListItem();
 
         // 3. Create an adapter
         mAdapter = new Recycler_View_Adapter(usersOpenTasksListItem.getData(), getContext());

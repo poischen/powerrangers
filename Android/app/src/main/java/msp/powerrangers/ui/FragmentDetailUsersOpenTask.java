@@ -85,7 +85,7 @@ public class FragmentDetailUsersOpenTask extends Fragment {
         } catch(Exception e){
             taskImageUrl = bundle.getString("taskImageUrl");
         }
-        isTaskAlreadyCompleted = bundle.getBoolean("StatusUsersOpenTask");
+     //   isTaskAlreadyCompleted = bundle.getBoolean("StatusUsersOpenTask");
     }
 
     @Override
