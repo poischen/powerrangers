@@ -125,12 +125,14 @@
     <string name="placeholderLocation">Location Placeholder</string>
 
     <!-- ActivityDonate-->
-    <string name="aDonate_donateIntro">Woho! Thanks, you wanna share your power and combine them with the rest of the world to save our planet! \n\nHow much you can effort?</string>
-    <string name="aDonate_buttonDonate">Combine Powers</string>
+    <string name="aDonate_donateHeadline">Combine your powers!</string>
+    <string name="aDonate_donateIntro">Woho! Thanks, you wanna share your power and combine them with the rest of the world to save our planet!</string>
+    <string name="aDonate_buttonDonate">Donate</string>
     <string name="aDonate_toastSuccessDonate">Powers combined successfully</string>
     <string name="aDonate_toastFailDonate">Something went wrong, please try again.</string>
     <string name="aDonate_currency">€</string>
     <string name="aDonate_prefixValue">Spende </string>
+    <string name="aDonate_donateEuro"> €</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
