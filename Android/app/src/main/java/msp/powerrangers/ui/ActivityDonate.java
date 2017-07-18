@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -24,8 +26,9 @@ import msp.powerrangers.logic.User;
 public class ActivityDonate extends AppCompatActivity {
 
     // view
-    EditText editTextDonateValue;
     Button ButtonDonateNow;
+    SeekBar seekbar;
+    TextView textViewDonateValue;
 
     // firebase instances
     private DatabaseReference dbRefDonate;
@@ -49,22 +52,40 @@ public class ActivityDonate extends AppCompatActivity {
         usDbId = us.getDbId();
         Log.i("KATJA", "user dbId:" + usDbId);
 
+
+        textViewDonateValue = (TextView) findViewById(R.id.aDonate_donateValue);
+        seekbar = (SeekBar) findViewById(R.id.seekBarDonate);
+
+        //* Show current seekbar value
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged (SeekBar seekBar,int progress, boolean fromUser){
+                int val = (progress * (seekBar.getWidth() - 2 * seekBar.getThumbOffset())) / seekBar.getMax();
+                textViewDonateValue.setText("" + val);
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+
+
         // firebase references to donations and current user
         dbRefDonate = FirebaseDatabase.getInstance().getReference("donations");
         refPathCurrentUser = FirebaseDatabase.getInstance().getReference().child("users").child(usDbId);
 
-        editTextDonateValue = (EditText) findViewById(R.id.aDonate_donateValue);
         ButtonDonateNow = (Button) findViewById(R.id.aDonate_buttonDonate);
 
         ButtonDonateNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String value = editTextDonateValue.getText().toString();
+                String value = textViewDonateValue.getText().toString();
 
                 if (!TextUtils.isEmpty(value)) {
 
                     final double donateValue = Double.parseDouble(value);
+                    Log.i("DONATION", "Donated" + donateValue);
 
                     try {
                         // create instance of donation class
@@ -92,7 +113,7 @@ public class ActivityDonate extends AppCompatActivity {
 
                                 });
 
-                        editTextDonateValue.setText("");
+                        //textViewDonateValue.setText("");
                         Toast.makeText(ActivityDonate.this, R.string.aDonate_toastSuccessDonate, Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         Toast.makeText(ActivityDonate.this, R.string.aDonate_toastFailDonate, Toast.LENGTH_SHORT).show();

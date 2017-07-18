@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TabHost;
@@ -32,6 +34,13 @@ public class FragmentTabs extends FragmentActivity implements Serializable {
             setContentView(R.layout.fragment_tabs);
             initView();
         }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.mainmenu, menu);
+        return true;
+    }
 
    /*     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {

@@ -1,5 +1,6 @@
 package msp.powerrangers.ui;
 
+import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -144,6 +145,10 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*ActionBar actionBar = ((FragmentTabs)getActivity()).getActionBar();
+        actionBar.show();
+        actionBar.setTitle("Profile");
+*/
         //Firebase stuff
         storageRef = FirebaseStorage.getInstance().getReference();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();

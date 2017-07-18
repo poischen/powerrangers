@@ -5,6 +5,8 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -51,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
         };
 
     }
-
 
     private void changeToLoggedInView() {
         //create the waiting fragment
