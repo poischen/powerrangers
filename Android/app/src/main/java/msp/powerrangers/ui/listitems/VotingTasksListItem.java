@@ -44,6 +44,7 @@ public class VotingTasksListItem implements Serializable {
     String nDislikesDB;
     String taskIdDB;
 
+    Boolean taskVoted;
 
     List<VotingTasksListItem> data = new ArrayList<>();
     private DatabaseReference dbRefTasks;
@@ -75,52 +76,58 @@ public class VotingTasksListItem implements Serializable {
                 .addValueEventListener(
                         new ValueEventListener() {
 
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // get data for each case from the db
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                // get data for each case from the db
 
-                Log.i("KATJA", "onDataChange drin");
-                Log.i("KATJA", "onDataChange dataSnapshot" + dataSnapshot);
+                                Log.i("KATJA", "onDataChange drin");
+                                Log.i("KATJA", "onDataChange dataSnapshot" + dataSnapshot);
 
-                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                    // Get the task data from snapshot
-                    Log.i("KATJA", "onDataChange for loop");
+                                data = new ArrayList<>();
+                                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                                    // Get the task data from snapshot
+                                    Log.i("KATJA", "onDataChange for loop");
 
-                    taskIdDB = (String) singleSnapshot.child("taskDbId").getValue();
+                                    taskVoted = (Boolean) singleSnapshot.child("taskVoted").getValue();
 
-                    titleDB = (String) singleSnapshot.child("city").getValue();
-                    Log.i("KATJA", "title: " + titleDB);
-                    cityDB = (String) singleSnapshot.child("city").getValue();
-                    Log.i("KATJA", "city: " + cityDB);
-                    countryDB = (String) singleSnapshot.child("country").getValue();
-                    Log.i("KATJA", "country: " + countryDB);
+                                    if (!taskVoted) {
 
-                    imageBeforeDB = (String) singleSnapshot.child("taskPicture").getValue();
-                    Log.i("KATJA", "before: " + imageBeforeDB);
-                    imageAfterDB = (String) singleSnapshot.child("taskPictureAfter").getValue();
-                    Log.i("KATJA", "after: " + imageAfterDB);
+                                        taskIdDB = (String) singleSnapshot.child("taskDbId").getValue();
 
-                    nLikesDB = String.valueOf(singleSnapshot.child("numberUpvotes").getValue());
-                    Log.i("KATJA", "up: " + nLikesDB);
-                    nDislikesDB = String.valueOf(singleSnapshot.child("numberDownvotes").getValue());
-                    Log.i("KATJA", "down: " + nDislikesDB);
+                                        titleDB = (String) singleSnapshot.child("city").getValue();
+                                        Log.i("KATJA", "title: " + titleDB);
+                                        cityDB = (String) singleSnapshot.child("city").getValue();
+                                        Log.i("KATJA", "city: " + cityDB);
+                                        countryDB = (String) singleSnapshot.child("country").getValue();
+                                        Log.i("KATJA", "country: " + countryDB);
 
-                    //TODO: add after image as ranger and get here
-                    locationDB = cityDB+ ", " + countryDB;
+                                        imageBeforeDB = (String) singleSnapshot.child("taskPicture").getValue();
+                                        Log.i("KATJA", "before: " + imageBeforeDB);
+                                        imageAfterDB = (String) singleSnapshot.child("taskPictureAfter").getValue();
+                                        Log.i("KATJA", "after: " + imageAfterDB);
 
-                    data.add(new VotingTasksListItem(taskIdDB, titleDB, locationDB, imageBeforeDB, imageAfterDB, nLikesDB, nDislikesDB));
-                    Log.i("KATJA", "This is the data for voting: " + data);
-                }
+                                        nLikesDB = String.valueOf(singleSnapshot.child("numberUpvotes").getValue());
+                                        Log.i("KATJA", "up: " + nLikesDB);
+                                        nDislikesDB = String.valueOf(singleSnapshot.child("numberDownvotes").getValue());
+                                        Log.i("KATJA", "down: " + nDislikesDB);
 
-                fragmentWait.changeToContentView(true);
-            }
+                                        //TODO: add after image as ranger and get here
+                                        locationDB = cityDB + ", " + countryDB;
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                                        data.add(new VotingTasksListItem(taskIdDB, titleDB, locationDB, imageBeforeDB, imageAfterDB, nLikesDB, nDislikesDB));
+                                        Log.i("KATJA", "This is the data for voting: " + data);
+                                    }
+                                }
 
-            }
+                                fragmentWait.changeToContentView(true);
+                            }
 
-        });
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+
+                        });
 
         /*
         data.add(new VotingTasksListItem("Waste on the beach", "Spain, Palma de Mallorca",  R.drawable.polluted_beach2, R.drawable.clean_beach2));

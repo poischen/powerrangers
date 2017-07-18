@@ -191,7 +191,7 @@ exports.createTasks = functions.database.ref('/cases/{caseId}/confirmed')
                   var taskRef = event.data.adminRef.root.child('tasks/').push();
                   var taskDbId = taskRef.key;
                   var taskIndex = index+1
-              return taskRef.set({taskDbId: taskDbId, taskId: taskId, city: city, country: country, comment: comment, reward: ranger_reward, scale: scale, taskPicture: uri, casePicture: casePicture, caseId: id, taskCompleted: false, assigned: false, numberRangers: number_rangers, name: name + " (Area " + (taskIndex) +")"});
+              return taskRef.set({taskDbId: taskDbId, taskId: taskId, city: city, country: country, comment: comment, reward: ranger_reward, scale: scale, taskPicture: uri, casePicture: casePicture, caseId: id, taskCompleted: false, taskVoted: false, assigned: false, numberRangers: number_rangers, name: name + " (Area " + (taskIndex) +")"});
                 });
 
                 /*
@@ -204,7 +204,7 @@ exports.createTasks = functions.database.ref('/cases/{caseId}/confirmed')
                   return event.data.adminRef.root.child('users/' + userDBID).child('cases/').push().set({caseId: caseId});
                 });
                 */
-                
+
             });
           }
           else {

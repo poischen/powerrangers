@@ -25,7 +25,7 @@ public class UsersOpenTasksListItem implements Serializable {
     public String title;
     public String location;
     public String comment;
-    public int imageID;
+    public int imageID;     // for holder (if exception)
 
     public String taskImageUrlDB;
     public String caseImageUrlDB;
@@ -58,24 +58,6 @@ public class UsersOpenTasksListItem implements Serializable {
 
     public UsersOpenTasksListItem() {
 
-    }
-/*
-public void setTaskBitmap(Bitmap image){
-        this.taskImage = image;
-    }
- */
-
-
-    public Bitmap getTaskBitmap() {
-        return taskImage;
-    }
-
-    public void setTaskBitmap(Bitmap image) {
-        this.taskImage = image;
-    }
-
-    public String getTaskUrl() {
-        return taskImageUrlDB;
     }
 
     public void fill_with_data(final FragmentWait fragmentWait, String userID) {
@@ -111,10 +93,9 @@ public void setTaskBitmap(Bitmap image){
                                         caseImageUrlDB = (String) singleSnapshot.child("casePicture").getValue();
 
                                         taskIdDB = (String) singleSnapshot.child("taskDbId").getValue();
-                                        Log.i("TASK ID IN FILL DATA", taskIdDB);
+                                        Log.i("KATJA", "taskDbId in dataSnapshot: "+ taskIdDB);
 
                                         caseIdDB = (String) singleSnapshot.child("caseId").getValue();
-
 
                                         data.add(new UsersOpenTasksListItem(titleDB, locationDB, commentDB, taskIdDB, caseIdDB, taskImageUrlDB, taskCompletedDB));
 
@@ -162,6 +143,19 @@ public void setTaskBitmap(Bitmap image){
     public String getCaseId() {
         return caseIdDB;
     }
+
+    public Bitmap getTaskBitmap() {
+        return taskImage;
+    }
+
+    public void setTaskBitmap(Bitmap image) {
+        this.taskImage = image;
+    }
+
+    public String getTaskUrl() {
+        return taskImageUrlDB;
+    }
+
 
 
 }

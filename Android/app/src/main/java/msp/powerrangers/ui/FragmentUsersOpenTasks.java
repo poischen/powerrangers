@@ -133,7 +133,7 @@ public class FragmentUsersOpenTasks extends Fragment {
                         bundle.putString("OpenTaskID", taskId);
                         bundle.putString("OpenTaskCaseID", caseId);
 
-
+/*
                         try{
                             Bitmap taskImage = mAdapter.getItem(position).getTaskBitmap();
                             ByteArrayOutputStream bs = new ByteArrayOutputStream();
@@ -142,7 +142,7 @@ public class FragmentUsersOpenTasks extends Fragment {
                         } catch (Exception e){
                             bundle.putString("taskImageUrl", mAdapter.getItem(position).getTaskUrl());
                         }
-
+*/
 
 
 
@@ -225,9 +225,7 @@ public class FragmentUsersOpenTasks extends Fragment {
             holder.title.setText(listItem.get(position).title);
             holder.location.setText(listItem.get(position).location);
             holder.description.setText(listItem.get(position).comment);
-            holder.imageView.setImageResource(listItem.get(position).imageID);
-
-
+           // holder.imageView.setImageResource(listItem.get(position).imageID);
 
             String taskImageUrlDB = listItem.get(position).taskImageUrlDB;
             Log.i("Viki: TaskImageURLDB", taskImageUrlDB);
