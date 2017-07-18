@@ -42,13 +42,24 @@
             android:textStyle="bold" />
 
 
+        <!-- Location  -->
+        <TextView
+            android:id="@+id/locationOUT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/titleUOT"
+            android:layout_toEndOf="@+id/ivUOT"
+            android:layout_marginBottom="8dp"
+            android:text="@string/placeholderLocation"
+            android:textColor="@color/colorPrimaryDark" />
+
         <!-- Description (some details of the task)
         [PLACEHOLDER FOR SOMETHING]  -->
         <TextView
             android:id="@+id/descriptionUOT"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/titleUOT"
+            android:layout_below="@+id/locationOUT"
             android:layout_toEndOf="@+id/ivUOT"
             android:text="@string/placeholderDesc" />
 
