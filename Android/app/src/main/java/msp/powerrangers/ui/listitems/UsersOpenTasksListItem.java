@@ -113,7 +113,7 @@ public void setTaskBitmap(Bitmap image){
                 }
 
                 Log.v("UOTListItem", "call fragmentWait.changeToContentView()");
-                fragmentWait.changeToContentView(true);
+                fragmentWait.changeToContentUOT(fragmentWait.getUsersOpenTasksListItem());
             }
 
             @Override
