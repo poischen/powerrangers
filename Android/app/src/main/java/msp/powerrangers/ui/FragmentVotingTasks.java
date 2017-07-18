@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -32,12 +31,11 @@ import java.util.List;
 
 import msp.powerrangers.R;
 import msp.powerrangers.logic.Global;
-import msp.powerrangers.ui.listitems.ConfirmerCasesListItem;
 import msp.powerrangers.ui.listitems.VotingTasksListItem;
 
 
 /**
- * A fragment representing a listItem of Items.
+ * A fragment representing a voting of Items.
  */
 public class FragmentVotingTasks extends Fragment {
 
@@ -49,7 +47,7 @@ public class FragmentVotingTasks extends Fragment {
     private VotingTasksListItem  votingTasksListItem;
 
     // Firebase db instance
-    private DatabaseReference dbRefTasks;
+    private DatabaseReference dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -65,6 +63,7 @@ public class FragmentVotingTasks extends Fragment {
 
         Bundle bund = getArguments();
         votingTasksListItem = (VotingTasksListItem) bund.getSerializable(getString(R.string.votingTasksSerializable));
+        Log.i("KATJA", "VotingTasks onCreate");
 
     }
 
@@ -73,10 +72,11 @@ public class FragmentVotingTasks extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fr_votingtasks, container, false);
         rootView.setTag(TAG);
+        Log.i("KATJA", "*****************  new voting  **********************");
+        Log.i("KATJA", "VotingTasks onCreateView");
 
         // 1. Get a reference to recyclerView & set the onClickListener
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewVT);
-
 
         // 2. Set layoutManager (defines how the elements are laid out)
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -91,6 +91,7 @@ public class FragmentVotingTasks extends Fragment {
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);
 
+        Log.i("KATJA", "VotingTasks adapter set");
         return rootView;
     }
 
@@ -104,14 +105,20 @@ public class FragmentVotingTasks extends Fragment {
      */
     private class Recycler_View_Adapter extends RecyclerView.Adapter<View_Holder> {
 
-        List<VotingTasksListItem> listItem = Collections.emptyList();
+        List<VotingTasksListItem> voting = Collections.emptyList();
         Context context;
-        int positive;
-        int negative;
-        int votingThreshold;
 
-        Recycler_View_Adapter(List<VotingTasksListItem> listItem, Context context) {
-            this.listItem = listItem;
+        private DatabaseReference pathCurrentTask;
+        String votingTitle;
+        String votingLocation;
+        String votingLikes;
+        String votingDislikes;
+        int votingThreshold = 5;
+
+
+
+        Recycler_View_Adapter(List<VotingTasksListItem> voting, Context context) {
+            this.voting = voting;
             this.context = context;
         }
 
@@ -127,15 +134,24 @@ public class FragmentVotingTasks extends Fragment {
         @Override
         public void onBindViewHolder(final View_Holder holder, final int position) {
 
-            dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
+            // current task
+            pathCurrentTask = dbRefTasks.child(voting.get(position).taskId);
+
+            Log.i("KATJA", "onBindViewHolder");
 
             // title and location
-            holder.title.setText(listItem.get(position).title);
-            holder.location.setText(listItem.get(position).location);
+            votingTitle = voting.get(position).title;
+            holder.title.setText(votingTitle);
+            Log.i("KATJA", "onBindViewHolder title "+ votingTitle);
+
+            votingLocation = voting.get(position).location;
+            holder.location.setText(votingLocation);
+            Log.i("KATJA", "onBindViewHolder location "+ votingLocation);
+
             holder.locationIcon.setImageResource(R.drawable.location);
 
-            // before/after images
-            String imageBeforeUrl = listItem.get(position).imageBeforeURL;
+            // before image
+            String imageBeforeUrl = voting.get(position).imageBeforeURL;
             try {
                 final File localFile = File.createTempFile("images", "jpg");
                 StorageReference riversRef = storageRef.child(Global.getThumbUrl(imageBeforeUrl));
@@ -144,6 +160,7 @@ public class FragmentVotingTasks extends Fragment {
                             @Override
                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                                 Log.v("FragmentVotingTask", "download erfolgreich");
+                                Log.i("KATJA", "download erfolgreich");
                                 Bitmap beforeImage = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                                 holder.imageView1.setImageBitmap(beforeImage);
                             }
@@ -151,25 +168,53 @@ public class FragmentVotingTasks extends Fragment {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         Log.d("FragmentVotingTask", "download nicht erfolgreich");
-                        holder.imageView1.setImageResource(listItem.get(position).imageID1);
+                        Log.i("KATJA", "download nicht erfolgreich");
+                        holder.imageView1.setImageResource(voting.get(position).imageID1);
                     }
                 });
             } catch (Exception e) {
                 Log.d("FragmentVotingTask", "download nicht erfolgreich");
-                holder.imageView1.setImageResource(listItem.get(position).imageID1);
+                holder.imageView1.setImageResource(voting.get(position).imageID1);
             }
+
+            // after image
             //TODO: get after image from storage
-            holder.imageView2.setImageResource(listItem.get(position).imageID2);
+            String imageAfterUrl = voting.get(position).imageAfterURL;
+            try {
+                final File localFile = File.createTempFile("images", "jpg");
+                StorageReference riversRef = storageRef.child(Global.getThumbUrl(imageAfterUrl));
+                riversRef.getFile(localFile)
+                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                Log.v("FragmentVotingTask", "download erfolgreich");
+                                Bitmap afterImage = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                holder.imageView2.setImageBitmap(afterImage);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Log.d("FragmentVotingTask", "download nicht erfolgreich");
+                        holder.imageView2.setImageResource(voting.get(position).imageID2);
+                    }
+                });
+            } catch (Exception e) {
+                Log.d("FragmentVotingTask", "download nicht erfolgreich");
+                holder.imageView2.setImageResource(voting.get(position).imageID2);
+            }
 
             // thumbs up/down
             holder.up.setImageResource(R.drawable.up);
             holder.down.setImageResource(R.drawable.down);
-            holder.nLikes.setText("4");           // dummy values
-            holder.nDislikes.setText("0");
 
-            positive = Integer.parseInt(holder.nLikes.getText().toString());
-            negative = Integer.parseInt(holder.nDislikes.getText().toString());
-            votingThreshold = 5;
+            // get values for likes/dislikes
+            votingLikes = voting.get(position).nLikes;
+            votingDislikes = voting.get(position).nDislikes;
+            Log.i("KATJA", "nLikes from  DB:" + votingLikes);
+            Log.i("KATJA", "nDislikes from DB:" + votingDislikes);
+
+            holder.nLikes.setText(votingLikes);
+            holder.nDislikes.setText(votingDislikes);
 
             // set onClickListener for before image
             holder.imageView1.setOnClickListener(new View.OnClickListener() {
@@ -196,17 +241,17 @@ public class FragmentVotingTasks extends Fragment {
 
                     // prevent downvoting if already upvoted
                     holder.down.setEnabled(false);
-
+                    int positive = Integer.parseInt(votingLikes);
                     // remove the item if the threshold was reached
                     if (positive + 1 >= votingThreshold) {
-                        remove(listItem.get(position));
+                        remove(voting.get(position));
                         Toast.makeText(getContext(), "Thanks! \nThe ranger will get his reward!", Toast.LENGTH_LONG).show();
                         // TODO: set the isConfirmed for the task in db to true. Ranger should get his reward.
 
                     } else {
                         // TODO: on data update write in db
                         holder.nLikes.setText(String.valueOf(positive + 1));
-                        dbRefTasks.child("numberUpvotes").setValue(positive + 1);
+                        pathCurrentTask.child("numberUpvotes").setValue(positive + 1);
                         //prevent clicking multiple times
                         holder.up.setEnabled(false);
                     }
@@ -220,18 +265,18 @@ public class FragmentVotingTasks extends Fragment {
 
                     // prevent upvoting if already downvoted
                     holder.up.setEnabled(false);
-
+                    int negative = Integer.parseInt(votingDislikes);
                     // remove the item if the threshold was reached
                     if (negative + 1 >= votingThreshold) {
-                        remove(listItem.get(position));
+                        remove(voting.get(position));
                         Toast.makeText(getContext(), "The ranger won't get his reward...", Toast.LENGTH_LONG).show();
-                        // TODO: set the isConfirmed to false. Ranger fucked up, he wont get his reward :)
+                        // TODO: set the isConfirmed to false. Ranger wont get his reward :)
                     }
 
                     else {
                         // TODO: on data update write in db
                         holder.nDislikes.setText(String.valueOf(negative + 1));
-                        dbRefTasks.child("numberDownvotes").setValue(negative + 1);
+                        pathCurrentTask.child("numberDownvotes").setValue(negative + 1);
                         //prevent clicking multiple times
                         holder.down.setEnabled(false);
                     }
@@ -244,7 +289,7 @@ public class FragmentVotingTasks extends Fragment {
         @Override
         public int getItemCount() {
             //returns the number of elements the RecyclerView will display
-            return listItem.size();
+            return voting.size();
         }
 
         @Override
@@ -254,14 +299,14 @@ public class FragmentVotingTasks extends Fragment {
 
         // Insert a new item to the RecyclerView on a predefined position
         public void insert(int position, VotingTasksListItem listItem) {
-            this.listItem.add(position, listItem);
+            this.voting.add(position, listItem);
             notifyItemInserted(position);
         }
 
         // Remove a RecyclerView item containing a specified Data object
         public void remove(VotingTasksListItem data) {
-            int position = listItem.indexOf(data);
-            listItem.remove(position);
+            int position = voting.indexOf(data);
+            voting.remove(position);
             notifyItemRemoved(position);
         }
     }

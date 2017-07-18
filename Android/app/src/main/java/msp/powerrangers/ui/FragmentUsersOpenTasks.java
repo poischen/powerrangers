@@ -28,7 +28,7 @@ import msp.powerrangers.ui.listitems.UsersOpenTasksListItem;
 
 
 /**
- * A fragment representing a listItem of Items.
+ * A fragment representing a voting of Items.
  */
 public class FragmentUsersOpenTasks extends Fragment {
 

@@ -53,6 +53,11 @@
     <!-- Intent Strings-->
     <string name="intent_current_user">Current User</string>
 
+    <!-- DB fields strings-->
+    <string name="tasks_taskPictureAfter">taskPictureAfter</string>
+    <string name="tasks_taskCompleted">taskCompleted</string>
+
+
     <!-- FragmentLogin-->
     <string name="fLogin_Signin">Sign in</string>
     <string name="fLogin_Register">Register</string>

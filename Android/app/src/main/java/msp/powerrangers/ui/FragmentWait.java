@@ -61,6 +61,7 @@ public class FragmentWait extends BaseContainerFragment {
 
         if (tag.equals(votingTag)) {
             votingTasksListItem = new VotingTasksListItem();
+            Log.i("KATJA", "FragmentWait votingTasks");
             votingTasksListItem.fill_with_data(this);
             votingTabClicked = true;
         }
@@ -94,11 +95,11 @@ public class FragmentWait extends BaseContainerFragment {
 
     }
 
-    public void changeToContentView(boolean isaboutUsersOpenTasks) {
+    public void changeToContentView(boolean isaboutVoting) {
         String tag;
-        if (isaboutUsersOpenTasks){
-            Log.v("FragmentWait", "it is about UsersOpenTasks!");
-            tag = (getString(R.string.usersOpenTasks));
+        if (!isaboutVoting){
+            Log.v("FragmentWait", "it is about VotingTasks!");
+            tag = (getString(R.string.votingTasksTag));
         } else {
             tag = getTag();
         }

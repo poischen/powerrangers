@@ -35,7 +35,7 @@ import msp.powerrangers.ui.listitems.ConfirmerCasesListItem;
 
 
 /**
- * A fragment representing a listItem of Items.
+ * A fragment representing a voting of Items.
  */
 public class FragmentConfirmerCases extends Fragment {
 

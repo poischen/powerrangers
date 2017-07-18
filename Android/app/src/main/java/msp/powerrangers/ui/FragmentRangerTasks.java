@@ -39,7 +39,7 @@ import msp.powerrangers.ui.listitems.RangerTasksListItem;
 
 
 /**
- * A fragment representing a listItem of Items.
+ * A fragment representing a voting of Items.
  */
 public class FragmentRangerTasks extends Fragment {
 

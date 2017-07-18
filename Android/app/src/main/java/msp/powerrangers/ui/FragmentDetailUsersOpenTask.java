@@ -214,8 +214,8 @@ public class FragmentDetailUsersOpenTask extends Fragment {
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         //write picture into db and change taskstatus
                         DatabaseReference db = FirebaseDatabase.getInstance().getReference("tasks").child(taskID);
-                        db.child("taskCompleted").setValue(true);
-                        db.child("taskPictureAfter").setValue(storageAndDBPath);
+                        db.child(getString(R.string.tasks_taskCompleted)).setValue(true);
+                        db.child(getString(R.string.tasks_taskPictureAfter)).setValue(storageAndDBPath);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
