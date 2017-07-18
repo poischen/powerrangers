@@ -43,6 +43,16 @@ public class FragmentUsersOpenTasks extends Fragment {
 
     private String currentUserId;
 
+
+
+    String taskTitle;
+    String taskDescription;
+    //  boolean isTaskAlreadyCompleted = mAdapter.getItem(position).getTaskCompeted();
+    String taskId;
+    String caseId;
+
+
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -77,52 +87,47 @@ public class FragmentUsersOpenTasks extends Fragment {
         // 1. Get a reference to recyclerView & set the onClickListener
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewUOT);
 
+
+
+        // 2. Set layoutManager (defines how the elements are laid out)
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        // will be filled with data
+        //usersOpenTasksListItem = new UsersOpenTasksListItem();
+
+        // 3. Create an adapter
+        mAdapter = new Recycler_View_Adapter(usersOpenTasksListItem.getData(), getContext());
+
+
+        // 4. set adapter
+        mRecyclerView.setAdapter(mAdapter);
+
+
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getContext(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
 
                         // show FragmentDetailUsersOpenTask
-                        String taskTitle = mAdapter.getItem(position).getTitleDB();
-                        Log.i("TASK TITLEEE", taskTitle);
-                        String taskDescription = mAdapter.getItem(position).getDescription();
-                      //  boolean isTaskAlreadyCompleted = mAdapter.getItem(position).getTaskCompeted();
-                        String taskId = mAdapter.getItem(position).getTaskid();
-                        String caseId = mAdapter.getItem(position).getCaseId();
+                        /*
+                           taskTitle = mAdapter.getItem(position).title;
+                        Log.i("VIKII: ITEM title", mAdapter.getItem(position).title);
+                        taskDescription = mAdapter.getItem(position).desc;
+                        Log.i("VIKII: ITEM desc", mAdapter.getItem(position).title);
+                         */
+
+                        //  boolean isTaskAlreadyCompleted = mAdapter.getItem(position).getTaskCompeted();
+                        taskId = mAdapter.getItem(position).getTaskid();
+                        caseId = mAdapter.getItem(position).getCaseId();
 
 
-                        /*FragmentDetailUsersOpenTask fragmentDetailUsersOpenTask = new FragmentDetailUsersOpenTask();
-                        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                        Bundle bundles = new Bundle();
-                        bundles.putInt("PositionUsersOpenTask", position);
-                        bundles.putString("TitleUsersOpenTask", taskTitle);
-                        bundles.putString("DescriptionUsersOpenTask", taskDescription);
-                        bundles.putBoolean("StatusUsersOpenTask", isTaskAlreadyCompleted);
-                        bundles.putString("OpenTaskID", taskId);
-                        bundles.putString("OpenTaskCaseID", caseId);
-
-                        try{
-                            Bitmap taskImage = mAdapter.getItem(position).getTaskBitmap();
-                            ByteArrayOutputStream bs = new ByteArrayOutputStream();
-                            taskImage.compress(Bitmap.CompressFormat.JPEG, 50, bs);
-                            bundles.putByteArray("ImageUsersOpenTask",bs.toByteArray());
-
-                        } catch (Exception e){
-                            bundles.putString("taskImageUrl", mAdapter.getItem(position).getTaskUrl());
-                        }
-
-                        fragmentDetailUsersOpenTask.setArguments(bundles);
-                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        ft.replace(R.id.activity_main_fragment_container, fragmentDetailUsersOpenTask);
-                        ft.addToBackStack(null);
-
-                        ft.commit();*/
 
                         FragmentDetailUsersOpenTask fragmentDetailUsersOpenTask = new FragmentDetailUsersOpenTask();
                         Bundle bundle = new Bundle();
                         bundle.putInt("PositionUsersOpenTask", position);
-                        bundle.putString("TitleUsersOpenTask", taskTitle);
-                        bundle.putString("DescriptionUsersOpenTask", taskDescription);
-                       // bundle.putBoolean("StatusUsersOpenTask", isTaskAlreadyCompleted);
+                        bundle.putString("TitleUsersOpenTask", mAdapter.getItem(position).title);
+                        bundle.putString("DescriptionUsersOpenTask", mAdapter.getItem(position).desc);
+                        //bundle.putBoolean("StatusUsersOpenTask", mAdapter.getItem(position).getTaskCompeted());
                         bundle.putString("OpenTaskID", taskId);
                         bundle.putString("OpenTaskCaseID", caseId);
 
@@ -135,6 +140,9 @@ public class FragmentUsersOpenTasks extends Fragment {
                         } catch (Exception e){
                             bundle.putString("taskImageUrl", mAdapter.getItem(position).getTaskUrl());
                         }
+
+
+                        Log.i("BUNDLE IN UOT", bundle.toString());
 
                         fragmentDetailUsersOpenTask.setArguments(bundle);
                         ((BaseContainerFragment)getParentFragment()).replaceFragmentDetailOpenTask(fragmentDetailUsersOpenTask);
@@ -154,18 +162,6 @@ public class FragmentUsersOpenTasks extends Fragment {
                 })
         );
 
-        // 2. Set layoutManager (defines how the elements are laid out)
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        // will be filled with data
-        //usersOpenTasksListItem = new UsersOpenTasksListItem();
-
-        // 3. Create an adapter
-        mAdapter = new Recycler_View_Adapter(usersOpenTasksListItem.getData(), getContext());
-
-        // 4. set adapter
-        mRecyclerView.setAdapter(mAdapter);
 
         return rootView;
     }

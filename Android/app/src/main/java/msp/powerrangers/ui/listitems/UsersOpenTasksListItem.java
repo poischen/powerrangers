@@ -28,11 +28,12 @@ public class UsersOpenTasksListItem implements Serializable {
     public int imageID;
 
 
+
     public Bitmap taskImage;
     public String taskImageUrlDB;
 
 
-    String titleDB;
+    String titleDB = "";
     String cityDB;
     String countryDB;
     String commentDB;
@@ -44,10 +45,13 @@ public class UsersOpenTasksListItem implements Serializable {
     List<UsersOpenTasksListItem> data = new ArrayList<>();
     private DatabaseReference dbRefTasks;
 
-    public UsersOpenTasksListItem(String title, String desc, int imageID) {
+    public UsersOpenTasksListItem(String title, String desc, int imageID, String taskIdDB, String caseIdDB, boolean taskCompletedDB) {
         this.title = title;
         this.desc = desc;
         this.imageID = imageID;
+        this.taskIdDB = taskIdDB;
+        this.caseIdDB = caseIdDB;
+        this.taskCompletedDB = taskCompletedDB;
     }
 
     public UsersOpenTasksListItem(){
@@ -84,16 +88,18 @@ public class UsersOpenTasksListItem implements Serializable {
                     countryDB = (String) singleSnapshot.child("country").getValue();
                     titleDB = cityDB + " , " + countryDB;
                     commentDB = (String) singleSnapshot.child("comment").getValue();
-                  //  taskCompletedDB = (Boolean) singleSnapshot.child("taskCompeted").getValue();
+                   // taskCompletedDB = (Boolean) singleSnapshot.child("taskCompeted").getValue();
 
                     // TODO: get first image for task from db
                     imageIdDB = R.drawable.placeholder_case;
 
 
                     taskIdDB = (String) singleSnapshot.child("taskId").getValue();
+                    Log.i("TASK ID IN FILL DATA", taskIdDB);
+
                     caseIdDB = (String) singleSnapshot.child("caseId").getValue();
 
-                    data.add(new UsersOpenTasksListItem(titleDB, commentDB, imageIdDB));
+                    data.add(new UsersOpenTasksListItem(titleDB, commentDB, imageIdDB, taskIdDB, caseIdDB, taskCompletedDB));
                     Log.i("This", this.toString());
                     Log.i("Data add" , data.toString());
 
@@ -120,9 +126,7 @@ public class UsersOpenTasksListItem implements Serializable {
     }
 
 
-    public String getTitleDB(){
-        return titleDB;
-    }
+    public String getTitle(){ return titleDB; }
 
     public String getDescription(){
         return commentDB;
@@ -132,11 +136,11 @@ public class UsersOpenTasksListItem implements Serializable {
         return taskCompletedDB;
     }
 
-    public String getTaskid(){
-        return taskIdDB;
-    }
+    public String getTaskid(){ return taskIdDB; }
 
     public String getCaseId(){
         return caseIdDB;
     }
+
+    public int getImageID(){ return imageIdDB; }
 }
