@@ -156,10 +156,7 @@ public class FragmentLogin extends Fragment {
                             String dbId = database.push().getKey();
                             String userId = currentuser.getUid();
                             //save users db key in shared preferances
-                            SharedPreferences sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
-                            SharedPreferences.Editor editor = sharedPrefs.edit();
-                            editor.putString(getResources().getString(R.string.sharedPrefs_userDbId), dbId);
-                            editor.commit();
+                            saveUserInSharedPrefs(dbId);
                             //create new user object
                             //user = new User(dbId, userId, currentName, currentMail);
                             // pushing firebaseUser to 'users' node using the userId
@@ -200,6 +197,17 @@ public class FragmentLogin extends Fragment {
                 });
     }
 
+    /*
+    saves the db user id in the shared preferences
+    @param dbID
+     */
+    public void saveUserInSharedPrefs(String dbID) {
+        SharedPreferences sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.putString(getResources().getString(R.string.sharedPrefs_userDbId), dbID);
+        editor.commit();
+    }
+
     /**
      * Method for signing in via email and Firebase
      *
@@ -220,7 +228,7 @@ public class FragmentLogin extends Fragment {
 
                             FirebaseUser firebaseUser = firebaseAuth.getInstance().getCurrentUser();
 
-                            createNewUserObject(firebaseUser, null, null, null, null);
+                            createNewUserObject(firebaseUser, null, null, null, givenMail);
 
                             /*FragmentTabs ft = new FragmentTabs();
                             ft.setArguments(getActivity().getIntent().getExtras());
@@ -233,37 +241,43 @@ public class FragmentLogin extends Fragment {
                 });
     }
 
+
     /*
     Create a new user object, create a tabhost and give the user to the tabhost, which stores it for all concerning fragments
      */
     public User createNewUserObject(FirebaseUser firebaseUser, String dbId, String userId, String currentName, String currentMail) {
         //if called by login
         if (firebaseUser != null) {
-            SharedPreferences sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
-            final String userDbID = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
             DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-            DatabaseReference refPath = db.child("users").child(userDbID);
-            refPath.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    try {
-                        User userInfo = dataSnapshot.getValue(User.class);
-                        String name = userInfo.getName();
-                        String dbId = userInfo.getDbId();
-                        String userId = userInfo.getId();
-                        String mail = userInfo.getEmail();
-                        user = new User(dbId, userId, name, mail);
-                        ((MainActivity)getActivity()).setUser(user);
-                        FragmentTabs ft = new FragmentTabs();
-                        //Bundle bundle = new Bundle();
-                        //bundle.putSerializable(getString(R.string.intent_current_user), user);
-                        //ft.setArguments(bundle);
+            final String userDbID;
+            SharedPreferences sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
+            String userDbIDFromSharedPrefs = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
+            if (userDbIDFromSharedPrefs != null) {
+                Log.v("FragmentLogin", "there is a user id in shared preferences.");
+                userDbID = userDbIDFromSharedPrefs;
+                DatabaseReference refPath = db.child("users").child(userDbID);
+                refPath.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        try {
+                            User userInfo = dataSnapshot.getValue(User.class);
+                            String name = userInfo.getName();
+                            String dbId = userInfo.getDbId();
+                            String userId = userInfo.getId();
+                            String mail = userInfo.getEmail();
+                            user = new User(dbId, userId, name, mail);
+                            ((MainActivity) getActivity()).setUser(user);
+                            FragmentTabs ft = new FragmentTabs();
+                            //Bundle bundle = new Bundle();
+                            //bundle.putSerializable(getString(R.string.intent_current_user), user);
+                            //ft.setArguments(bundle);
+                            Log.v("FragmentLogin", "User: " + user);
 
-                        Intent intent = new Intent(getActivity(), FragmentTabs.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable(getString(R.string.intent_current_user), user);
-                        intent.putExtras(bundle);
-                        getActivity().startActivity(intent);
+                            Intent intent = new Intent(getActivity(), FragmentTabs.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable(getString(R.string.intent_current_user), user);
+                            intent.putExtras(bundle);
+                            getActivity().startActivity(intent);
 
                        /* FragmentTransaction transaction = getFragmentManager().beginTransaction();
                         transaction.replace(R.id.activity_main_fragment_container, ft, "tabHostFragment");
@@ -271,17 +285,59 @@ public class FragmentLogin extends Fragment {
                         transaction.commit();
                         Log.v("FragmentLogin", "TAG: " + ft.getTag());*/
 
-                    } catch (Exception e) {
-                        Log.d("FragmentStart", "An error occured, user has to be signed out");
-                        FirebaseAuth.getInstance().signOut();
+                        } catch (Exception e) {
+                            Log.d("FragmentStart", "An error occured, user has to be signed out");
+                            FirebaseAuth.getInstance().signOut();
+                        }
                     }
-                }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+                //return user;
+            } else if (userDbIDFromSharedPrefs == null) {
+                Log.v("FragmentLogin", "there is no user id in shared preferences. get from db via mail.");
+                DatabaseReference dbRefUser = FirebaseDatabase.getInstance().getReference("users");
+                dbRefUser.orderByChild("email").equalTo(currentMail).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        try {
+                            Log.v("FragmentLogin", "dataSnapshot: " + dataSnapshot);
+
+                            for (DataSnapshot singeSnapshot : dataSnapshot.getChildren()){
+                                String name = (String) singeSnapshot.child("name").getValue();
+                                String dbId = (String) singeSnapshot.child("dbId").getValue();
+                                String id = (String) singeSnapshot.child("id").getValue();
+                                String email = (String) singeSnapshot.child("email").getValue();
+                                Log.v("FragmentLogin", "userInfo: " + name + ", " + dbId + ", "  + id + ", " + email);
+                                user = new User(dbId, id, name, email);
+                                ((MainActivity) getActivity()).setUser(user);
+                                saveUserInSharedPrefs(dbId);
+                            }
+
+
+                            Log.v("FragmentLogin", "User: " + user);
+
+                            Intent intent = new Intent(getActivity(), FragmentTabs.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable(getString(R.string.intent_current_user), user);
+                            intent.putExtras(bundle);
+                            getActivity().startActivity(intent);
+
+                        } catch (Exception e) {
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+                //return user;
+            }
             return user;
+
         } else {
             //if called by register
             user = new User(dbId, userId, currentName, currentMail);
