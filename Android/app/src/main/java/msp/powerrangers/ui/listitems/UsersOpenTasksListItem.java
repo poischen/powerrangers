@@ -89,33 +89,39 @@ public void setTaskBitmap(Bitmap image){
                 .addValueEventListener(
                         new ValueEventListener() {
 
+
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 // get data for each task from the db
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
 
-                    titleDB = (String) singleSnapshot.child("name").getValue();
-
-                    cityDB = (String) singleSnapshot.child("city").getValue();
-                    countryDB = (String) singleSnapshot.child("country").getValue();
-                    locationDB = cityDB + ", " + countryDB;
-
-                    commentDB = (String) singleSnapshot.child("comment").getValue();
                     taskCompletedDB = (Boolean) singleSnapshot.child("taskCompleted").getValue();
 
-                    // TODO: get first image for task from db
-                    imageIdDB = R.drawable.placeholder_case;
-                    taskImageUrlDB = (String) singleSnapshot.child("taskPicture").getValue();
+                    if (!taskCompletedDB) {
+                        titleDB = (String) singleSnapshot.child("name").getValue();
 
-                    taskIdDB = (String) singleSnapshot.child("taskDbId").getValue();
-                    Log.i("TASK ID IN FILL DATA", taskIdDB);
+                        cityDB = (String) singleSnapshot.child("city").getValue();
+                        countryDB = (String) singleSnapshot.child("country").getValue();
+                        locationDB = cityDB + ", " + countryDB;
 
-                    caseIdDB = (String) singleSnapshot.child("caseId").getValue();
+                        commentDB = (String) singleSnapshot.child("comment").getValue();
 
-                    data.add(new UsersOpenTasksListItem(titleDB, locationDB, commentDB, imageIdDB, taskIdDB, caseIdDB, taskImageUrlDB, taskCompletedDB));
-                    Log.i("This", this.toString());
-                    Log.i("Data add" , data.toString());
+
+                        // TODO: get first image for task from db
+                        imageIdDB = R.drawable.placeholder_case;
+                        taskImageUrlDB = (String) singleSnapshot.child("taskPicture").getValue();
+
+                        taskIdDB = (String) singleSnapshot.child("taskDbId").getValue();
+                        Log.i("TASK ID IN FILL DATA", taskIdDB);
+
+                        caseIdDB = (String) singleSnapshot.child("caseId").getValue();
+
+                        data.add(new UsersOpenTasksListItem(titleDB, locationDB, commentDB, imageIdDB, taskIdDB, caseIdDB, taskImageUrlDB, taskCompletedDB));
+                        Log.i("This", this.toString());
+                        Log.i("Data add", data.toString());
+                    }
 
                 }
 

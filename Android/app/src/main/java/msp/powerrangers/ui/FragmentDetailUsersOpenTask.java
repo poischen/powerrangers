@@ -201,7 +201,7 @@ public class FragmentDetailUsersOpenTask extends Fragment {
      * method to upload case pictures via firebase
      */
     private void completeTask() {
-        Toast.makeText(getContext(), "Please wait, while picture is uploaded.", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Please wait, while picture is uploaded.", Toast.LENGTH_SHORT).show();
 
         //upload picture
         final String storageAndDBPath;
