@@ -116,6 +116,7 @@ public class FragmentUsersOpenTasks extends Fragment {
                         bundle.putString("TitleUsersOpenTask", mAdapter.getItem(position).title);
                         bundle.putString("DescriptionUsersOpenTask", mAdapter.getItem(position).desc);
                         bundle.putBoolean("StatusUsersOpenTask", mAdapter.getItem(position).getTaskCompleted());
+                        //bundle.putString("OpenTaskID", taskId);
                         bundle.putString("OpenTaskID", taskId);
                         bundle.putString("OpenTaskCaseID", caseId);
 /*
