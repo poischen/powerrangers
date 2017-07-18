@@ -27,43 +27,48 @@ public class UsersOpenTasksListItem implements Serializable {
     public String desc;
     public int imageID;
 
-
-
-    public Bitmap taskImage;
     public String taskImageUrlDB;
+    public Bitmap taskImage;
 
 
-    String titleDB = "";
+    String titleDB;
     String cityDB;
     String countryDB;
     String commentDB;
     int imageIdDB;
-    boolean taskCompletedDB;
+    Boolean taskCompletedDB;
     String taskIdDB;
     String caseIdDB;
 
     List<UsersOpenTasksListItem> data = new ArrayList<>();
     private DatabaseReference dbRefTasks;
 
-    public UsersOpenTasksListItem(String title, String desc, int imageID, String taskIdDB, String caseIdDB, boolean taskCompletedDB) {
+    public UsersOpenTasksListItem(String title, String desc, int imageID, String taskIdDB, String caseIdDB, String taskImageUrlDB, Boolean taskCompletedDB ) {
         this.title = title;
         this.desc = desc;
         this.imageID = imageID;
         this.taskIdDB = taskIdDB;
         this.caseIdDB = caseIdDB;
         this.taskCompletedDB = taskCompletedDB;
+        this.taskImageUrlDB = taskImageUrlDB;
     }
 
     public UsersOpenTasksListItem(){
 
     }
-
-    public void setTaskBitmap(Bitmap image){
+/*
+public void setTaskBitmap(Bitmap image){
         this.taskImage = image;
     }
+ */
+
 
     public Bitmap getTaskBitmap(){
         return taskImage;
+    }
+
+    public void setTaskBitmap(Bitmap image){
+        this.taskImage = image;
     }
 
     public String getTaskUrl(){
@@ -88,18 +93,18 @@ public class UsersOpenTasksListItem implements Serializable {
                     countryDB = (String) singleSnapshot.child("country").getValue();
                     titleDB = cityDB + " , " + countryDB;
                     commentDB = (String) singleSnapshot.child("comment").getValue();
-                   // taskCompletedDB = (Boolean) singleSnapshot.child("taskCompeted").getValue();
+                    taskCompletedDB = (Boolean) singleSnapshot.child("taskCompleted").getValue();
 
                     // TODO: get first image for task from db
                     imageIdDB = R.drawable.placeholder_case;
-
+                    taskImageUrlDB = (String) singleSnapshot.child("taskPicture").getValue();
 
                     taskIdDB = (String) singleSnapshot.child("taskId").getValue();
                     Log.i("TASK ID IN FILL DATA", taskIdDB);
 
                     caseIdDB = (String) singleSnapshot.child("caseId").getValue();
 
-                    data.add(new UsersOpenTasksListItem(titleDB, commentDB, imageIdDB, taskIdDB, caseIdDB, taskCompletedDB));
+                    data.add(new UsersOpenTasksListItem(titleDB, commentDB, imageIdDB, taskIdDB, caseIdDB, taskImageUrlDB, taskCompletedDB));
                     Log.i("This", this.toString());
                     Log.i("Data add" , data.toString());
 
@@ -132,7 +137,7 @@ public class UsersOpenTasksListItem implements Serializable {
         return commentDB;
     }
 
-    public boolean getTaskCompeted(){
+    public boolean getTaskCompleted(){
         return taskCompletedDB;
     }
 

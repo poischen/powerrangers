@@ -1,11 +1,9 @@
 package msp.powerrangers.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Collections;
@@ -23,7 +20,6 @@ import java.util.List;
 
 import msp.powerrangers.R;
 import msp.powerrangers.logic.User;
-import msp.powerrangers.ui.listitems.RangerTasksListItem;
 import msp.powerrangers.ui.listitems.UsersOpenTasksListItem;
 
 
@@ -47,7 +43,7 @@ public class FragmentUsersOpenTasks extends Fragment {
 
     String taskTitle;
     String taskDescription;
-    //  boolean isTaskAlreadyCompleted = mAdapter.getItem(position).getTaskCompeted();
+    //  boolean isTaskAlreadyCompleted = mAdapter.getItem(position).getTaskCompleted();
     String taskId;
     String caseId;
 
@@ -109,14 +105,8 @@ public class FragmentUsersOpenTasks extends Fragment {
                     @Override public void onItemClick(View view, int position) {
 
                         // show FragmentDetailUsersOpenTask
-                        /*
-                           taskTitle = mAdapter.getItem(position).title;
-                        Log.i("VIKII: ITEM title", mAdapter.getItem(position).title);
-                        taskDescription = mAdapter.getItem(position).desc;
-                        Log.i("VIKII: ITEM desc", mAdapter.getItem(position).title);
-                         */
 
-                        //  boolean isTaskAlreadyCompleted = mAdapter.getItem(position).getTaskCompeted();
+                        //  boolean isTaskAlreadyCompleted = mAdapter.getItem(position).getTaskCompleted();
                         taskId = mAdapter.getItem(position).getTaskid();
                         caseId = mAdapter.getItem(position).getCaseId();
 
@@ -127,7 +117,7 @@ public class FragmentUsersOpenTasks extends Fragment {
                         bundle.putInt("PositionUsersOpenTask", position);
                         bundle.putString("TitleUsersOpenTask", mAdapter.getItem(position).title);
                         bundle.putString("DescriptionUsersOpenTask", mAdapter.getItem(position).desc);
-                        //bundle.putBoolean("StatusUsersOpenTask", mAdapter.getItem(position).getTaskCompeted());
+                        bundle.putBoolean("StatusUsersOpenTask", mAdapter.getItem(position).getTaskCompleted());
                         bundle.putString("OpenTaskID", taskId);
                         bundle.putString("OpenTaskCaseID", caseId);
 
@@ -138,7 +128,7 @@ public class FragmentUsersOpenTasks extends Fragment {
                             bundle.putByteArray("ImageUsersOpenTask",bs.toByteArray());
 
                         } catch (Exception e){
-                            bundle.putString("taskImageUrl", mAdapter.getItem(position).getTaskUrl());
+                            bundle.putString("taskImageUrl", mAdapter.getItem(position).taskImageUrlDB);
                         }
 
 
