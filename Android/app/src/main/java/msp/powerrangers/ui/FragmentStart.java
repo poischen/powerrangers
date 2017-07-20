@@ -146,10 +146,6 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*ActionBar actionBar = ((FragmentTabs)getActivity()).getActionBar();
-        actionBar.show();
-        actionBar.setTitle("Profile");
-*/
         //Firebase stuff
         storageRef = FirebaseStorage.getInstance().getReference();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -164,8 +160,10 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         Log.v("FragmentStart", "User in onCreate: " + u);
         //tabHost = (FragmentTabs) bundle.getSerializable(getString(R.string.tabHostSerializable));
        //Log.v(TAG, "tabhost: " + tabHost);
+       //Log.v(TAG, "tabhost: " + tabHost);
         downloadUserPic();
         setUserInfos();
+
     }
 
     @Override
