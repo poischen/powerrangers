@@ -90,7 +90,7 @@ public class FragmentDetailVotingTask extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bund = getArguments();
-        position = bund.getInt("PositionVoting");
+        position = bund.getInt("PositionVotingTask");
         storageRef = FirebaseStorage.getInstance().getReference();
         pictureURLs = new ArrayList<>();
         pictureBitmapList = new ArrayList<>();
@@ -115,7 +115,7 @@ public class FragmentDetailVotingTask extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fr_detail_voting_task, container, false);
 
-        //give user progredd feedback while downloading pictures
+        //give user progress feedback while downloading pictures
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setTitle(getString(R.string.uploadPicture));
         progressDialog.show();
@@ -129,7 +129,7 @@ public class FragmentDetailVotingTask extends Fragment {
          Button buttonOk = (Button) view.findViewById(R.id.buttonOk);
          Button buttonNotOk = (Button) view.findViewById(R.id.buttonNotOk);
 
-        ImageView imageBefore = (ImageView) view.findViewById(R.id.ivVotingPic1);
+        final ImageView imageBefore = (ImageView) view.findViewById(R.id.ivVotingPic1);
         ImageView imageAfter = (ImageView) view.findViewById(R.id.ivVotingPic2);
 
         // refernece to db tasks
@@ -146,7 +146,7 @@ public class FragmentDetailVotingTask extends Fragment {
                         }
                         DataSnapshot singleSnapshot = (DataSnapshot) iter.next();
 
-                        //get cases picture urls from db, download pictures from storage and show them
+                        //get task and after picture urls from db, download pictures from storage and show them
                         String beforePicURL = (String) singleSnapshot.child("taskPicture").getValue();
                         String afterPicURL = (String) singleSnapshot.child("taskPictureAfter").getValue();
 
@@ -161,7 +161,7 @@ public class FragmentDetailVotingTask extends Fragment {
                                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                                             Log.v("Download", "download erfolgreich");
                                             Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                            imageAfter.setImageBitmap(bitmap);
+                                            imageBefore.setImageBitmap(bitmap);
                                             Log.v("DetailConfirmerCase", "picture Bitmap List new entry: " + bitmap);
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
@@ -202,6 +202,77 @@ public class FragmentDetailVotingTask extends Fragment {
             @Override
             public void onClick(View v) {
 
+                dbRefTasks.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        Iterator iter = dataSnapshot.getChildren().iterator();
+                        for (int i = 0; i < position; i++) {
+                            iter.next();
+                        }
+                        DataSnapshot singleSnapshot = (DataSnapshot) iter.next();
+
+                        rangerID = (String) singleSnapshot.child("rangerID").getValue();
+
+                        // ranger can`t vote for his own task :)
+                        if (rangerID.equals(userDbID)) {
+                            Toast.makeText(getContext(), R.string.errorRangerVotesHisOwnTask, Toast.LENGTH_LONG).show();
+                        }
+
+                        // fill in new values
+                        else {
+                            // TODO function votes
+                            // TODO: taskVoted auf true
+                            // TODO: reward entsprechend setzen und earned in Start aktualisieren
+                            // TODO: anzahl open Tasks in start dekrementieren, hier eventuell prüfen in der query dass dieses case nicht in open tasks angezegt wird
+                            // TODO:
+
+
+                            // when voted,
+                            // update user opentasks
+                            refPathCurrentUser.addListenerForSingleValueEvent(
+                                    new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnap) {
+
+                                            // WAS SOLL GEMACHT WERDEN WENN NICHT GESCHAFFT??? OPEN TASKS BLEIBT GLEICH ODER WAS?
+
+                                            String currentNumberOpenTasks = (String) dataSnap.child("numberOpenTasks").getValue();
+                                            // TODO: warum sind numberOpenTasks string????
+                                            int newNumberOfOpenTasks = Integer.parseInt(currentNumberOpenTasks) - 1;
+                                            String stringValueOfNewNOT = String.valueOf(newNumberOfOpenTasks);
+                                            dataSnap.getRef().child("numberOpenTasks").setValue(stringValueOfNewNOT);
+
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+                                            Log.e("FrDetailConfirmerCase", "The currentUser read failed: " + databaseError.getMessage());
+                                        }
+
+                                    });
+
+
+
+
+
+
+                            // go back to FragmentStart
+                            Intent i = new Intent(getActivity(), MainActivity.class);
+                            startActivity(i);
+                            ((Activity) getActivity()).overridePendingTransition(0, 0);
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
             }
         });
 
@@ -212,7 +283,7 @@ public class FragmentDetailVotingTask extends Fragment {
             public void onClick(View v) {
 
                 //Query filteredCases = dbRefCases.orderByChild("confirmed").equalTo(false);
-                filteredCases.addListenerForSingleValueEvent(
+                dbRefTasks.addListenerForSingleValueEvent(
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -223,15 +294,22 @@ public class FragmentDetailVotingTask extends Fragment {
                                 }
                                 DataSnapshot singleSnapshot = (DataSnapshot) iter.next();
 
-                                detectiveID = String.valueOf(singleSnapshot.child("detectiveID").getValue());
+                                rangerID = String.valueOf(singleSnapshot.child("rangerID").getValue());
 
-                                // detective can`t confirme his own case :)
-                                if (detectiveID.equals(userDbID)) {
-                                    Toast.makeText(getContext(), R.string.detailConfirmerCaseDectiveError, Toast.LENGTH_LONG).show();
+                                // ranger can`t vote for his own task :)
+                                if (rangerID.equals(userDbID)) {
+                                    Toast.makeText(getContext(), R.string.errorRangerVotesHisOwnTask, Toast.LENGTH_LONG).show();
                                 }
 
                                 // fill in new values
                                 else {
+                                    // TODO function votes
+                                    // TODO: taskVoted auf true
+                                    // TODO: reward entsprechend setzen und earned in Start aktualisieren
+                                    // TODO: anzahl open Tasks in start dekrementieren
+                                    // TODO:
+
+
                                     singleSnapshot.child("name").getRef().setValue(editTextConfirmCaseTitle.getText().toString());
                                     singleSnapshot.child("city").getRef().setValue(editTextConfirmCaseCity.getText().toString());
                                     singleSnapshot.child("country").getRef().setValue(editTextConfirmCaseCountry.getText().toString());
@@ -243,21 +321,23 @@ public class FragmentDetailVotingTask extends Fragment {
                                     // add the confirmer id to the childs
                                     singleSnapshot.child("confirmerId").getRef().setValue(userDbID);
 
-                                    // update user balance & number confirmed cases
+
+                                    // when voted,
+                                    // update user opentasks
                                     refPathCurrentUser.addListenerForSingleValueEvent(
                                             new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnap) {
-                                                    // TODO eigentlich sollte der fixedReward in der Confirmer-Instanz gesetzt werden. Zurzeit gibt es keinen Confimer objekt..
-                                                    // [getFixedReward vom Confirmer benutzen]
-                                                    int fixedReward = 5;
-                                                    String currentBalance = String.valueOf(dataSnap.child("balance").getValue());
-                                                    int newBalance =Integer.parseInt(currentBalance)+fixedReward;
-                                                    dataSnap.getRef().child("balance").setValue(newBalance);
 
-                                                    String currentCount = String.valueOf(dataSnap.child("numberConfirmedCases").getValue());
-                                                    int newCount = Integer.parseInt(currentCount)+1;
-                                                    dataSnap.getRef().child("numberConfirmedCases").setValue(newCount);
+                                                    String currentNumberOpenTasks = (String) dataSnap.child("numberOpenTasks").getValue();
+                                                    // TODO: warum sind numberOpenTasks string????
+                                                    int newNumberOfOpenTasks = Integer.parseInt(currentNumberOpenTasks) - 1;
+                                                    String stringValueOfNewNOT = String.valueOf(newNumberOfOpenTasks);
+                                                    dataSnap.getRef().child("numberOpenTasks").setValue(stringValueOfNewNOT);
+
+                                                    String currentCount = String.valueOf(dataSnap.child("numberCompletedTasks").getValue());
+                                                    int newCount = Integer.parseInt(currentCount) + 1;
+                                                    dataSnap.getRef().child("numberCompletedTasks").setValue(newCount);
                                                 }
 
                                                 @Override
