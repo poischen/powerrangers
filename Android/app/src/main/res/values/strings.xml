@@ -79,9 +79,9 @@
     <string name="reportCityOfCase">City</string>
     <string name="reportCountryOfCase">Country</string>
     <string name="reportScalaOfCase">Pollution Scale:</string>
-    <string name="reportAreaCoordinates">Area coordinates:</string>
-    <string name="reportXCoordinateOfCase">X Coordinate *</string>
-    <string name="reportYCoordinateOfCase">Y Coordinate *</string>
+    <string name="reportAreaCoordinates">Area coordinates in meters:</string>
+    <string name="reportXCoordinateOfCase">Width</string>
+    <string name="reportYCoordinateOfCase">Height</string>
     <string name="reportPictureOfCase">Upload picture</string>
     <string name="reportInformationOfCase">Comment</string>
     <string name="reportCaseButton">Report Case</string>
@@ -93,8 +93,11 @@
     <string name="reportException">Something went wrong!</string>
     <string name="reportCaseSuccess">Case was reported successfully</string>
     <string name="reportCaseFillFields">Please give all necessary inforamtion!</string>
-    <string name="reportInstructionManualUploadPics">Show us some pictures! First load up an image of the hole trashy area, then seperate the area in equal parts and load a picture for each.</string>
+    <string name="reportInstructionManualUploadPics1">Show us some pictures! First load up an image of the hole trashy area. then seperate the area in equal parts and load a picture for each.</string>
+    <string name="reportInstructionManualUploadPics2">Now seperate the area in equal parts and load a picture for each one.</string>
     <string name="uploadPictureFailed">Uploading of picture failed! Sorry</string>
+    <string name="reportChooseCasePic">Choose a picture of the hole trashy area</string>
+    <string name="reportChooseTaskPics">Choose pictures of the seperated area</string>
 
     <!-- FragmentDetailConfirmerCase-->
     <string name="detailConfirmerCaseFragmentTitle">Confirm case</string>

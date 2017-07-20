@@ -1,6 +1,5 @@
 package msp.powerrangers.ui;
 
-import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
@@ -16,20 +15,18 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -55,7 +52,8 @@ import msp.powerrangers.logic.User;
 
 public class ActivityReportCase extends AppCompatActivity {
 
-    private static final int CHOOSE_IMAGE_REQUEST = 123;
+    private static final int CHOOSE_CASEIMAGE_REQUEST = 123;
+    private static final int CHOOSE_TASKIMAGES_REQUEST = 789;
     private static final int STORAGE_PERMISSION_REQUEST = 234;
     final long ONE_MEGABYTE = 1024 * 1024;
 
@@ -64,8 +62,10 @@ public class ActivityReportCase extends AppCompatActivity {
     private EditText editTextCaseTitle;
     private EditText editTextCaseCity;
     private EditText editTextCaseCountry;
-    private EditText editTextCaseXCoordinate;
-    private EditText editTextCaseYCoordinate;
+    //private EditText editTextCaseXCoordinate;
+    private NumberPicker numberPickerCaseXCoordinate;
+    //private EditText editTextCaseYCoordinate;
+    private NumberPicker numberPickerCaseYCoordinate;
     private EditText editTextCaseInformation;
 
     //TODO: only one button should be selectable!!
@@ -76,17 +76,12 @@ public class ActivityReportCase extends AppCompatActivity {
 
     // buttons
     private Button buttonCaseReport;
-    private ImageButton imageButtonUploadPicture;
+    private ImageButton imageButtonUploadPictureCase;
+    private ImageButton imageButtonUploadPicturesTasks;
 
     //swipegallery
-    ViewPager viewPager;
-
-    // firebase storage Ref
-    private StorageReference storageRef;
-
-    // firebase db instances
-    private DatabaseReference dbRefCases;
-    private DatabaseReference refPathCurrentUser;
+    ViewPager viewPagerTaskPics;
+    ImageView imgViewCasePic;
 
     private User us;
     String userDbId;
@@ -97,6 +92,8 @@ public class ActivityReportCase extends AppCompatActivity {
     private List<Bitmap> pictureBitmapList;
     List<String> casePictures;
     boolean isDefaultPic;
+    Bitmap bmpCaseImgage;
+    Uri bmpUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,38 +104,38 @@ public class ActivityReportCase extends AppCompatActivity {
         pictureUrisList = new ArrayList<>();
         pictureBitmapList = new ArrayList<>();
 
-        Bitmap defaultPic = BitmapFactory.decodeResource(getResources(), R.drawable.nopicyet);
+        Bitmap defaultPic = BitmapFactory.decodeResource(getResources(), R.drawable.nopicsyet);
         pictureBitmapList.add(defaultPic);
 
         casePictures = new ArrayList<>();
         isDefaultPic = true;
 
-        //Firebase stuff
-        storageRef = FirebaseStorage.getInstance().getReference();
-        dbRefCases = FirebaseDatabase.getInstance().getReference("cases");
-
         //get current User Object from Intent
         Intent myIntent = getIntent();
         us = (User) myIntent.getSerializableExtra("USER");
         userDbId = us.getDbId();
-        refPathCurrentUser = FirebaseDatabase.getInstance().getReference().child("users").child(userDbId);
-
 
         // find UI elements
         editTextCaseTitle = (EditText) findViewById(R.id.editTextCaseTitle);
         editTextCaseCity = (EditText) findViewById(R.id.editTextCaseCity);
         editTextCaseCountry = (EditText) findViewById(R.id.editTextCaseCountry);
-        editTextCaseXCoordinate = (EditText) findViewById(R.id.editTextCaseXCoordinate);
-        editTextCaseYCoordinate = (EditText) findViewById(R.id.editTextCaseYCoordinate);
+        numberPickerCaseXCoordinate = (NumberPicker) findViewById(R.id.numberPickerCaseXCoordinate);
+        numberPickerCaseYCoordinate = (NumberPicker) findViewById(R.id.numberPickerCaseYCoordinate);
+        numberPickerCaseXCoordinate.setMinValue(1);
+        numberPickerCaseYCoordinate.setMinValue(1);
+        numberPickerCaseXCoordinate.setMaxValue(100);
+        numberPickerCaseYCoordinate.setMaxValue(100);
         editTextCaseInformation = (EditText) findViewById(R.id.editTextCaseInformation);
         radioButtonCaseLow = (RadioButton) findViewById(R.id.radioButtonCaseLow);
         radioButtonCaseMiddle = (RadioButton) findViewById(R.id.radioButtonCaseMiddle);
         radioButtonCaseHigh = (RadioButton) findViewById(R.id.radioButtonCaseHigh);
-        imageButtonUploadPicture = (ImageButton) findViewById(R.id.imageButtonUploadPicture);
+        imageButtonUploadPictureCase = (ImageButton) findViewById(R.id.imageButtonUploadPictureCase);
+        imageButtonUploadPicturesTasks = (ImageButton) findViewById(R.id.imageButtonUploadPictureTask);
         buttonCaseReport = (Button) findViewById(R.id.buttonCaseReport);
-        viewPager = (ViewPager) findViewById(R.id.aReportCaseViewPager);
+        viewPagerTaskPics = (ViewPager) findViewById(R.id.aReportCaseViewPager);
+        imgViewCasePic = (ImageView) findViewById(R.id.aReportCaseTaskPicture);
         ActivityReportCase.ImageAdapter adapter = new ActivityReportCase.ImageAdapter(this);
-        viewPager.setAdapter(adapter);
+        viewPagerTaskPics.setAdapter(adapter);
 
         // add action bar going back to parent
         // TODO: im Moment geht man zurück zur MainActivity, trotzdem zur FragmentStart, abchecken wie man das sauber macht
@@ -147,7 +144,7 @@ public class ActivityReportCase extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         //get and show photos
-        imageButtonUploadPicture.setOnClickListener(new View.OnClickListener() {
+        imageButtonUploadPicturesTasks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isDefaultPic) {
@@ -155,8 +152,15 @@ public class ActivityReportCase extends AppCompatActivity {
                     pictureBitmapList.clear();
                     updateImageViews();
                 }
-                showFileChooser();
+                showFileChooser(CHOOSE_TASKIMAGES_REQUEST);
 
+            }
+        });
+
+        imageButtonUploadPictureCase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFileChooser(CHOOSE_CASEIMAGE_REQUEST);
             }
         });
 
@@ -202,13 +206,21 @@ public class ActivityReportCase extends AppCompatActivity {
         buttonCaseReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // firebase db instances
+                DatabaseReference dbRefCases;
+                DatabaseReference refPathCurrentUser;
+
+                dbRefCases = FirebaseDatabase.getInstance().getReference("cases");
+                refPathCurrentUser = FirebaseDatabase.getInstance().getReference().child("users").child(userDbId);
+
                 // get attributes from a case
                 String dbId = dbRefCases.push().getKey();
                 String caseId = UUID.randomUUID().toString();
 
                 //get input values
-                int areaX = Integer.valueOf(editTextCaseXCoordinate.getText().toString());
-                int areaY = Integer.valueOf(editTextCaseYCoordinate.getText().toString());
+                int areaX = numberPickerCaseXCoordinate.getValue();
+                int areaY = numberPickerCaseYCoordinate.getValue();
                 String caseTitle = editTextCaseTitle.getText().toString().trim();
                 String caseCity = editTextCaseCity.getText().toString().trim();
                 String caseCountry = editTextCaseCountry.getText().toString().trim();
@@ -295,13 +307,16 @@ public class ActivityReportCase extends AppCompatActivity {
     /**
      * method to show file chooser for images
      */
-    private void showFileChooser() {
+    private void showFileChooser(int requestCode) {
         Intent getimageintent = new Intent();
         getimageintent.setType("image/*");
-        getimageintent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         getimageintent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(getimageintent, getResources().getString(R.string.chooseProfilePicture)), CHOOSE_IMAGE_REQUEST);
-
+        if (requestCode == CHOOSE_CASEIMAGE_REQUEST){
+            startActivityForResult(Intent.createChooser(getimageintent, getResources().getString(R.string.reportChooseCasePic)), requestCode);
+        } else {
+            getimageintent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            startActivityForResult(Intent.createChooser(getimageintent, getResources().getString(R.string.reportChooseTaskPics)), requestCode);
+        }
     }
 
     /**
@@ -311,20 +326,31 @@ public class ActivityReportCase extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CHOOSE_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        if (requestCode == CHOOSE_TASKIMAGES_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             try {
                 Uri uri = data.getData();
                 pictureUrisList.add(uri);
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
                 pictureBitmapList.add(bitmap);
-                viewPager.getAdapter().notifyDataSetChanged();
+                viewPagerTaskPics.getAdapter().notifyDataSetChanged();
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        if (requestCode == CHOOSE_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getClipData() != null) {
+        if (requestCode == CHOOSE_CASEIMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            try {
+                bmpUri = data.getData();
+                bmpCaseImgage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), bmpUri);
+                imgViewCasePic.setImageBitmap(bmpCaseImgage);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+
+            if (requestCode == CHOOSE_TASKIMAGES_REQUEST && resultCode == RESULT_OK && data != null && data.getClipData() != null) {
             ClipData clipData = data.getClipData();
             if (clipData != null) {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
@@ -339,7 +365,7 @@ public class ActivityReportCase extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-                viewPager.getAdapter().notifyDataSetChanged();
+                viewPagerTaskPics.getAdapter().notifyDataSetChanged();
             }
         }
 
@@ -353,20 +379,47 @@ public class ActivityReportCase extends AppCompatActivity {
      */
     private List<String> uploadFiles(String caseID, List<Uri> pictureUrisList) {
         final List<String> storageUrls = new ArrayList<>();
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
+        //upload case pic
+        final String storageAndDBPathCase;
+        storageAndDBPathCase = "images/cases/" + caseID + "/0.jpg";
+        storageUrls.add(storageAndDBPathCase);
+
+        StorageReference riversRefCase = storageRef.child(storageAndDBPathCase);
+
+        riversRefCase.putFile(bmpUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(Exception exception) {
+                        //upload not successful
+                        Toast.makeText(getApplicationContext(), R.string.errorUpload, Toast.LENGTH_LONG).show();
+                    }
+                })
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    }
+                });
+
+        //upload task pics
         for (int i = 0; i < pictureUrisList.size(); i++) {
 
             final String storageAndDBPath;
-            storageAndDBPath = "images/cases/" + caseID + "/" + i + ".jpg";
-
+            storageAndDBPath = "images/cases/" + caseID + "/" + i+1 + ".jpg";
 
             //write path from storage into list for case-db
             storageUrls.add(storageAndDBPath);
 
             //upload to Firebase Storage
-            StorageReference riversRef = storageRef.child(storageAndDBPath);
+            StorageReference riversRefTasks = storageRef.child(storageAndDBPath);
 
-            riversRef.putFile(pictureUrisList.get((i)))
+            riversRefTasks.putFile(pictureUrisList.get((i)))
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -392,7 +445,7 @@ public class ActivityReportCase extends AppCompatActivity {
     }
 
     public void updateImageViews() {
-        viewPager.getAdapter().notifyDataSetChanged();
+        viewPagerTaskPics.getAdapter().notifyDataSetChanged();
     }
 
     /*
