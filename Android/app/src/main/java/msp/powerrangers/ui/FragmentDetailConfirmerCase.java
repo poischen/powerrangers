@@ -1,12 +1,15 @@
 package msp.powerrangers.ui;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -20,10 +23,12 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -212,7 +217,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
 
                             try {
                                 final File localFile = File.createTempFile("images", "jpg");
-                                StorageReference riversRef = storageRef.child(Global.getThumbUrl(url));
+                                StorageReference riversRef = storageRef.child(Global.getDisplayUrl(url));
                                 riversRef.getFile(localFile)
                                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                             @Override
@@ -505,10 +510,35 @@ public class FragmentDetailConfirmerCase extends Fragment {
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             ImageView imageView = new ImageView(context);
-            //int padding = 10;
-            //imageView.setPadding(padding, padding, padding, padding);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-            imageView.setImageBitmap(pictureBitmapList.get(position));
+            final Bitmap bmp = pictureBitmapList.get(position);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setImageBitmap(bmp);
+
+            imageView.setOnClickListener(new View.OnClickListener()
+
+            {
+                @Override
+                public void onClick(View v) {
+                    Dialog builder = new Dialog(getContext());
+                    builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    builder.getWindow().setBackgroundDrawable(
+                            new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                    builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialogInterface) {
+                            //nothing;
+                        }
+                    });
+
+                    ImageView imageView = new ImageView(getContext());
+                    imageView.setImageBitmap(bmp);
+                    builder.addContentView(imageView, new RelativeLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT));
+                    builder.show();
+                }
+            });
+
             ((ViewPager) container).addView(imageView, 0);
             return imageView;
         }

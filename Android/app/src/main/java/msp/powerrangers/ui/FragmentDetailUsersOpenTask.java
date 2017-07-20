@@ -1,19 +1,30 @@
 package msp.powerrangers.ui;
+
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,7 +54,7 @@ import static android.app.Activity.RESULT_OK;
 public class FragmentDetailUsersOpenTask extends Fragment {
 
     private TextView tvTaskName;
-    private ImageView ivTaskImage;
+    //private ImageView ivTaskImage;
     private TextView tvTaskDesc;
     private TextView tvActionToUpload;
     private Button buttonUploadImages;
@@ -54,8 +65,11 @@ public class FragmentDetailUsersOpenTask extends Fragment {
     private String taskTitle;
     private String taskDescription;
     private Bitmap taskImageBefore;
-    private String taskImageUrl;
     private boolean isTaskAlreadyCompleted;
+    List<Bitmap> pictureBitmapList;
+    String caseImageUrl;
+    String taskImageUrl;
+    ViewPager viewPager;
 
     private String taskID;
     private String caseID;
@@ -81,14 +95,11 @@ public class FragmentDetailUsersOpenTask extends Fragment {
         taskDescription = bundle.getString("DescriptionUsersOpenTask");
 
         taskImageUrl = bundle.getString("taskImageUrl");
+        caseImageUrl = bundle.getString("caseImageUrl");
 
- /*       try {
-            taskImageBefore = BitmapFactory.decodeByteArray(
-                    bundle.getByteArray("ImageUsersOpenTask"),0,bundle.getByteArray("ImageUsersOpenTask").length);
-        } catch(Exception e){
-            taskImageUrl = bundle.getString("taskImageUrl");
-        }*/
-     //   isTaskAlreadyCompleted = bundle.getBoolean("StatusUsersOpenTask");
+        isTaskAlreadyCompleted = bundle.getBoolean("StatusUsersOpenTask");
+
+        pictureBitmapList = new ArrayList<>();
     }
 
     @Override
@@ -101,36 +112,59 @@ public class FragmentDetailUsersOpenTask extends Fragment {
         tvTaskName = (TextView) view.findViewById(R.id.taskNameUOT);
         tvTaskName.setText(taskTitle);
 
-        ivTaskImage = (ImageView) view.findViewById(R.id.taskImageUOT);
-        if (taskImageBefore !=null){
-            ivTaskImage.setImageBitmap(taskImageBefore);
-        } else {
+        //ivTaskImage = (ImageView) view.findViewById(R.id.taskImageUOT);
+        viewPager = (ViewPager) view.findViewById(R.id.taskImagesUOT);
+        FragmentDetailUsersOpenTask.ImageAdapter adapter = new FragmentDetailUsersOpenTask.ImageAdapter(this.getContext());
+        viewPager.setAdapter(adapter);
+
+        if (taskImageUrl != null) {
             try {
-                final File localFile = File.createTempFile("images", "jpg");
+                final File localFileTask = File.createTempFile("images", "jpg");
                 StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                StorageReference riversRef = storageRef.child(Global.getThumbUrl(taskImageUrl));
-                riversRef.getFile(localFile)
+                StorageReference riversRefTask = storageRef.child(Global.getDisplayUrl(taskImageUrl));
+                riversRefTask.getFile(localFileTask)
                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                                 Log.v("FragmentStart", "download erfolgreich");
-                                Bitmap bmp = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                ivTaskImage.setImageBitmap(bmp);
+                                Bitmap bmp = BitmapFactory.decodeFile(localFileTask.getAbsolutePath());
+                                pictureBitmapList.add(bmp);
+                                updateImageViews();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         Log.d("FragmentStart", exception.getMessage());
-                        ivTaskImage.setImageResource(R.drawable.placeholder_task);
-
                     }
                 });
             } catch (Exception e) {
                 Log.d("FragmentStart", "no image available or some other error occured");
-                ivTaskImage.setImageResource(R.drawable.placeholder_task);
+            }
+            if (caseImageUrl != null) {
+                try {
+                    final File localFileCase = File.createTempFile("images", "jpg");
+                    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                    StorageReference riversRefCase = storageRef.child(Global.getDisplayUrl(caseImageUrl));
+                    riversRefCase.getFile(localFileCase)
+                            .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                    Log.v("FragmentStart", "download erfolgreich");
+                                    Bitmap bmp = BitmapFactory.decodeFile(localFileCase.getAbsolutePath());
+                                    pictureBitmapList.add(bmp);
+                                    updateImageViews();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Log.d("FragmentStart", exception.getMessage());
+                        }
+                    });
+                } catch (Exception e) {
+                    Log.d("FragmentStart", "no image available or some other error occured");
+                }
             }
         }
-
         tvTaskDesc = (TextView) view.findViewById(R.id.taskDescUOT);
         tvTaskDesc.setText(taskDescription);
 
@@ -155,15 +189,21 @@ public class FragmentDetailUsersOpenTask extends Fragment {
         });
 
         //give feedback, when task is already completed
-        if (isTaskAlreadyCompleted){
+        if (isTaskAlreadyCompleted) {
             buttonUploadImages.setEnabled(false);
             buttonCompleteTask.setEnabled(false);
             tvActionToUpload.setText(getString(R.string.textNoNeedToUpload));
+            //TODO: show uploaded picture, if task was already completed
+            ivUploadedImage.setVisibility(View.GONE);
         }
 
         return view;
     }
 
+
+    public void updateImageViews() {
+        viewPager.getAdapter().notifyDataSetChanged();
+    }
 
     /**
      * method to show file chooser for images
@@ -188,8 +228,7 @@ public class FragmentDetailUsersOpenTask extends Fragment {
             try {
                 uriAfterImage = data.getData();
                 taskImageAfter = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uriAfterImage);
-                ivUploadedImage.setVisibility(View.VISIBLE);
-                ivTaskImage.setImageBitmap(taskImageAfter);
+                ivUploadedImage.setImageBitmap(taskImageAfter);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -240,8 +279,87 @@ public class FragmentDetailUsersOpenTask extends Fragment {
         // move to Main Activity (FragmentStart)
         Intent i = new Intent(getActivity(), MainActivity.class);
         startActivity(i);
-        ((Activity) getActivity()).overridePendingTransition(0,0);
+        ((Activity) getActivity()).overridePendingTransition(0, 0);
     }
 
+
+    public class ImageAdapter extends PagerAdapter {
+        Context context;
+
+        ImageAdapter(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            if (pictureBitmapList.contains((View) object)) {
+                return pictureBitmapList.indexOf((View) object);
+            } else {
+                return POSITION_NONE;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return pictureBitmapList.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == ((ImageView) object);
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            ImageView imageView = new ImageView(context);
+            final Bitmap bmp = pictureBitmapList.get(position);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setImageBitmap(bmp);
+
+            imageView.setOnClickListener(new View.OnClickListener()
+
+            {
+                @Override
+                public void onClick(View v) {
+                    Dialog builder = new Dialog(getContext());
+                    builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    builder.getWindow().setBackgroundDrawable(
+                            new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                    builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialogInterface) {
+                        }
+                    });
+
+                    ImageView imageView = new ImageView(getContext());
+                    imageView.setImageBitmap(bmp);
+                    builder.addContentView(imageView, new RelativeLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT));
+                    builder.show();
+                }
+            });
+
+            ((ViewPager) container).addView(imageView, 0);
+            return imageView;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            ((ViewPager) container).removeView((ImageView) object);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                return true;
+            default:
+                return false;
+        }
+    }
 
 }

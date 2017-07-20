@@ -410,8 +410,9 @@ public class ActivityReportCase extends AppCompatActivity {
         //upload task pics
         for (int i = 0; i < pictureUrisList.size(); i++) {
 
+            int j = i+1;
             final String storageAndDBPath;
-            storageAndDBPath = "images/cases/" + caseID + "/" + i+1 + ".jpg";
+            storageAndDBPath = "images/cases/" + caseID + "/" + j + ".jpg";
 
             //write path from storage into list for case-db
             storageUrls.add(storageAndDBPath);

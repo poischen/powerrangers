@@ -21,25 +21,13 @@
                 android:gravity="center"
                 />
 
-            <!--<ImageView
-                android:id="@+id/rangerTaskDetailImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/taskDetailName"
-                android:layout_marginTop="16dp"
-                android:adjustViewBounds="true"
-                android:scaleType="centerInside"
-                app:srcCompat="@drawable/polluted_beach1"
-                />-->
-
             <android.support.v4.view.ViewPager
                 android:id="@+id/fRangerTaskDetailViewPager"
                 android:layout_width="match_parent"
-                android:layout_height="160dp"
+                android:layout_height="210dp"
                 android:layout_below="@+id/taskDetailName"
                 android:layout_marginTop="16dp"
                 android:adjustViewBounds="true"
-                android:scaleType="centerInside"
                 />
 
             <!-- Row 1 -->

@@ -54,16 +54,17 @@ const THUMB_PREFIX = 'thumb_';
 exports.generateThumbnail = functions.storage.object().onChange(event => {
   // File and directory paths.
   const filePath = event.data.name;
-
-  if (fileName.startsWith(DISPLAY_PREFIX)){
-
-  } else {
   const fileDir = path.dirname(filePath);
   const fileName = path.basename(filePath);
   const thumbFilePath = path.normalize(path.join(fileDir, `${THUMB_PREFIX}${fileName}`));
   const tempLocalFile = path.join(os.tmpdir(), filePath);
   const tempLocalDir = path.dirname(tempLocalFile);
   const tempLocalThumbFile = path.join(os.tmpdir(), thumbFilePath);
+
+  //Exit if this is a auto generated display image
+  if (fileName.startsWith(DISPLAY_PREFIX)){
+    return;
+  }
 
   // Exit if this is triggered on a file that is not an image.
   if (!event.data.contentType.startsWith('image/')) {
@@ -124,7 +125,7 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
     // Add the URLs to the Database
     return admin.database().ref('images').push({path: fileUrl, thumbnail: thumbFileUrl});
   });
-  }
+
 });
 
 /**
@@ -145,9 +146,6 @@ exports.generateDisplaySize = functions.storage.object().onChange(event => {
   // File and directory paths.
   const filePath = event.data.name;
 
-if (fileName.startsWith(THUMB_PREFIX)){
-
-} else {
   //if witdh > height image is landscape
   if (event.data.width > event.data.height) {
   height = 720;
@@ -163,6 +161,11 @@ if (fileName.startsWith(THUMB_PREFIX)){
   const tempLocalFile = path.join(os.tmpdir(), filePath);
   const tempLocalDir = path.dirname(tempLocalFile);
   const tempLocalDisplayFile = path.join(os.tmpdir(), displayFilePath);
+
+//Exit if this is a generated thumbnail
+if (fileName.startsWith(THUMB_PREFIX)){
+    return;
+}
 
   // Exit if this is triggered on a file that is not an image.
   if (!event.data.contentType.startsWith('image/')) {
@@ -223,10 +226,7 @@ if (fileName.startsWith(THUMB_PREFIX)){
     // Add the URLs to the Database
     return admin.database().ref('images').push({path: fileUrl, display: displayFileUrl});
   });
-  }
 });
-
-
 
 /*
 * Listens for cases being confirmed,

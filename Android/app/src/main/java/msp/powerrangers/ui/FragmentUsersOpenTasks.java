@@ -157,9 +157,9 @@ public class FragmentUsersOpenTasks extends Fragment {
                             bundle.putString("taskImageUrl", mAdapter.getItem(position).taskImageUrlDB);
                         }
 */
-
-                        Log.i("BUNDLE IN UOT", bundle.toString());
                         bundle.putString("taskImageUrl", mAdapter.getItem(position).taskImageUrlDB);
+                        bundle.putString("caseImageUrl", mAdapter.getItem(position).caseImageUrlDB);
+                        Log.i("BUNDLE IN UOT", bundle.toString());
                         fragmentDetailUsersOpenTask.setArguments(bundle);
                         ((BaseContainerFragment)getParentFragment()).replaceFragmentDetailOpenTask(fragmentDetailUsersOpenTask);
 
@@ -228,6 +228,7 @@ public class FragmentUsersOpenTasks extends Fragment {
            // holder.imageView.setImageResource(listItem.get(position).imageID);
 
             String taskImageUrlDB = listItem.get(position).taskImageUrlDB;
+            String cas = listItem.get(position).taskImageUrlDB;
             Log.i("Viki: TaskImageURLDB", taskImageUrlDB);
 
 

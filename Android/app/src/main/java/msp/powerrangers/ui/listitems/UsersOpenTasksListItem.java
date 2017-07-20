@@ -105,7 +105,7 @@ public class UsersOpenTasksListItem implements Serializable {
                                     }
 
                                     Log.v("UOTListItem", "call fragmentWait.changeToContentView()");
-                                    fragmentWait.changeToContentUOT(fragmentWait.getUsersOpenTasksListItem());
+                                    fragmentWait.changeToContentUOT();
                                 }
                             }
 

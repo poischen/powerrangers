@@ -101,8 +101,8 @@ public class FragmentWait extends BaseContainerFragment {
 
 
 
-    public void changeToContentUOT(UsersOpenTasksListItem usersOpenTasksListItem){
-        replaceFragmentUOT(this, usersOpenTasksListItem);
+    public void changeToContentUOT(){
+        replaceFragmentUOT(this);
     }
 
     public void changeToContentView(boolean isaboutVoting) {

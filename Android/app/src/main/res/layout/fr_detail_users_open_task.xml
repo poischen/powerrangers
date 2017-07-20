@@ -22,7 +22,7 @@
             android:gravity="center" />
 
         <!-- Task image (before) -->
-        <ImageView
+        <!--<ImageView
             android:id="@+id/taskImageUOT"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,7 +30,16 @@
             android:layout_marginTop="20dp"
             android:adjustViewBounds="true"
             android:scaleType="centerInside"
-            app:srcCompat="@drawable/polluted_beach1"/>
+            app:srcCompat="@drawable/polluted_beach1"/>-->
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/taskImagesUOT"
+            android:layout_width="match_parent"
+            android:layout_height="210dp"
+            android:layout_below="@+id/taskNameUOT"
+            android:layout_marginTop="20dp"
+            android:adjustViewBounds="true"
+            />
 
 
         <!--Task description -->
@@ -39,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_below="@+id/taskImageUOT"
+            android:layout_below="@+id/taskImagesUOT"
             android:layout_marginTop="20dp"
             />
 
@@ -53,24 +62,14 @@
             <!-- text hint -->
             <TextView
                 android:id="@+id/textImagesToUpload"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".60"
+                android:layout_width="191dp"
+                android:layout_height="69dp"
                 android:text="@string/textToUpload"
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="20dp"
                 android:visibility="visible"/>
 
-            <!-- thumbnail of the task image-->
-            <ImageView
-                android:id="@+id/taskUploadedImageRanger"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".60"
-                android:layout_marginTop="20dp"
-                android:visibility="gone"
-                />
             <!-- button upload image -->
             <Button
                 android:id="@+id/buttonUploadImageUOT"
@@ -86,17 +85,34 @@
 
         </LinearLayout>
 
-
-        <!-- Button Complete Task -->
-        <Button
-            android:id="@+id/buttonCompleteTask"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/linLayoutOUT"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:text="@string/completeTask"
-            android:layout_marginTop="20dp"/>
+            android:orientation="vertical"
+            android:layout_below="@+id/linLayoutOUT">
+
+            <!-- thumbnail of the task image-->
+            <ImageView
+                android:id="@+id/taskUploadedImageRanger"
+                android:layout_width="match_parent"
+                android:layout_height="210dp"
+                android:src="@drawable/nopicyet"
+                android:layout_marginTop="20dp"
+                android:scaleType="centerInside"/>
+
+            <!-- Button Complete Task -->
+            <Button
+                android:id="@+id/buttonCompleteTask"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:text="@string/completeTask"
+                android:layout_marginTop="20dp"/>
+
+        </LinearLayout>
+
+
     </RelativeLayout>
 
 </ScrollView>

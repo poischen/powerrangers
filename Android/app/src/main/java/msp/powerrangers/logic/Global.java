@@ -43,4 +43,21 @@ public final class Global {
         }
     }
 
+
+    public static String getDisplayUrl (String stringUrl) {
+        try {
+
+            String file = stringUrl.substring(stringUrl.lastIndexOf('/')+1, stringUrl.length());
+            String path = stringUrl.substring(0, stringUrl.lastIndexOf('/')+1);
+
+            String StringDisplayUrl = path + "prev_" + file;
+            Log.v("Global", "string Url: " + StringDisplayUrl);
+            return StringDisplayUrl;
+        } catch (Exception e){
+            Log.v("Global", "string Url: " + stringUrl);
+            return stringUrl;
+        }
+    }
+
+
 }

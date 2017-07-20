@@ -120,13 +120,14 @@ public class BaseContainerFragment extends Fragment {
     }
 
 
-    public void replaceFragmentUOT(FragmentWait fw, UsersOpenTasksListItem usersOpenTasksListItem){
+    public void replaceFragmentUOT(FragmentWait fw){
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         Log.v("BaseContainer", "replace Fragment, UsersOpenTasks");
         FragmentUsersOpenTasks fragmentUsersOpenTasks = new FragmentUsersOpenTasks();
+        transaction.addToBackStack(null);
         transaction.replace(R.id.container_framelayout, fragmentUsersOpenTasks);
         Bundle bundles = new Bundle();
-        bundles.putSerializable(getString(R.string.openTasksSerializable), usersOpenTasksListItem);
+        bundles.putSerializable(getString(R.string.openTasksSerializable), fw.getUsersOpenTasksListItem());
         Log.v("BaseContainer", "data: " + fw.getUsersOpenTasksListItem());
         fragmentUsersOpenTasks.setArguments(bundles);
         transaction.commit();
