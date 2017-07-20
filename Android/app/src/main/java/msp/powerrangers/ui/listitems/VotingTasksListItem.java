@@ -1,5 +1,6 @@
 package msp.powerrangers.ui.listitems;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
@@ -30,9 +31,13 @@ public class VotingTasksListItem implements Serializable {
     public int imageID2;
     public String imageBeforeURL;
     public String imageAfterURL;
-    public String nLikes;
-    public String nDislikes;
     public String taskId;
+
+    public Bitmap imageBefore;
+    public Bitmap imageAfter;
+
+    List<VotingTasksListItem> data = new ArrayList<>();
+    private DatabaseReference dbRefTasks;
 
     String titleDB;
     String cityDB;
@@ -46,17 +51,13 @@ public class VotingTasksListItem implements Serializable {
 
     Boolean taskVoted;
 
-    List<VotingTasksListItem> data = new ArrayList<>();
-    private DatabaseReference dbRefTasks;
 
-    public VotingTasksListItem(String taskId, String title, String location, String imageBeforeURL, String imageAfterURL, String nLikes, String nDislikes) {
+    public VotingTasksListItem(String taskId, String title, String location, String imageBeforeURL, String imageAfterURL) {
         this.taskId = taskId;
         this.title = title;
         this.location = location;
         this.imageBeforeURL = imageBeforeURL;
         this.imageAfterURL = imageAfterURL;
-        this.nLikes = nLikes;
-        this.nDislikes = nDislikes;
     }
 
     public VotingTasksListItem() {
@@ -70,55 +71,36 @@ public class VotingTasksListItem implements Serializable {
 
         // get the reference to the db tasks
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
-        Log.i("KATJA", "VotingTasksListItem before OnDataChange");
-
         dbRefTasks.orderByChild("taskCompleted").equalTo(true)
                 .addValueEventListener(
                         new ValueEventListener() {
 
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
+
                                 // get data for each case from the db
-
-                                Log.i("KATJA", "onDataChange drin");
-                                Log.i("KATJA", "onDataChange dataSnapshot" + dataSnapshot);
-
-                               // data = new ArrayList<>();
                                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                                    // Get the task data from snapshot
-                                    Log.i("KATJA", "onDataChange for loop");
 
-                                    taskVoted = (Boolean) singleSnapshot.child("taskVoted").getValue();
-
-                                    if (!taskVoted) {
+                                    //taskVoted = (Boolean) singleSnapshot.child("taskVoted").getValue();
+                                    // TODO : check if userDbiD equals rangerID
+                                    //if (!taskVoted) {
 
                                         taskIdDB = (String) singleSnapshot.child("taskDbId").getValue();
-
-                                        titleDB = (String) singleSnapshot.child("city").getValue();
-                                        Log.i("KATJA", "title: " + titleDB);
+                                        titleDB = (String) singleSnapshot.child("name").getValue();
                                         cityDB = (String) singleSnapshot.child("city").getValue();
-                                        Log.i("KATJA", "city: " + cityDB);
                                         countryDB = (String) singleSnapshot.child("country").getValue();
-                                        Log.i("KATJA", "country: " + countryDB);
 
                                         imageBeforeDB = (String) singleSnapshot.child("taskPicture").getValue();
-                                        Log.i("KATJA", "before: " + imageBeforeDB);
                                         imageAfterDB = (String) singleSnapshot.child("taskPictureAfter").getValue();
-                                        Log.i("KATJA", "after: " + imageAfterDB);
 
-                                        nLikesDB = String.valueOf(singleSnapshot.child("numberUpvotes").getValue());
-                                        Log.i("KATJA", "up: " + nLikesDB);
-                                        nDislikesDB = String.valueOf(singleSnapshot.child("numberDownvotes").getValue());
-                                        Log.i("KATJA", "down: " + nDislikesDB);
-
-                                        //TODO: add after image as ranger and get here
                                         locationDB = cityDB + ", " + countryDB;
 
-                                        data.add(new VotingTasksListItem(taskIdDB, titleDB, locationDB, imageBeforeDB, imageAfterDB, nLikesDB, nDislikesDB));
+                                        data.add(new VotingTasksListItem(taskIdDB, titleDB, locationDB, imageBeforeDB, imageAfterDB));
                                         Log.i("KATJA", "This is the data for voting: " + data);
-                                    }
+                                   // }
                                 }
 
+                                // TODO: checken, ob wirklich true sein soll (es gibt einen besonderen tag bei voting... kP)
                                 fragmentWait.changeToContentView(true);
                             }
 
@@ -126,16 +108,33 @@ public class VotingTasksListItem implements Serializable {
                             public void onCancelled(DatabaseError databaseError) {
 
                             }
-
                         });
-
-        /*
-        data.add(new VotingTasksListItem("Waste on the beach", "Spain, Palma de Mallorca",  R.drawable.polluted_beach2, R.drawable.clean_beach2));
-        */
-        //Log.i("Data", "This is the data: " + data);
 
     }
 
+    public void setBitmapBefore(Bitmap img) {
+        this.imageBefore = img;
+    }
+
+    public void setBitmapAfter(Bitmap img) {
+        this.imageAfter = img;
+    }
+
+    public Bitmap getBitmapBefore() {
+        return imageBefore;
+    }
+
+    public Bitmap getBitmapAfter() {
+        return imageAfter;
+    }
+
+    public String getImageBeforeURL() {
+        return imageBeforeURL;
+    }
+
+    public String getImageAfterURL() {
+        return imageAfterURL;
+    }
 
     public List<VotingTasksListItem> getData() {
         return data;

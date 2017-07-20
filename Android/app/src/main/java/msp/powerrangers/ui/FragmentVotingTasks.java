@@ -25,12 +25,14 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
 import msp.powerrangers.R;
 import msp.powerrangers.logic.Global;
+import msp.powerrangers.ui.listitems.RangerTasksListItem;
 import msp.powerrangers.ui.listitems.VotingTasksListItem;
 
 
@@ -49,10 +51,6 @@ public class FragmentVotingTasks extends Fragment {
     // Firebase db instance
     private DatabaseReference dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public FragmentVotingTasks() {
     }
 
@@ -73,10 +71,51 @@ public class FragmentVotingTasks extends Fragment {
         View rootView = inflater.inflate(R.layout.fr_votingtasks, container, false);
         rootView.setTag(TAG);
         Log.i("KATJA", "*****************  new voting  **********************");
-        Log.i("KATJA", "VotingTasks onCreateView");
 
         // 1. Get a reference to recyclerView & set the onClickListener
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewVT);
+
+        mRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+
+                        //show FragmentDetailVotingTask
+                        FragmentDetailVotingTask fragmentDetailVotingTask = new FragmentDetailVotingTask();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("PositionVotingTask", position);
+
+                        // img before
+                        try{
+                            Bitmap imgBefore = mAdapter.getItem(position).getBitmapBefore();
+                            ByteArrayOutputStream bs = new ByteArrayOutputStream();
+                            imgBefore.compress(Bitmap.CompressFormat.JPEG, 50, bs);
+                            bundle.putByteArray("imageBeforeByteArray", bs.toByteArray());
+                        } catch (Exception e){
+                            bundle.putString("imageBeforeUrl", mAdapter.getItem(position).getImageBeforeURL());
+                        }
+
+                        // img after
+                        try{
+                            Bitmap imgAfter = mAdapter.getItem(position).getBitmapAfter();
+                            ByteArrayOutputStream bs = new ByteArrayOutputStream();
+                            imgAfter.compress(Bitmap.CompressFormat.JPEG, 50, bs);
+                            bundle.putByteArray("imageAfterByteArray", bs.toByteArray());
+                        } catch (Exception e){
+                            bundle.putString("imageAfterUrl", mAdapter.getItem(position).getImageAfterURL());
+                        }
+
+                        fragmentDetailVotingTask.setArguments(bundle);
+                        ((BaseContainerFragment)getParentFragment()).replaceFragmentDetailVoting(fragmentDetailVotingTask);
+
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+                        // TODO: do whatever
+                    }
+                })
+        );
 
         // 2. Set layoutManager (defines how the elements are laid out)
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -85,13 +124,9 @@ public class FragmentVotingTasks extends Fragment {
         // 3. Create an adapter and fill
         mAdapter = new FragmentVotingTasks.Recycler_View_Adapter(votingTasksListItem.getData(), getContext());
 
-        // 3. Create an adapter
-       // mAdapter = new Recycler_View_Adapter(data, getContext());
-
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);
 
-        Log.i("KATJA", "VotingTasks adapter set");
         return rootView;
     }
 
@@ -108,12 +143,12 @@ public class FragmentVotingTasks extends Fragment {
         List<VotingTasksListItem> voting = Collections.emptyList();
         Context context;
 
-        private DatabaseReference pathCurrentTask;
+       /* private DatabaseReference pathCurrentTask;
         String votingTitle;
         String votingLocation;
         String votingLikes;
         String votingDislikes;
-        int votingThreshold = 5;
+        int votingThreshold = 5; */
 
 
         Recycler_View_Adapter(List<VotingTasksListItem> voting, Context context) {
@@ -128,33 +163,55 @@ public class FragmentVotingTasks extends Fragment {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.fr_votingtasks_li, parent, false);
 
-
             return new View_Holder(view);
         }
 
         @Override
         public void onBindViewHolder(final View_Holder holder, final int position) {
 
+            // populate the current row on the RecyclerView
+            holder.title.setText(voting.get(position).title);
+            holder.location.setText(voting.get(position).location);
+
+
+            String imageBeforeURL = voting.get(position).imageBeforeURL;
+            Log.i("KATJA", "imageBeforeURL: " + imageBeforeURL);
+
+            try {
+                final File localFile = File.createTempFile("images", "jpg");
+                StorageReference riversRef = storageRef.child(Global.getThumbUrl(imageBeforeURL));
+                riversRef.getFile(localFile)
+                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                Log.v("FragmentRangerTasks", "download erfolgreich");
+                                Bitmap taskImage = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                voting.get(position).setBitmapBefore(taskImage);
+                                holder.imageView1.setImageBitmap(voting.get(position).getBitmapBefore());
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Log.d("FragmentRangerTasks", "download nicht erfolgreich (1)");
+                        holder.imageView1.setImageResource(R.drawable.placeholder_task);
+                    }
+                });
+            } catch (Exception e) {
+                Log.d("FragmentRangerTasks", "download nicht erfolgreich (2)");
+                holder.imageView1.setImageResource(R.drawable.placeholder_task);
+            }
+
+
+            /*
+                ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+             */
 
             // current task
             pathCurrentTask = dbRefTasks.child(voting.get(position).taskId);
             Log.i("Viki", "Voting get position taskid" + voting.get(position).taskId);
 
             Log.i("Viki", "Path to current Task " + pathCurrentTask.toString());
-
-            Log.i("KATJA", "onBindViewHolder");
-            Log.i("KATJA", "position: "+position);
-
-            // title and location
-            votingTitle = voting.get(position).title;
-            holder.title.setText(votingTitle);
-            Log.i("KATJA", "onBindViewHolder title "+ votingTitle);
-
-            votingLocation = voting.get(position).location;
-            holder.location.setText(votingLocation);
-            Log.i("KATJA", "onBindViewHolder location "+ votingLocation);
-
-            holder.locationIcon.setImageResource(R.drawable.location);
 
             // before image
             String imageBeforeUrl = voting.get(position).imageBeforeURL;
@@ -329,6 +386,10 @@ public class FragmentVotingTasks extends Fragment {
             voting.remove(position);
             notifyItemRemoved(position);
         }
+
+        public VotingTasksListItem getItem(int position) {
+            return voting.get(position);
+        }
     }
 
     /**
@@ -345,16 +406,15 @@ public class FragmentVotingTasks extends Fragment {
      */
     private class View_Holder extends RecyclerView.ViewHolder {
 
+        // from layout
         CardView cv;
         TextView title;
         TextView location;
-        ImageView locationIcon;
         ImageView imageView1;
         ImageView imageView2;
-        ImageView up;
-        ImageView down;
-        TextView nLikes;
-        TextView nDislikes;
+        //Button buttonOk;
+        //Button buttonNotOk;
+
 
         View_Holder(View itemView) {
             super(itemView);
@@ -362,21 +422,11 @@ public class FragmentVotingTasks extends Fragment {
             cv = (CardView) itemView.findViewById(R.id.cvVT);
             title = (TextView) itemView.findViewById(R.id.titleVT);
             location = (TextView) itemView.findViewById(R.id.locationVT);
-            locationIcon = (ImageView) itemView.findViewById(R.id.ivLocationIcon);
-
             // before/after images
             imageView1 = (ImageView) itemView.findViewById(R.id.ivVotingPic1);
             imageView2 = (ImageView) itemView.findViewById(R.id.ivVotingPic2);
-
-            // vote thumbs up/down
-            up = (ImageView) itemView.findViewById(R.id.ivVotingUp);
-            down = (ImageView) itemView.findViewById(R.id.ivVotingDown);
-            nLikes = (TextView) itemView.findViewById(R.id.tvVotingUp);
-            nDislikes = (TextView) itemView.findViewById(R.id.tvVotingDown);
         }
     }
-
-
 
 }
 

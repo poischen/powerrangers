@@ -47,9 +47,6 @@ import java.util.List;
 import msp.powerrangers.R;
 import msp.powerrangers.logic.Global;
 
-/**
- * Created by T410 on 19.07.2017.
- */
 
 public class FragmentDetailVotingTask extends Fragment {
 
@@ -109,8 +106,6 @@ public class FragmentDetailVotingTask extends Fragment {
         // Set action bar menu
         setHasOptionsMenu(true);
 
-
-
     }
 
     @Override
@@ -134,10 +129,10 @@ public class FragmentDetailVotingTask extends Fragment {
          Button buttonOk = (Button) view.findViewById(R.id.buttonOk);
          Button buttonNotOk = (Button) view.findViewById(R.id.buttonNotOk);
 
-        ImageView imageBefore;
-        ImageView imageAfter;
+        ImageView imageBefore = (ImageView) view.findViewById(R.id.ivVotingPic1);
+        ImageView imageAfter = (ImageView) view.findViewById(R.id.ivVotingPic2);
 
-        // fill in information from detective case in EditTexts
+        // refernece to db tasks
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
 
         dbRefTasks.addListenerForSingleValueEvent(
@@ -152,10 +147,32 @@ public class FragmentDetailVotingTask extends Fragment {
                         DataSnapshot singleSnapshot = (DataSnapshot) iter.next();
 
                         //get cases picture urls from db, download pictures from storage and show them
-                        String urlBefore = singleSnapshot.child("")
+                        String beforePicURL = (String) singleSnapshot.child("taskPicture").getValue();
+                        String afterPicURL = (String) singleSnapshot.child("taskPictureAfter").getValue();
 
-                        pictureBitmapList.clear();
 
+                        // download pic before
+                        try {
+                            final File localFile = File.createTempFile("images", "jpg");
+                            StorageReference riversRef = storageRef.child(Global.getThumbUrl(beforePicURL));
+                            riversRef.getFile(localFile)
+                                    .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                            Log.v("Download", "download erfolgreich");
+                                            Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                            imageAfter.setImageBitmap(bitmap);
+                                            Log.v("DetailConfirmerCase", "picture Bitmap List new entry: " + bitmap);
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    Log.d("DetailConfirmerCase", exception.getMessage());
+                                }
+                            });
+                        } catch (Exception e) {
+                            Log.d("DetailConfirmerCase", e.getMessage());
+                        }
 
 
                         while (dsPictureURLs.hasNext()) {
@@ -163,37 +180,13 @@ public class FragmentDetailVotingTask extends Fragment {
                             String url = dataSnapshotChild.getValue(String.class);
                             pictureURLs.add(url);
 
-                            try {
-                                final File localFile = File.createTempFile("images", "jpg");
-                                StorageReference riversRef = storageRef.child(Global.getThumbUrl(url));
-                                riversRef.getFile(localFile)
-                                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                            @Override
-                                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                                Log.v("Download", "download erfolgreich");
-                                                Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                                pictureBitmapList.add(bitmap);
-                                                Log.v("DetailConfirmerCase", "picture Bitmap List new entry: " + bitmap);
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception exception) {
-                                        Log.d("DetailConfirmerCase", exception.getMessage());
-                                    }
-                                });
-                            } catch (Exception e) {
-                                Log.d("DetailConfirmerCase", e.getMessage());
-                            }
+
 
                         }
 
                         // set all data in the Detail View except of pictures
                         editTextConfirmCaseTitle.setText(caseTitle);
                         editTextConfirmCaseCity.setText(caseCity);
-                        editTextConfirmCaseCountry.setText(caseCountry);
-                        editTextConfirmCaseInformation.setText(caseComment);
-                        editTextConfirmCaseXCoordinate.setText(caseXCoord);
-                        editTextConfirmCaseYCoordinate.setText(caseYCoord);
 
                     }
 

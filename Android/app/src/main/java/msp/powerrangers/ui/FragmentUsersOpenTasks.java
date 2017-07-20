@@ -57,8 +57,6 @@ public class FragmentUsersOpenTasks extends Fragment {
     String taskId;
     String caseId;
 
-
-
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -133,42 +131,11 @@ public class FragmentUsersOpenTasks extends Fragment {
                         bundle.putString("OpenTaskID", taskId);
                         bundle.putString("OpenTaskCaseID", caseId);
 
-/*
-                        try{
-                            Bitmap taskImage = mAdapter.getItem(position).getTaskBitmap();
-                            ByteArrayOutputStream bs = new ByteArrayOutputStream();
-                            taskImage.compress(Bitmap.CompressFormat.JPEG, 50, bs);
-                            bundle.putByteArray("taskImageByteArray", bs.toByteArray());
-                        } catch (Exception e){
-                            bundle.putString("taskImageUrl", mAdapter.getItem(position).getTaskUrl());
-                        }
-*/
-
-
-
-/*
-                        try{
-                            Bitmap taskImage = mAdapter.getItem(position).getTaskBitmap();
-                            ByteArrayOutputStream bs = new ByteArrayOutputStream();
-                            taskImage.compress(Bitmap.CompressFormat.JPEG, 50, bs);
-                            bundle.putByteArray("ImageUsersOpenTask",bs.toByteArray());
-
-                        } catch (Exception e){
-                            bundle.putString("taskImageUrl", mAdapter.getItem(position).taskImageUrlDB);
-                        }
-*/
 
                         Log.i("BUNDLE IN UOT", bundle.toString());
                         bundle.putString("taskImageUrl", mAdapter.getItem(position).taskImageUrlDB);
                         fragmentDetailUsersOpenTask.setArguments(bundle);
                         ((BaseContainerFragment)getParentFragment()).replaceFragmentDetailOpenTask(fragmentDetailUsersOpenTask);
-
-                        /*
-                         Intent intent = new Intent(getActivity(), ActivityDetailContainer.class);
-                        intent.putExtra(String.valueOf(R.string.activityDetailContainer_targetFr), "FragmentDetailUsersOpenTask");
-                        startActivity(intent);
-                         */
-
 
                     }
 
