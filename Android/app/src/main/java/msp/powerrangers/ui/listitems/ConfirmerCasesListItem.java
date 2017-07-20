@@ -31,7 +31,6 @@ public class ConfirmerCasesListItem implements Serializable {
     String countryDB;
     String commentDB;
 
-
     List<ConfirmerCasesListItem> data = new ArrayList<>();
 
     public ConfirmerCasesListItem(String title, String city, String country, String comment, String imageURL) {

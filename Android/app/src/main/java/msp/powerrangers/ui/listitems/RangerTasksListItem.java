@@ -32,7 +32,6 @@ public class RangerTasksListItem implements Serializable {
     public Bitmap taskImage;
 
     List<RangerTasksListItem> data = new ArrayList<>();
-    private DatabaseReference dbRefTasks;
 
     String titleDB;
     String cityDB;
@@ -73,7 +72,7 @@ public class RangerTasksListItem implements Serializable {
      * Generates RT-Objects for RecyclerView's adapter.
      */
     public void fill_with_data(final FragmentWait fragmentWait) {
-
+        DatabaseReference dbRefTasks;
         // get the reference to the db cases
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
         dbRefTasks.orderByChild("assigned").equalTo(false).addListenerForSingleValueEvent(new ValueEventListener() {

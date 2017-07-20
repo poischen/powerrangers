@@ -47,7 +47,7 @@ public class VotingTasksListItem implements Serializable {
     Boolean taskVoted;
 
     List<VotingTasksListItem> data = new ArrayList<>();
-    private DatabaseReference dbRefTasks;
+
 
     public VotingTasksListItem(String taskId, String title, String location, String imageBeforeURL, String imageAfterURL, String nLikes, String nDislikes) {
         this.taskId = taskId;
@@ -67,7 +67,7 @@ public class VotingTasksListItem implements Serializable {
      * Generates Voting Task Objects for RecyclerView's adapter.
      */
     public void fill_with_data(final FragmentWait fragmentWait) {
-
+        DatabaseReference dbRefTasks;
         // get the reference to the db tasks
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
         Log.i("KATJA", "VotingTasksListItem before OnDataChange");
