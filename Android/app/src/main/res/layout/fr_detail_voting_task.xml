@@ -1,0 +1,120 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_detail_voting_task"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="msp.powerrangers.ui.FragmentDetailVotingTask">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:id= "@+id/linlayout1">
+                    <TextView
+                        android:id="@+id/textViewVotingTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop = "true"
+                        android:textSize="13pt"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:gravity="center"
+                        android:text=""/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_below="@+id/linlayout1"
+                    android:id="@+id/linlayout2">
+                    <TextView
+                        android:id="@+id/textViewVotingLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:fontFamily="casual"/>
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:id="@+id/linlayout4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/linlayout1"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <ImageView
+                        android:id="@+id/ivVotingPic1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:scaleType="centerInside"
+                        android:adjustViewBounds="true"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        app:srcCompat="@drawable/clean_beach"
+                        />
+
+                    <ImageView
+                        android:id="@+id/ivVotingPic2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:scaleType="centerInside"
+                        android:adjustViewBounds="true"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/clean_beach"
+                        />
+
+                </LinearLayout>
+
+
+                    <Button
+                        android:id="@+id/buttonNotOk"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorAccent"
+                        android:textColor="@color/colorWhite"
+                        android:text="Not OK"
+                        android:layout_below="@+id/linlayout4"/>
+
+
+                    <Button
+                        android:id="@+id/buttonOk"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorAccent"
+                        android:text="OK"
+                        android:textColor="@color/colorWhite"
+                        android:layout_below="@+id/linlayout4"
+                        android:layout_toEndOf="@+id/buttonNotOk"/>
+
+
+            </RelativeLayout>
+        </ScrollView>
+    </RelativeLayout>
+
+</FrameLayout>

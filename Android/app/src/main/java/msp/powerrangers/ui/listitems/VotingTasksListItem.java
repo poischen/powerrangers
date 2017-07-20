@@ -83,7 +83,7 @@ public class VotingTasksListItem implements Serializable {
                                 Log.i("KATJA", "onDataChange drin");
                                 Log.i("KATJA", "onDataChange dataSnapshot" + dataSnapshot);
 
-                                data = new ArrayList<>();
+                               // data = new ArrayList<>();
                                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                                     // Get the task data from snapshot
                                     Log.i("KATJA", "onDataChange for loop");

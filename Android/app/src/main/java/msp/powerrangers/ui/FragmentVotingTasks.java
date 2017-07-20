@@ -116,7 +116,6 @@ public class FragmentVotingTasks extends Fragment {
         int votingThreshold = 5;
 
 
-
         Recycler_View_Adapter(List<VotingTasksListItem> voting, Context context) {
             this.voting = voting;
             this.context = context;
@@ -128,14 +127,20 @@ public class FragmentVotingTasks extends Fragment {
             //Inflate the layout, initialize the View Holder
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.fr_votingtasks_li, parent, false);
+
+
             return new View_Holder(view);
         }
 
         @Override
         public void onBindViewHolder(final View_Holder holder, final int position) {
 
+
             // current task
             pathCurrentTask = dbRefTasks.child(voting.get(position).taskId);
+            Log.i("Viki", "Voting get position taskid" + voting.get(position).taskId);
+
+            Log.i("Viki", "Path to current Task " + pathCurrentTask.toString());
 
             Log.i("KATJA", "onBindViewHolder");
             Log.i("KATJA", "position: "+position);
@@ -210,6 +215,8 @@ public class FragmentVotingTasks extends Fragment {
 
             // get values for likes/dislikes
             votingLikes = voting.get(position).nLikes;
+            Log.i("Viki", "Voting get poistion" + voting.get(position));
+            Log.i("Viki", "Position" + position);
             votingDislikes = voting.get(position).nDislikes;
             Log.i("KATJA", "nLikes from  DB:" + votingLikes);
             Log.i("KATJA", "nDislikes from DB:" + votingDislikes);
@@ -244,9 +251,11 @@ public class FragmentVotingTasks extends Fragment {
                     // prevent downvoting if already upvoted
                     holder.down.setEnabled(false);
                     int positive = Integer.parseInt(votingLikes);
+                    Log.i("Viki", "voting Likes: " +  positive);
                     // remove the item if the threshold was reached
                     if (positive + 1 >= votingThreshold) {
                         pathCurrentTask.child("taskVoted").setValue(true);
+                        Log.i("Viki", pathCurrentTask.toString());
                         Log.i("KATJA", "position in onClick:"+position);
                         remove(voting.get(position));
                         Toast.makeText(getContext(), "Thanks! \nThe ranger will get his reward!", Toast.LENGTH_LONG).show();
@@ -256,6 +265,8 @@ public class FragmentVotingTasks extends Fragment {
                         // TODO: on data update write in db
                         //holder.nLikes.setText(String.valueOf(positive + 1));
                         pathCurrentTask.child("numberUpvotes").setValue(positive + 1);
+                        Log.i("Viki", "Path to current task in Else" + pathCurrentTask.child("taskId").toString());
+
                         pathCurrentTask.child("taskVoted").setValue(true);
                         remove(voting.get(position));
                         //prevent clicking multiple times
@@ -276,6 +287,7 @@ public class FragmentVotingTasks extends Fragment {
                     // remove the item if the threshold was reached
                     if (negative + 1 >= votingThreshold) {
                         remove(voting.get(position));
+
                         Toast.makeText(getContext(), "The ranger won't get his reward...", Toast.LENGTH_LONG).show();
                         // TODO: set the isConfirmed to false. Ranger wont get his reward :)
                     }
@@ -313,6 +325,7 @@ public class FragmentVotingTasks extends Fragment {
         // Remove a RecyclerView item containing a specified Data object
         public void remove(VotingTasksListItem data) {
             int position = voting.indexOf(data);
+            Log.i("Viki", "Position in remove" + position);
             voting.remove(position);
             notifyItemRemoved(position);
         }
