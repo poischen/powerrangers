@@ -11,7 +11,7 @@
     <!-- from material design (for anita with love) -->
     <color name="colorCardViewBackground">#E0F2F1</color>
     <color name="colorPrimaryBackground">#F5F3EE</color>
+    <color name="colorBackgroundOpacity55">#29222222</color>
     <color name="colorPink">#E65C70</color>
     <color name="colorGrey">#6E6E6E</color>
-
 </resources>

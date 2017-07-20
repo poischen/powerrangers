@@ -138,6 +138,7 @@ public class FragmentVotingTasks extends Fragment {
             pathCurrentTask = dbRefTasks.child(voting.get(position).taskId);
 
             Log.i("KATJA", "onBindViewHolder");
+            Log.i("KATJA", "position: "+position);
 
             // title and location
             votingTitle = voting.get(position).title;
@@ -215,7 +216,7 @@ public class FragmentVotingTasks extends Fragment {
 
             holder.nLikes.setText(votingLikes);
             holder.nDislikes.setText(votingDislikes);
-
+/*
             // set onClickListener for before image
             holder.imageView1.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -233,27 +234,33 @@ public class FragmentVotingTasks extends Fragment {
                     Toast.makeText(getContext(), "Here opens the most beautiful after image..", Toast.LENGTH_SHORT).show();
                 }
             });
-
+*/
             // set onClickListener for up votes
             holder.up.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
+                    Log.d("KATJA", "------- ONCLICK --------");
                     // prevent downvoting if already upvoted
                     holder.down.setEnabled(false);
                     int positive = Integer.parseInt(votingLikes);
                     // remove the item if the threshold was reached
                     if (positive + 1 >= votingThreshold) {
+                        pathCurrentTask.child("taskVoted").setValue(true);
+                        Log.i("KATJA", "position in onClick:"+position);
                         remove(voting.get(position));
                         Toast.makeText(getContext(), "Thanks! \nThe ranger will get his reward!", Toast.LENGTH_LONG).show();
                         // TODO: set the isConfirmed for the task in db to true. Ranger should get his reward.
 
                     } else {
                         // TODO: on data update write in db
-                        holder.nLikes.setText(String.valueOf(positive + 1));
+                        //holder.nLikes.setText(String.valueOf(positive + 1));
                         pathCurrentTask.child("numberUpvotes").setValue(positive + 1);
+                        pathCurrentTask.child("taskVoted").setValue(true);
+                        remove(voting.get(position));
                         //prevent clicking multiple times
-                        holder.up.setEnabled(false);
+                       // holder.up.setEnabled(false);
+
                     }
                 }
             });

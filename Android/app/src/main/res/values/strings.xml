@@ -61,12 +61,13 @@
     <!-- FragmentLogin-->
     <string name="fLogin_Signin">Sign in</string>
     <string name="fLogin_Register">Register</string>
-    <string name="fLogin_AlreadyRegistered">Already registered? Sign in!</string>
+    <string name="fLogin_AlreadyRegistered">Already registered? <b>Sign in.</b></string>
     <string name="fLogin_NotRegisteredYet">Do not have an account? Register now!</string>
     <string name="fLogin_EnterPassword">Enter your password</string>
     <string name="fLogin_EnterName">Enter your name</string>
     <string name="fLogin_EnterEmail">Enter your email</string>
-    <string name="fLogin_Slogan">POWERS COMBINED!</string>
+    <string name="fLogin_Slogan">and help us save the planet!</string>
+    <string name="fLogin_Slogan_Title">Be a Power Ranger</string>
 
     <!-- Buttonnames in Start Screen-->
     <string name="donate">donate</string>
@@ -142,6 +143,4 @@
     <string name="aDonate_prefixValue">Spende </string>
     <string name="aDonate_donateEuro"> €</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

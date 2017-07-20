@@ -35,14 +35,15 @@
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:layout_height="match_parent"
-            android:gravity="center_horizontal|center_vertical">
+            android:gravity="center_horizontal|center_vertical"
+            android:background="@color/colorBackgroundOpacity55">
 
 
         <ImageView
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:background="@drawable/icon_location_white"
-            android:layout_marginBottom="5dp"/>
+            android:layout_marginBottom="5dp" />
 
         <!-- Location  -->
         <TextView

@@ -311,7 +311,7 @@ exports.createTasks = functions.database.ref('/cases/{caseId}/confirmed')
                   return event.data.adminRef.root.child('users/' + userDBID).child('cases/').push().set({caseId: caseId});
                 });
                 */
-                
+
             });
           }
           else {
