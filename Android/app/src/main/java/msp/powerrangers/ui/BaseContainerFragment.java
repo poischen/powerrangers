@@ -34,7 +34,7 @@ public class BaseContainerFragment extends Fragment {
             bundles.putSerializable(getString(R.string.votingTasksSerializable), fragmentWait.getVotingTasksListItem());
             bundles.putString("tag", tag);
             fragmentVotingTasks.setArguments(bundles);
-            transaction.commit();
+            transaction.commitAllowingStateLoss();
             getChildFragmentManager().executePendingTransactions();
         } else if (tag.equals(getString(R.string.rangerTasksTag))) {
             FragmentRangerTasks fragmentRangerTasks = new FragmentRangerTasks();
@@ -135,10 +135,12 @@ public class BaseContainerFragment extends Fragment {
         transaction.addToBackStack(null);
         transaction.replace(R.id.container_framelayout, fragmentUsersOpenTasks);
         Bundle bundles = new Bundle();
+        Log.i("Viki replaceFragmentUOT", "vor put serializable");
         bundles.putSerializable(getString(R.string.openTasksSerializable), fw.getUsersOpenTasksListItem());
+        Log.i("Viki replaceFragmentUOT", "nach put serializable");
         Log.v("BaseContainer", "data: " + fw.getUsersOpenTasksListItem());
         fragmentUsersOpenTasks.setArguments(bundles);
-        transaction.commit();
+        transaction.commitAllowingStateLoss();
         getChildFragmentManager().executePendingTransactions();
     }
 

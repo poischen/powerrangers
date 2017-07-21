@@ -326,6 +326,7 @@ public class FragmentDetailUsersOpenTask extends Fragment {
         final String storageAndDBPath;
         //TODO: pictureName anpassen: Position?!
         storageAndDBPath = "images/cases/" + caseID + "/" + position + "_after.jpg";
+        Log.i("Viki", "in complete Task nach storageDBPath");
 
         //upload to Firebase Storage
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
