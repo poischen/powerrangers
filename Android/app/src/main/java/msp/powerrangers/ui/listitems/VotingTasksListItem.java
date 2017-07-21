@@ -27,6 +27,7 @@ public class VotingTasksListItem implements Serializable {
 
     public String title;
     public String location;
+    public String comment;
     public int reward;
     public String imageBeforeURL;
     public String imageAfterURL;
@@ -40,6 +41,7 @@ public class VotingTasksListItem implements Serializable {
     String cityDB;
     String countryDB;
     String locationDB;
+    String commentDB;
     String imageBeforeDB;
     String imageAfterDB;
     String taskIdDB;
@@ -47,10 +49,11 @@ public class VotingTasksListItem implements Serializable {
 
     Boolean taskVoted;
 
-    public VotingTasksListItem(String taskId, String title, String location, String imageBeforeURL, String imageAfterURL, int reward) {
+    public VotingTasksListItem(String taskId, String title, String location, String comment, String imageBeforeURL, String imageAfterURL, int reward) {
         this.taskId = taskId;
         this.title = title;
         this.location = location;
+        this.comment = comment;
         this.imageBeforeURL = imageBeforeURL;
         this.imageAfterURL = imageAfterURL;
         this.reward = reward;
@@ -85,6 +88,7 @@ public class VotingTasksListItem implements Serializable {
                                         titleDB = (String) singleSnapshot.child("name").getValue();
                                         cityDB = (String) singleSnapshot.child("city").getValue();
                                         countryDB = (String) singleSnapshot.child("country").getValue();
+                                        commentDB = (String) singleSnapshot.child("comment").getValue();
                                         rewardDB = (int)(long) singleSnapshot.child("reward").getValue();
 
                                         imageBeforeDB = (String) singleSnapshot.child("taskPicture").getValue();
@@ -92,12 +96,11 @@ public class VotingTasksListItem implements Serializable {
 
                                         locationDB = cityDB + ", " + countryDB;
 
-                                        data.add(new VotingTasksListItem(taskIdDB, titleDB, locationDB, imageBeforeDB, imageAfterDB, rewardDB));
+                                        data.add(new VotingTasksListItem(taskIdDB, titleDB, locationDB, commentDB, imageBeforeDB, imageAfterDB, rewardDB));
                                         Log.i("KATJA", "This is the data for voting: " + data);
                                     }
                                 }
 
-                                // TODO: checken, ob wirklich true sein soll (es gibt einen besonderen tag bei voting... kP)
                                 fragmentWait.changeToContentView(true);
                             }
 

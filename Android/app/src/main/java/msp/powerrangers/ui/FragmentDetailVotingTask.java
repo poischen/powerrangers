@@ -61,6 +61,7 @@ public class FragmentDetailVotingTask extends Fragment {
     private String taskDBId;
     private String location;
     private String title;
+    private String comment;
     private int reward;
 
     // images
@@ -84,6 +85,7 @@ public class FragmentDetailVotingTask extends Fragment {
         taskDBId = bund.getString("TaskDbIdVotingTask");
         title = bund.getString("TitleVotingTask");
         location = bund.getString("LocationVotingTask");
+        comment = bund.getString("CommentVotingTask");
         reward = bund.getInt("RewardVotingTask");
 
         // get the urls or the bitmaps from bundle
@@ -127,7 +129,7 @@ public class FragmentDetailVotingTask extends Fragment {
                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                Log.i("Viki DetailVotingTask", "download erfolgreich, imageBefore");
+                                Log.i("KATJA DetailVotingTask", "download erfolgreich, imageBefore");
                                 Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                                 imageBefore.setImageBitmap(bitmap);
                             }
@@ -153,7 +155,7 @@ public class FragmentDetailVotingTask extends Fragment {
                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                Log.i("Viki DetailVotingTask", "download erfolgreich, imageAfter");
+                                Log.i("KATJA DetailVotingTask", "download erfolgreich, imageAfter");
                                 Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                                 imageAfter.setImageBitmap(bitmap);
                             }
@@ -169,7 +171,6 @@ public class FragmentDetailVotingTask extends Fragment {
 
         }
 
-
         // set title and location
         textViewVotingTitle.setText(title);
         textViewVotingLocation.setText(location);
@@ -178,6 +179,7 @@ public class FragmentDetailVotingTask extends Fragment {
             @Override
             public void onClick(View v) {
 
+                Log.i("KATJA", "button notOk clicked");
                 dbRefTasks.orderByChild("taskCompleted").equalTo(true)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -200,6 +202,7 @@ public class FragmentDetailVotingTask extends Fragment {
                                 } else {
                                     // when voted: update in user opentasks and completedtasks,
                                     // in task : set taskVoted true
+                                    Log.i("KATJA", "ranger!=user");
                                     refPathRanger.addListenerForSingleValueEvent(
                                             new ValueEventListener() {
                                                 @Override
@@ -247,6 +250,7 @@ public class FragmentDetailVotingTask extends Fragment {
             @Override
             public void onClick(View v) {
 
+                Log.i("KATJA", "button ok clicked");
                 dbRefTasks.orderByChild("taskCompleted").equalTo(true)
                         .addListenerForSingleValueEvent(
                                 new ValueEventListener() {
@@ -266,7 +270,7 @@ public class FragmentDetailVotingTask extends Fragment {
                                         if (rangerDbId.equals(userDbID)) {
                                             Toast.makeText(getContext(), R.string.errorRangerVotesHisOwnTask, Toast.LENGTH_LONG).show();
                                         } else {
-
+                                            Log.i("KATJA", "ranger!=user");
                                             // when voted,
                                             // update user opentasks
                                             refPathRanger.addListenerForSingleValueEvent(
@@ -276,18 +280,18 @@ public class FragmentDetailVotingTask extends Fragment {
 
                                                             // decrement bubble number opentasks
                                                             String currentNOT = (String) dataSnap.child("numberOpenTasks").getValue();
-                                                            Log.i("Viki", "currentNOT" + currentNOT);
+                                                            Log.i("KATJA", "currentNOT: " + currentNOT);
                                                             int newNOT = Integer.parseInt(currentNOT) - 1;
-                                                            dataSnap.getRef().child("numberOpenTasks").setValue(String.valueOf(newNOT));
-                                                            Log.i("Viki", "newNOT" + newNOT);
+                                                            dataSnap.child("numberOpenTasks: ").getRef().setValue(String.valueOf(newNOT));
+                                                            Log.i("KATJA", "newNOT: " + newNOT);
 
                                                             // update balance with reward
                                                             //int fixedReward = Integer.valueOf(reward);
                                                             String currentBalance = String.valueOf(dataSnap.child("balance").getValue());
-                                                            Log.i("Viki", "Old Balance" + currentBalance);
+                                                            Log.i("KATJA", "current balance" + currentBalance);
                                                             int newBalance = Integer.parseInt(currentBalance) + reward;
-                                                            dataSnap.getRef().child("balance").setValue(newBalance);
-                                                            Log.i("Viki", "new balance" + newBalance);
+                                                            dataSnap.child("balance").getRef().setValue(newBalance);
+                                                            Log.i("KATJA", "new balance" + newBalance);
 
                                                         }
 

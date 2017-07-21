@@ -30,8 +30,6 @@ public class UsersOpenTasksListItem implements Serializable {
     public String taskImageUrlDB;
     public String caseImageUrlDB;
 
-
-
     String titleDB;
     String cityDB;
     String countryDB;
@@ -80,9 +78,11 @@ public class UsersOpenTasksListItem implements Serializable {
                                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
 
                                     taskCompletedDB = (Boolean) singleSnapshot.child("taskCompleted").getValue();
+                                    Log.i("KATJA", "taskCompleted: "+ taskCompletedDB.toString());
                                     taskVotedDb = (Boolean) singleSnapshot.child("taskVoted").getValue();
+                                    Log.i("KATJA", "taskVoted: "+ taskVotedDb.toString());
 
-                                    if (!taskCompletedDB && !taskVotedDb) {
+                                    if (!taskCompletedDB || !taskVotedDb) {
                                         titleDB = (String) singleSnapshot.child("name").getValue();
 
                                         cityDB = (String) singleSnapshot.child("city").getValue();

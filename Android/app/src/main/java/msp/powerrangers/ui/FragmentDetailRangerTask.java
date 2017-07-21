@@ -76,11 +76,11 @@ public class FragmentDetailRangerTask extends Fragment {
     // task ID
     private String taskID;
     private  String taskDBId;
+    Boolean isAssigned;
 
     SharedPreferences sharedPrefs;
     String userDbID;
     DatabaseReference refPathCurrentUser;
-    String currentCount;
 
 
     public FragmentDetailRangerTask() {
@@ -90,19 +90,17 @@ public class FragmentDetailRangerTask extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         storageRef = FirebaseStorage.getInstance().getReference();
+
         Bundle bund = getArguments();
         position = bund.getInt("PositionRanger");
 
         caseImageUrl = bund.getString("caseImageUrl");
+        taskImageUrl = bund.getString("taskImageUrl");
         pictureBitmapList = new ArrayList<>();
 
-        taskImageUrl = bund.getString("taskImageUrl");
-        if (taskImageUrl==null){
-            Bitmap taskPictureBitmap = BitmapFactory.decodeByteArray(
-                    bund.getByteArray("taskImageByteArray"),0,bund.getByteArray("taskImageByteArray").length);
-            pictureBitmapList.add(taskPictureBitmap);
-        }
+        Log.i("KATJA", "FrDetailRT onCreate");
 
         // Set action bar menu
         setHasOptionsMenu(true);
@@ -113,6 +111,7 @@ public class FragmentDetailRangerTask extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fr_detail_ranger_task, container, false);
 
@@ -122,10 +121,6 @@ public class FragmentDetailRangerTask extends Fragment {
         textNumberRangers = (TextView) view.findViewById(R.id.textNumberRangers);
         textPollutionLevel = (TextView) view.findViewById(R.id.textScalePollution);
         rangerTaskDescription = (TextView) view.findViewById(R.id.detailTaskDescription);
-        //rangerTaskDetailImage = (ImageView) view.findViewById(R.id.rangerTaskDetailImage);
-        viewPager = (ViewPager) view.findViewById(R.id.fRangerTaskDetailViewPager);
-        FragmentDetailRangerTask.ImageAdapter adapter = new ImageAdapter(this.getContext());
-        viewPager.setAdapter(adapter);
 
         // fancy icons
         iconMoney = (ImageView) view.findViewById(R.id.rangerReward);
@@ -134,15 +129,69 @@ public class FragmentDetailRangerTask extends Fragment {
         iconRanger.setImageResource(R.drawable.iconranger);
         iconPollution = (ImageView) view.findViewById(R.id.imagePollutionLevel);
 
+        viewPager = (ViewPager) view.findViewById(R.id.fRangerTaskDetailViewPager);
+        FragmentDetailRangerTask.ImageAdapter adapter = new ImageAdapter(this.getContext());
+        viewPager.setAdapter(adapter);
+
+        // download the task image (url from bundle)
+        if (taskImageUrl != null) {
+            try {
+                final File localFileTask = File.createTempFile("images", "jpg");
+                StorageReference riversRefTask = storageRef.child(Global.getDisplayUrl(taskImageUrl));
+                riversRefTask.getFile(localFileTask)
+                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                Log.i("KATJA FrDetailRT", "task image download erfolgreich");
+                                Bitmap taskBitmap = BitmapFactory.decodeFile(localFileTask.getAbsolutePath());
+                                pictureBitmapList.add(taskBitmap);
+                                updateImageViews();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Log.i("KATJA FrDetailRT", exception.getMessage());
+                    }
+                });
+            } catch (Exception e) {
+                Log.i("KATJA FrDetailRT", "no image available or some other error occured");
+            }
+        }
+
+        // download the case image (url from bundle)
+        if (caseImageUrl != null) {
+            try {
+                final File localFileTask = File.createTempFile("images", "jpg");
+                StorageReference riversRefTask = storageRef.child(Global.getDisplayUrl(caseImageUrl));
+                riversRefTask.getFile(localFileTask)
+                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                Log.i("KATJA FrDetailRT", "case image download erfolgreich");
+                                Bitmap caseBitmap = BitmapFactory.decodeFile(localFileTask.getAbsolutePath());
+                                pictureBitmapList.add(caseBitmap);
+                                updateImageViews();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Log.i("KATJA FrDetailRT", exception.getMessage());
+                    }
+                });
+            } catch (Exception e) {
+                Log.i("KATJA FrDetailRT", "no image available or some other error occured");
+            }
+        }
+
         // fill in information from task
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
-
         Query filteredTasks = dbRefTasks.orderByChild("assigned").equalTo(false);
+
         filteredTasks.addValueEventListener( new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                Log.i("KATJA", "filtered tasks, onDataChange");
                 Iterator iter = dataSnapshot.getChildren().iterator();
                 for(int i = 0; i < position; i++) {
                     iter.next();
@@ -155,22 +204,29 @@ public class FragmentDetailRangerTask extends Fragment {
                 String country = (String) singleSnapshot.child("country").getValue();
                 String reward = String.valueOf(singleSnapshot.child("reward").getValue());
                 String scale = String.valueOf(singleSnapshot.child("scale").getValue());
-                String taskInfo = (String) singleSnapshot.child("comment").getValue();
+                String comment = (String) singleSnapshot.child("comment").getValue();
 
-                // get the task id
                 taskID =  (String) singleSnapshot.child("taskId").getValue();
                 taskDBId = (String) singleSnapshot.child("taskDbId").getValue();
+                isAssigned = (Boolean) singleSnapshot.child("assigned").getValue();
+
+                Log.i("KATJA", "taskID: "+taskID);
+                Log.i("KATJA", "taskDBID: "+taskDBId);
+                Log.i("KATJA", "isAssigned: "+isAssigned.toString());
+
                 rangerTaskName.setText( city + " , " + country);
                 textRangerReward.setText(reward);
+
                 String numberRangers = String.valueOf(singleSnapshot.child("numberRangers").getValue());
+                Log.i("KATJA", "#rangers: "+numberRangers);
+
                 textNumberRangers.setText(numberRangers);
 
                 textPollutionLevel.setText(convertScaleToText(scale));
-                rangerTaskDescription.setText(taskInfo + "\nWe need you! ;-)");
-
+                comment = comment + getString(R.string.detailRangerTaskComment);
+                rangerTaskDescription.setText(comment);
 
                 // set appropriate icon
-
                 switch(scale){
 
                     case "1":
@@ -184,78 +240,23 @@ public class FragmentDetailRangerTask extends Fragment {
                     case "3":
                         iconPollution.setImageResource(R.drawable.icon_pollution_high);
                         break;
-
                 }
-
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
-
-
         });
-
-        if (taskImageUrl!=null){
-            try {
-                final File localFile = File.createTempFile("images", "jpg");
-                StorageReference riversRef = storageRef.child(Global.getThumbUrl(taskImageUrl));
-                riversRef.getFile(localFile)
-                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                Log.v("DetailRangerTask", "download erfolgreich");
-                                Bitmap taskImageBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                pictureBitmapList.add(taskImageBitmap);
-                                updateImageViews();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Log.d("DetailRangerTask", exception.getMessage());
-                    }
-                });
-            } catch (Exception e) {
-                Log.d("DetailRangerTask", e.getMessage());
-            }
-        }
-
-        try {
-            final File localFile = File.createTempFile("images", "jpg");
-            StorageReference riversRef = storageRef.child(Global.getThumbUrl(caseImageUrl));
-            riversRef.getFile(localFile)
-                    .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                            Log.v("DetailRangerTask", "download erfolgreich");
-                            Bitmap caseImageHitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                            pictureBitmapList.add(caseImageHitmap);
-                            updateImageViews();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    Log.d("DetailRangerTask", exception.getMessage());
-                }
-            });
-        } catch (Exception e) {
-            Log.d("DetailRangerTask", e.getMessage());
-        }
-
-
 
         // set some fancy icons
         buttonJoin = (Button) view.findViewById(R.id.buttonJoinAsRanger);
         buttonJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Ranger erstellen
-                // TODO: task zuweisen und in die db eintragen (users, tasks)
-                // TODO: Anzeige in FragmentStart andern (nOpenTasks +1 )
 
-                Toast.makeText(v.getContext(), "You have joined the task :-)!", Toast.LENGTH_LONG).show();
+                Log.i("KATJA", "button Join as Ranger is clicked ");
+
                 sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
                 userDbID = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
 
@@ -266,16 +267,18 @@ public class FragmentDetailRangerTask extends Fragment {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
+                        Log.i("KATJA", "path current user, onDataChange");
                         User userInfo = dataSnapshot.getValue(User.class);
-                        currentCount = String.valueOf(dataSnapshot.child("numberOpenTasks").getValue());
 
                         // Create a new Ranger and fill additional information in the DB Tasks
                         Ranger ranger = new Ranger(userInfo, taskID);
                         dbRefTasks.child(taskDBId).child("rangerDbId").setValue(ranger.getDbId());
-                        dbRefTasks.child(taskDBId).child("assigned").setValue(true);
+                        Log.i("KATJA", "rangerDbId is set: "+ranger.getDbId());
+                        dbRefTasks.child(taskDBId).child("assigned").getRef().setValue(true);
 
-                        // update the number of rangers open tasks
-                        int newCount = Integer.valueOf(currentCount) + 1;
+                        // update the number of user open tasks
+                        String currentNOT = (String) dataSnapshot.child("numberOpenTasks").getValue();
+                        int newCount = Integer.parseInt(currentNOT) + 1;
                         refPathCurrentUser.child("numberOpenTasks").setValue(String.valueOf(newCount));
 
                     }
@@ -286,7 +289,7 @@ public class FragmentDetailRangerTask extends Fragment {
                     }
                 });
 
-
+                Toast.makeText(v.getContext(), "You have joined the task :-)!", Toast.LENGTH_LONG).show();
 
                 // move to Main Activity (FragmentStart)
                 Intent i = new Intent(getActivity(), MainActivity.class);
@@ -295,7 +298,6 @@ public class FragmentDetailRangerTask extends Fragment {
 
             }
         });
-
 
         return view;
     }

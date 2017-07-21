@@ -10,51 +10,54 @@
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardBackgroundColor="@color/colorCardViewBackground"
-    app:cardCornerRadius="5dp"
-    app:cardElevation="5dp"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="0dp"
     app:cardUseCompatPadding="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:layout_height="170dp"
+        android:padding="0dp">
 
-        <!-- Title of the task -->
-        <TextView
-            android:id="@+id/titleVT"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:text="@string/placeholderTitle"
-            android:textAppearance="?attr/textAppearanceListItem"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold" />
+        <!-- Image Overlay -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|center_vertical">
 
-        <!-- Location of the task with icon -->
-        <ImageView
-            android:id="@+id/ivLocationIcon"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_below="@+id/titleVT"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="4dp"
-            app:srcCompat="@drawable/location" />
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/icon_location_white"
+                android:layout_marginBottom="5dp"/>
 
-        <TextView
-            android:id="@+id/locationVT"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/titleVT"
-            android:layout_centerHorizontal="true"
-            android:layout_toEndOf="@+id/ivLocationIcon"
-            android:layout_marginBottom="8dp"
-            android:text="@string/placeholderLocation"
-            android:textAppearance="?attr/textAppearanceListItem"
-            android:textColor="@color/colorPrimaryDark" />
+            <!-- Location  -->
+            <TextView
+                android:id="@+id/locationVT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
+                android:textSize="19sp"
+                android:text="@string/placeholderLocation"
+                android:layout_gravity="center_horizontal" />
 
-        <!-- Placeholder for before/after images of the task -->
+            <!-- Comment -->
+            <TextView
+                android:id="@+id/descriptionVT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold"
+                android:layout_marginTop="14dp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/placeholderDesc" />
+
+        </LinearLayout>
+
+
+        <!-- Placeholder for before/after images of the task
         <LinearLayout
             android:id="@+id/votingPics"
             android:layout_width="match_parent"
@@ -82,50 +85,7 @@
                 android:layout_weight="1"
                 />
 
-        </LinearLayout>
-
-        <!-- Up-Vote and Down-Vote, used as "buttons"  -->
-        <LinearLayout
-            android:id="@+id/votingUpDown"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/votingPics"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal" >
-
-            <!-- Up -->
-            <ImageView
-                android:id="@+id/ivVotingUp"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                app:srcCompat="@drawable/up"/>
-
-            <TextView
-                android:id="@+id/tvVotingUp"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginStart="10dp"
-                android:paddingTop="6dp"
-               />
-
-            <!-- Down -->
-            <ImageView
-                android:id="@+id/ivVotingDown"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="30dp"
-                app:srcCompat="@drawable/down"
-                />
-
-             <TextView
-                android:id="@+id/tvVotingDown"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginStart="10dp"
-                 android:paddingTop="6dp" />
-
-        </LinearLayout>
+        </LinearLayout>  -->
 
     </RelativeLayout>
 

@@ -149,29 +149,34 @@ public class FragmentRangerTasks extends Fragment {
             holder.comment.setText(listItem.get(position).comment);
 
             String taskImageUrlDB = listItem.get(position).taskImageUrlDB;
-            Log.v("FragmentRangerTasks", "taskImageUrlDB: " + taskImageUrlDB);
-            try {
-                final File localFile = File.createTempFile("images", "jpg");
-                StorageReference riversRef = storageRef.child(Global.getThumbUrl(taskImageUrlDB));
-                riversRef.getFile(localFile)
-                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                Log.v("FragmentRangerTasks", "download erfolgreich");
-                                Bitmap taskImage = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                listItem.get(position).setTaskBitmap(blur(taskImage));
-                                holder.image.setImageBitmap(listItem.get(position).getTaskBitmap());
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Log.d("FragmentRangerTasks", "download nicht erfolgreich (1)");
-                        holder.image.setImageResource(R.drawable.placeholder_task);
-                    }
-                });
-            } catch (Exception e) {
-                Log.d("FragmentRangerTasks", "download nicht erfolgreich (2)");
-                holder.image.setImageResource(R.drawable.placeholder_task);
+            Log.i("KATJA FrRangerTasks", "taskImageUrlDB: " + taskImageUrlDB);
+
+            // set image
+            if (taskImageUrlDB != null) {     //  url from bundle is set
+
+                try { // download image
+                    final File localFile = File.createTempFile("images", "jpg");
+                    StorageReference riversRef = storageRef.child(Global.getThumbUrl(taskImageUrlDB));
+                    riversRef.getFile(localFile)
+                            .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                    Log.i(" KATJA FrRangerTasks", "download erfolgreich");
+                                    Bitmap taskImage = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                    // set blurred task image
+                                    holder.image.setImageBitmap(blur(taskImage));
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Log.i("KATJA FrRangerTasks", "download nicht erfolgreich (1)");
+                            holder.image.setImageResource(R.drawable.placeholder_task);
+                        }
+                    });
+                } catch (Exception e) {
+                    Log.i("KATJA FrRangerTasks", "download nicht erfolgreich (2)");
+                    holder.image.setImageResource(R.drawable.placeholder_task);
+                }
             }
 
         }

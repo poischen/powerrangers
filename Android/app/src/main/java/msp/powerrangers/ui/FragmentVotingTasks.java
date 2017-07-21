@@ -47,11 +47,8 @@ public class FragmentVotingTasks extends Fragment {
     protected RecyclerView mRecyclerView;
     protected RecyclerView.LayoutManager mLayoutManager;
     protected Recycler_View_Adapter mAdapter;
-    private StorageReference storageRef;
     private VotingTasksListItem  votingTasksListItem;
 
-    // Firebase db instance
-    private DatabaseReference dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
 
     public FragmentVotingTasks() {
     }
@@ -59,7 +56,6 @@ public class FragmentVotingTasks extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        storageRef = FirebaseStorage.getInstance().getReference();
 
         Bundle bund = getArguments();
         votingTasksListItem = (VotingTasksListItem) bund.getSerializable(getString(R.string.votingTasksSerializable));
@@ -88,11 +84,11 @@ public class FragmentVotingTasks extends Fragment {
                         bundle.putInt("PositionVotingTask", position);
                         bundle.putString("TitleVotingTask", mAdapter.getItem(position).title);
                         bundle.putString("LocationVotingTask", mAdapter.getItem(position).location);
+                        bundle.putString("CommentVotingTask", mAdapter.getItem(position).comment);
                         bundle.putString("TaskDbIdVotingTask", mAdapter.getItem(position).taskId);
                         bundle.putInt("RewardVotingTask", mAdapter.getItem(position).reward);
                         bundle.putString("imageBeforeUrl", mAdapter.getItem(position).imageBeforeURL);
                         bundle.putString("imageAfterUrl", mAdapter.getItem(position).imageAfterURL);
-
 
                         fragmentDetailVotingTask.setArguments(bundle);
                         ((BaseContainerFragment)getParentFragment()).replaceFragmentDetailVoting(fragmentDetailVotingTask);
@@ -149,10 +145,10 @@ public class FragmentVotingTasks extends Fragment {
 
         @Override
         public void onBindViewHolder(final View_Holder holder, final int position) {
-
             // populate the current row on the RecyclerView
-            holder.title.setText(voting.get(position).title);
+            // holder.title.setText(voting.get(position).title);
             holder.location.setText(voting.get(position).location);
+            holder.comment.setText(voting.get(position).comment);
 
 
         }
@@ -204,7 +200,8 @@ public class FragmentVotingTasks extends Fragment {
 
         // from layout
         CardView cv;
-        TextView title;
+        //TextView title;
+        TextView comment;
         TextView location;
 
 
@@ -212,8 +209,9 @@ public class FragmentVotingTasks extends Fragment {
             super(itemView);
 
             cv = (CardView) itemView.findViewById(R.id.cvVT);
-            title = (TextView) itemView.findViewById(R.id.titleVT);
+            // title = (TextView) itemView.findViewById(R.id.titleVT);
             location = (TextView) itemView.findViewById(R.id.locationVT);
+            comment = (TextView) itemView.findViewById(R.id.descriptionVT);
 
         }
     }

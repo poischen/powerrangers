@@ -49,6 +49,7 @@
     <string name="title_activity_detail_container">ActivityDetailContainer</string>
     <string name="fStart_closeAppError">Sorry, an error occured.</string>
     <string name="frStart_logout">Logout</string>
+    <string name="frStartUsername">Username</string>
 
     <!-- Intent Strings-->
     <string name="intent_current_user">Current User</string>
@@ -114,6 +115,7 @@
     <string name="taskDescriptionDetail">Here comes the task description</string>
     <string name="pollutionDetail">Pollution</string>
     <string name="buttonJoinAsRanger">Join as Ranger</string>
+    <string name="detailRangerTaskComment">\nWe need you!</string>
 
 
     <!-- FragmentConfirmerCases-->
@@ -124,7 +126,7 @@
     <string name="buttonUploadImage">Upload image</string>
     <string name="completeTask">Complete Task</string>
     <string name="textToUpload">Please take a picture of the same area shown above - BUT CLEAN :).</string>
-    <string name="textNoNeedToUpload">You already completed this task.</string>
+    <string name="textNoNeedToUpload">You already completed this task. Wait for the confirmation of your job!</string>
 
     <!-- FragmentVotingTasks-->
     <string name="titleVotingTasks">Voting Tasks</string>

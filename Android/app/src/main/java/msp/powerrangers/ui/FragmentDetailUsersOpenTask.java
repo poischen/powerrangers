@@ -127,13 +127,12 @@ public class FragmentDetailUsersOpenTask extends Fragment {
         tvTaskName = (TextView) view.findViewById(R.id.taskNameUOT);
         tvTaskName.setText(taskTitle);
 
-        //ivTaskImage = (ImageView) view.findViewById(R.id.taskImageUOT);
         viewPager = (ViewPager) view.findViewById(R.id.taskImagesUOT);
         FragmentDetailUsersOpenTask.ImageAdapter adapter = new FragmentDetailUsersOpenTask.ImageAdapter(this.getContext());
         viewPager.setAdapter(adapter);
 
-
         if (taskImageUrl != null) {
+            Log.i("KATJA", "task image url is not null: "+ taskImageUrl);
             try {
                 final File localFileTask = File.createTempFile("images", "jpg");
                 StorageReference storageRef = FirebaseStorage.getInstance().getReference();
@@ -142,7 +141,7 @@ public class FragmentDetailUsersOpenTask extends Fragment {
                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                Log.v("FragmentStart", "download erfolgreich");
+                                Log.v("FrDetailUsersOpenTask", "download erfolgreich");
                                 Bitmap bmp = BitmapFactory.decodeFile(localFileTask.getAbsolutePath());
                                 pictureBitmapList.add(bmp);
                                 updateImageViews();
@@ -150,101 +149,14 @@ public class FragmentDetailUsersOpenTask extends Fragment {
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        Log.d("FragmentStart", exception.getMessage());
+                        Log.d("FrDetailUsersOpenTask", exception.getMessage());
                     }
                 });
             } catch (Exception e) {
-                Log.d("FragmentStart", "no image available or some other error occured");
+                Log.d("FrDetailUsersOpenTask", "no image available or some other error occured");
             }
         }
 
-
-
-
-
-
-        // neu, wie setze ich das bild
-        /*
-        if (taskImageUrl != null) {     // no bitmap from bundle
-
-            try {   // download pic before
-                final File localFile = File.createTempFile("images", "jpg");
-                StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                StorageReference riversRef = storageRef.child(Global.getThumbUrl(taskImageUrl));
-                riversRef.getFile(localFile)
-                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                Log.i("Viki DetailVotingTask", "download erfolgreich, imageBefore");
-                                Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                pictureBitmapList.set(0, bitmap);
-                                //imageBefore.setImageBitmap(bitmap);
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Log.i("Viki DetailVotingTask", exception.getMessage());
-                    }
-                });
-            } catch (Exception e) {
-                Log.i("Viki DetailVotingTask", e.getMessage());
-            }
-
-        }
-
-*/
-
-
-/*
-        if (taskImageUrl != null) {
-            try {
-                final File localFileTask = File.createTempFile("images", "jpg");
-                StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                StorageReference riversRefTask = storageRef.child(Global.getDisplayUrl(taskImageUrl));
-                riversRefTask.getFile(localFileTask)
-                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                Log.v("FragmentStart", "download erfolgreich");
-                                Bitmap bmp = BitmapFactory.decodeFile(localFileTask.getAbsolutePath());
-                                pictureBitmapList.add(bmp);
-                                updateImageViews();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Log.d("FragmentStart", exception.getMessage());
-                    }
-                });
-            } catch (Exception e) {
-                Log.d("FragmentStart", "no image available or some other error occured");
-            }
-            if (caseImageUrl != null) {
-                try {
-                    final File localFileCase = File.createTempFile("images", "jpg");
-                    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                    StorageReference riversRefCase = storageRef.child(Global.getDisplayUrl(caseImageUrl));
-                    riversRefCase.getFile(localFileCase)
-                            .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                    Log.v("FragmentStart", "download erfolgreich");
-                                    Bitmap bmp = BitmapFactory.decodeFile(localFileCase.getAbsolutePath());
-                                    pictureBitmapList.add(bmp);
-                                    updateImageViews();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            Log.d("FragmentStart", exception.getMessage());
-                        }
-                    });
-                } catch (Exception e) {
-                    Log.d("FragmentStart", "no image available or some other error occured");
-                }
-            }
-        }
-        */
         tvTaskDesc = (TextView) view.findViewById(R.id.taskDescUOT);
         tvTaskDesc.setText(taskDescription);
 
@@ -324,9 +236,8 @@ public class FragmentDetailUsersOpenTask extends Fragment {
 
         //upload picture
         final String storageAndDBPath;
-        //TODO: pictureName anpassen: Position?!
         storageAndDBPath = "images/cases/" + caseID + "/" + position + "_after.jpg";
-        Log.i("Viki", "in complete Task nach storageDBPath");
+        Log.i("KATJA", "DUOT nach storageDBPath");
 
         //upload to Firebase Storage
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
@@ -344,11 +255,11 @@ public class FragmentDetailUsersOpenTask extends Fragment {
                         refPathCurrentUser.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-
                                 String currentCount = String.valueOf(dataSnapshot.child("numberCompletedTasks").getValue());
+                                Log.i("KATJA", "DUOT current NOT: "+currentCount);
                                 int newCount = Integer.valueOf(currentCount) + 1;
+                                Log.i("KATJA", "DUOT new NOT: "+currentCount);
                                 refPathCurrentUser.child("numberCompletedTasks").setValue(String.valueOf(newCount));
-
                             }
 
                             @Override
@@ -363,7 +274,7 @@ public class FragmentDetailUsersOpenTask extends Fragment {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         Toast.makeText(getContext(), R.string.errorUpload, Toast.LENGTH_LONG).show();
-                        Log.d("DetailUsersOpenTask", exception.getMessage());
+                        Log.i("KATJA DUsersOpenTask", exception.getMessage());
                     }
                 })
                 .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
