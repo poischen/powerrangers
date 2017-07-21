@@ -27,13 +27,11 @@ public class VotingTasksListItem implements Serializable {
 
     public String title;
     public String location;
-    public String reward;
+    public int reward;
     public String imageBeforeURL;
     public String imageAfterURL;
     public String taskId;
 
-    public Bitmap imageBefore;
-    public Bitmap imageAfter;
 
     List<VotingTasksListItem> data = new ArrayList<>();
     private DatabaseReference dbRefTasks;
@@ -45,12 +43,12 @@ public class VotingTasksListItem implements Serializable {
     String imageBeforeDB;
     String imageAfterDB;
     String taskIdDB;
-    String rewardDB;
+    int rewardDB;
 
     Boolean taskVoted;
 
 
-    public VotingTasksListItem(String taskId, String title, String location, String imageBeforeURL, String imageAfterURL, String reward) {
+    public VotingTasksListItem(String taskId, String title, String location, String imageBeforeURL, String imageAfterURL, int reward) {
         this.taskId = taskId;
         this.title = title;
         this.location = location;
@@ -88,7 +86,7 @@ public class VotingTasksListItem implements Serializable {
                                         titleDB = (String) singleSnapshot.child("name").getValue();
                                         cityDB = (String) singleSnapshot.child("city").getValue();
                                         countryDB = (String) singleSnapshot.child("country").getValue();
-                                        rewardDB = (String) singleSnapshot.child("reward").getValue();
+                                        rewardDB = (int)(long) singleSnapshot.child("reward").getValue();
 
                                         imageBeforeDB = (String) singleSnapshot.child("taskPicture").getValue();
                                         imageAfterDB = (String) singleSnapshot.child("taskPictureAfter").getValue();
@@ -112,21 +110,6 @@ public class VotingTasksListItem implements Serializable {
 
     }
 
-    public void setBitmapBefore(Bitmap img) {
-        this.imageBefore = img;
-    }
-
-    public void setBitmapAfter(Bitmap img) {
-        this.imageAfter = img;
-    }
-
-    public Bitmap getBitmapBefore() {
-        return imageBefore;
-    }
-
-    public Bitmap getBitmapAfter() {
-        return imageAfter;
-    }
 
     public String getImageBeforeURL() {
         return imageBeforeURL;

@@ -61,7 +61,7 @@ public class FragmentDetailVotingTask extends Fragment {
     private String taskDBId;
     private String location;
     private String title;
-    private String reward;
+    private int reward;
 
     // images
     String imgBeforeURL;
@@ -84,21 +84,12 @@ public class FragmentDetailVotingTask extends Fragment {
         taskDBId = bund.getString("TaskDbIdVotingTask");
         title = bund.getString("TitleVotingTask");
         location = bund.getString("LocationVotingTask");
-        reward = bund.getString("RewardVotingTask");
+        reward = bund.getInt("RewardVotingTask");
 
         // get the urls or the bitmaps from bundle
         imgBeforeURL = bund.getString("imageBeforeUrl");
         imgAfterURL = bund.getString("imageAfterUrl");
 
-        if (imgBeforeURL == null) {
-            imgBeforeBitmap = BitmapFactory.decodeByteArray(
-                    bund.getByteArray("imageBeforeByteArray"), 0, bund.getByteArray("imageBeforeByteArray").length);
-        }
-
-        if (imgAfterURL == null) {
-            imgAfterBitmap = BitmapFactory.decodeByteArray(
-                    bund.getByteArray("imageAfterByteArray"), 0, bund.getByteArray("imageAfterByteArray").length);
-        }
 
         // get the current user
         sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
@@ -137,22 +128,20 @@ public class FragmentDetailVotingTask extends Fragment {
                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                Log.v("Download", "download erfolgreich");
+                                Log.i("Viki DetailVotingTask", "download erfolgreich, imageBefore");
                                 Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                                 imageBefore.setImageBitmap(bitmap);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        Log.d("DetailVotingTask", exception.getMessage());
+                        Log.i("Viki DetailVotingTask", exception.getMessage());
                     }
                 });
             } catch (Exception e) {
-                Log.d("DetailVotingTask", e.getMessage());
+                Log.i("Viki DetailVotingTask", e.getMessage());
             }
 
-        } else {            // bitmap from bundle
-            imageBefore.setImageBitmap(imgBeforeBitmap);
         }
 
         // set image after
@@ -165,22 +154,20 @@ public class FragmentDetailVotingTask extends Fragment {
                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                Log.v("Download", "download erfolgreich");
+                                Log.i("Viki DetailVotingTask", "download erfolgreich, imageAfter");
                                 Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                                 imageAfter.setImageBitmap(bitmap);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        Log.d("DetailVotingTask", exception.getMessage());
+                        Log.i("Viki DetailVotingTask", exception.getMessage());
                     }
                 });
             } catch (Exception e) {
-                Log.d("DetailVotingTask", e.getMessage());
+                Log.i("Viki DetailVotingTask", e.getMessage());
             }
 
-        } else {            // bitmap from bundle
-            imageAfter.setImageBitmap(imgAfterBitmap);
         }
 
 
@@ -286,14 +273,19 @@ public class FragmentDetailVotingTask extends Fragment {
 
                                                             // decrement bubble number opentasks
                                                             String currentNOT = (String) dataSnap.child("numberOpenTasks").getValue();
+                                                            Log.i("Viki", "currentNOT" + currentNOT);
                                                             int newNOT = Integer.parseInt(currentNOT) - 1;
-                                                            dataSnap.getRef().child("numberOpenTasks").setValue(newNOT);
+                                                            dataSnap.getRef().child("numberOpenTasks").setValue(String.valueOf(newNOT));
+                                                            Log.i("Viki", "newNOT" + newNOT);
 
                                                             // update balance with reward
-                                                            int fixedReward = Integer.valueOf(reward);
+                                                            //int fixedReward = Integer.valueOf(reward);
                                                             String currentBalance = String.valueOf(dataSnap.child("balance").getValue());
-                                                            int newBalance = Integer.parseInt(currentBalance) + fixedReward;
+                                                            Log.i("Viki", "Old Balance" + currentBalance);
+                                                            int newBalance = Integer.parseInt(currentBalance) + reward;
                                                             dataSnap.getRef().child("balance").setValue(newBalance);
+                                                            Log.i("Viki", "new balance" + newBalance);
+
                                                         }
 
                                                         @Override

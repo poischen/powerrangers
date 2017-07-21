@@ -90,27 +90,9 @@ public class FragmentVotingTasks extends Fragment {
                         bundle.putString("TitleVotingTask", mAdapter.getItem(position).title);
                         bundle.putString("LocationVotingTask", mAdapter.getItem(position).location);
                         bundle.putString("TaskDbIdVotingTask", mAdapter.getItem(position).taskId);
-                        bundle.putString("RewardVotingTask", mAdapter.getItem(position).reward);
-
-                        // put img before in bundle
-                        try{
-                            Bitmap imgBefore = mAdapter.getItem(position).getBitmapBefore();
-                            ByteArrayOutputStream bs = new ByteArrayOutputStream();
-                            imgBefore.compress(Bitmap.CompressFormat.JPEG, 50, bs);
-                            bundle.putByteArray("imageBeforeByteArray", bs.toByteArray());
-                        } catch (Exception e){
-                            bundle.putString("imageBeforeUrl", mAdapter.getItem(position).getImageBeforeURL());
-                        }
-
-                        // put img after in bundle
-                        try{
-                            Bitmap imgAfter = mAdapter.getItem(position).getBitmapAfter();
-                            ByteArrayOutputStream bs = new ByteArrayOutputStream();
-                            imgAfter.compress(Bitmap.CompressFormat.JPEG, 50, bs);
-                            bundle.putByteArray("imageAfterByteArray", bs.toByteArray());
-                        } catch (Exception e){
-                            bundle.putString("imageAfterUrl", mAdapter.getItem(position).getImageAfterURL());
-                        }
+                        bundle.putInt("RewardVotingTask", mAdapter.getItem(position).reward);
+                        bundle.putString("imageBeforeUrl", mAdapter.getItem(position).imageBeforeURL);
+                        bundle.putString("imageAfterUrl", mAdapter.getItem(position).imageAfterURL);
 
 
                         fragmentDetailVotingTask.setArguments(bundle);
@@ -174,62 +156,6 @@ public class FragmentVotingTasks extends Fragment {
             holder.location.setText(voting.get(position).location);
 
 
-            // image before
-            String imageBeforeURL = voting.get(position).imageBeforeURL;
-            Log.i("KATJA", "imageBeforeURL: " + imageBeforeURL);
-
-            try {
-                final File localFile = File.createTempFile("images", "jpg");
-                StorageReference riversRef = storageRef.child(Global.getThumbUrl(imageBeforeURL));
-                riversRef.getFile(localFile)
-                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                Log.v("FragmentVotingTasks", "download erfolgreich");
-                                Bitmap taskImage = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                voting.get(position).setBitmapBefore(taskImage);
-                                holder.imageView1.setImageBitmap(voting.get(position).getBitmapBefore());
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Log.d("FragmentVotingTasks", "download nicht erfolgreich (1)");
-                        holder.imageView1.setImageResource(R.drawable.placeholder_task);
-                    }
-                });
-            } catch (Exception e) {
-                Log.d("FragmentVotingTasks", "download nicht erfolgreich (2)");
-                holder.imageView1.setImageResource(R.drawable.placeholder_task);
-            }
-
-            // image after
-            String imageAfterURL = voting.get(position).imageAfterURL;
-            Log.i("KATJA", "imageAfterURL: " + imageAfterURL);
-
-            try {
-                final File localFile = File.createTempFile("images", "jpg");
-                StorageReference riversRef = storageRef.child(Global.getThumbUrl(imageAfterURL));
-                riversRef.getFile(localFile)
-                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                Log.v("FragmentVotingTasks", "download erfolgreich");
-                                Bitmap taskImage = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                voting.get(position).setBitmapAfter(taskImage);
-                                holder.imageView2.setImageBitmap(voting.get(position).getBitmapAfter());
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Log.d("FragmentVotingTasks", "download nicht erfolgreich (1)");
-                        holder.imageView2.setImageResource(R.drawable.placeholder_task);
-                    }
-                });
-            } catch (Exception e) {
-                Log.d("FragmentVotingTasks", "download nicht erfolgreich (2)");
-                holder.imageView2.setImageResource(R.drawable.placeholder_task);
-            }
-
         }
 
         @Override
@@ -281,10 +207,6 @@ public class FragmentVotingTasks extends Fragment {
         CardView cv;
         TextView title;
         TextView location;
-        ImageView imageView1;
-        ImageView imageView2;
-        //Button buttonOk;
-        //Button buttonNotOk;
 
 
         View_Holder(View itemView) {
@@ -293,9 +215,7 @@ public class FragmentVotingTasks extends Fragment {
             cv = (CardView) itemView.findViewById(R.id.cvVT);
             title = (TextView) itemView.findViewById(R.id.titleVT);
             location = (TextView) itemView.findViewById(R.id.locationVT);
-            // before/after images
-            imageView1 = (ImageView) itemView.findViewById(R.id.ivVotingPic1);
-            imageView2 = (ImageView) itemView.findViewById(R.id.ivVotingPic2);
+
         }
     }
 
