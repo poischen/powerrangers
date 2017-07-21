@@ -193,11 +193,14 @@ public class FragmentDetailVotingTask extends Fragment {
                                 DataSnapshot singleSnapshot = (DataSnapshot) iter.next();
 
                                 rangerDbId = (String) singleSnapshot.child("rangerDbId").getValue();
-
                                 refPathRanger = FirebaseDatabase.getInstance().getReference().child("users").child(rangerDbId);
+
+                                Log.i("KATJA", "rangerDBID: "+ rangerDbId);
+                                Log.i("KATJA", "userDBID: "+ userDbID);
 
                                 // ranger can`t vote for his own task :)
                                 if (rangerDbId.equals(userDbID)) {
+                                    Log.i("KATJA", "ranger==user");
                                     Toast.makeText(getContext(), R.string.errorRangerVotesHisOwnTask, Toast.LENGTH_LONG).show();
                                 } else {
                                     // when voted: update in user opentasks and completedtasks,
@@ -266,8 +269,12 @@ public class FragmentDetailVotingTask extends Fragment {
                                         rangerDbId = String.valueOf(singleSnapshot.child("rangerDbId").getValue());
                                         refPathRanger = FirebaseDatabase.getInstance().getReference().child("users").child(rangerDbId);
 
+                                        Log.i("KATJA", "rangerDBID: "+ rangerDbId);
+                                        Log.i("KATJA", "userDBID: "+ userDbID);
+
                                         // ranger can`t vote for his own task :)
                                         if (rangerDbId.equals(userDbID)) {
+                                            Log.i("KATJA", "ranger==user");
                                             Toast.makeText(getContext(), R.string.errorRangerVotesHisOwnTask, Toast.LENGTH_LONG).show();
                                         } else {
                                             Log.i("KATJA", "ranger!=user");
@@ -282,16 +289,16 @@ public class FragmentDetailVotingTask extends Fragment {
                                                             String currentNOT = (String) dataSnap.child("numberOpenTasks").getValue();
                                                             Log.i("KATJA", "currentNOT: " + currentNOT);
                                                             int newNOT = Integer.parseInt(currentNOT) - 1;
-                                                            dataSnap.child("numberOpenTasks: ").getRef().setValue(String.valueOf(newNOT));
+                                                            dataSnap.child("numberOpenTasks").getRef().setValue(String.valueOf(newNOT));
                                                             Log.i("KATJA", "newNOT: " + newNOT);
 
                                                             // update balance with reward
                                                             //int fixedReward = Integer.valueOf(reward);
                                                             String currentBalance = String.valueOf(dataSnap.child("balance").getValue());
-                                                            Log.i("KATJA", "current balance" + currentBalance);
+                                                            Log.i("KATJA", "current balance: " + currentBalance);
                                                             int newBalance = Integer.parseInt(currentBalance) + reward;
                                                             dataSnap.child("balance").getRef().setValue(newBalance);
-                                                            Log.i("KATJA", "new balance" + newBalance);
+                                                            Log.i("KATJA", "new balance: " + newBalance);
 
                                                         }
 
