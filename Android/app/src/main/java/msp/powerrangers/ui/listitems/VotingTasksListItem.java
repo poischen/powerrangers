@@ -27,8 +27,7 @@ public class VotingTasksListItem implements Serializable {
 
     public String title;
     public String location;
-    public int imageID1;
-    public int imageID2;
+    public String reward;
     public String imageBeforeURL;
     public String imageAfterURL;
     public String taskId;
@@ -45,19 +44,19 @@ public class VotingTasksListItem implements Serializable {
     String locationDB;
     String imageBeforeDB;
     String imageAfterDB;
-    String nLikesDB;
-    String nDislikesDB;
     String taskIdDB;
+    String rewardDB;
 
     Boolean taskVoted;
 
 
-    public VotingTasksListItem(String taskId, String title, String location, String imageBeforeURL, String imageAfterURL) {
+    public VotingTasksListItem(String taskId, String title, String location, String imageBeforeURL, String imageAfterURL, String reward) {
         this.taskId = taskId;
         this.title = title;
         this.location = location;
         this.imageBeforeURL = imageBeforeURL;
         this.imageAfterURL = imageAfterURL;
+        this.reward = reward;
     }
 
     public VotingTasksListItem() {
@@ -89,13 +88,14 @@ public class VotingTasksListItem implements Serializable {
                                         titleDB = (String) singleSnapshot.child("name").getValue();
                                         cityDB = (String) singleSnapshot.child("city").getValue();
                                         countryDB = (String) singleSnapshot.child("country").getValue();
+                                        rewardDB = (String) singleSnapshot.child("reward").getValue();
 
                                         imageBeforeDB = (String) singleSnapshot.child("taskPicture").getValue();
                                         imageAfterDB = (String) singleSnapshot.child("taskPictureAfter").getValue();
 
                                         locationDB = cityDB + ", " + countryDB;
 
-                                        data.add(new VotingTasksListItem(taskIdDB, titleDB, locationDB, imageBeforeDB, imageAfterDB));
+                                        data.add(new VotingTasksListItem(taskIdDB, titleDB, locationDB, imageBeforeDB, imageAfterDB, rewardDB));
                                         Log.i("KATJA", "This is the data for voting: " + data);
                                    // }
                                 }

@@ -1,6 +1,7 @@
 package msp.powerrangers.ui;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -19,8 +20,11 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -34,6 +38,8 @@ import java.util.List;
 
 import msp.powerrangers.R;
 import msp.powerrangers.logic.Global;
+import msp.powerrangers.logic.Ranger;
+import msp.powerrangers.logic.User;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -64,6 +70,11 @@ public class FragmentDetailUsersOpenTask extends Fragment {
     private Uri uriAfterImage;
     private static final int CHOOSE_IMAGE_REQUEST = 123;
 
+    // current user
+    SharedPreferences sharedPrefs;
+    DatabaseReference refPathCurrentUser;
+    String userDbID;
+
     public FragmentDetailUsersOpenTask() {
         // Required empty public constructor
     }
@@ -71,6 +82,10 @@ public class FragmentDetailUsersOpenTask extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
+        userDbID = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
+        refPathCurrentUser = FirebaseDatabase.getInstance().getReference().child("users").child(userDbID);
 
         Bundle bundle = getArguments();
         position = bundle.getInt("PositionUsersOpenTask");
@@ -216,9 +231,27 @@ public class FragmentDetailUsersOpenTask extends Fragment {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         //write picture into db and change taskstatus
-                        DatabaseReference db = FirebaseDatabase.getInstance().getReference("tasks").child(taskID);
-                        db.child(getString(R.string.tasks_taskCompleted)).setValue(true);
-                        db.child(getString(R.string.tasks_taskPictureAfter)).setValue(storageAndDBPath);
+                        DatabaseReference refTasks = FirebaseDatabase.getInstance().getReference("tasks").child(taskID);
+                        refTasks.child(getString(R.string.tasks_taskCompleted)).setValue(true);
+                        refTasks.child(getString(R.string.tasks_taskPictureAfter)).setValue(storageAndDBPath);
+
+                        // update bubble user completed tasks
+                        refPathCurrentUser.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                String currentCount = String.valueOf(dataSnapshot.child("numberCompletedTasks").getValue());
+                                int newCount = Integer.valueOf(currentCount) + 1;
+                                refPathCurrentUser.child("numberCompletedTasks").setValue(String.valueOf(newCount));
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
