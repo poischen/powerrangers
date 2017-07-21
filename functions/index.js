@@ -44,6 +44,7 @@ const THUMB_MAX_HEIGHT = 200;
 const THUMB_MAX_WIDTH = 200;
 // Thumbnail prefix added to file names.
 const THUMB_PREFIX = 'thumb_';
+//const DISPLAY_PREFIX = 'display_';
 
 /**
  * When an image is uploaded in the Storage bucket We generate a thumbnail automatically using
@@ -52,17 +53,22 @@ const THUMB_PREFIX = 'thumb_';
  * we write the public URL to the Firebase Realtime Database.
  */
 exports.generateThumbnail = functions.storage.object().onChange(event => {
-  // File and directory paths.
-  const filePath = event.data.name;
-  const fileDir = path.dirname(filePath);
-  const fileName = path.basename(filePath);
-  const thumbFilePath = path.normalize(path.join(fileDir, `${THUMB_PREFIX}${fileName}`));
-  const tempLocalFile = path.join(os.tmpdir(), filePath);
-  const tempLocalDir = path.dirname(tempLocalFile);
-  const tempLocalThumbFile = path.join(os.tmpdir(), thumbFilePath);
+   // File and directory paths
+   const filePath = event.data.name;   
+   const fileDir = path.dirname(filePath);   
+   const fileName = path.basename(filePath);   
+   // Thumb images file paths
+   const thumbFilePath = path.normalize(path.join(fileDir, `${THUMB_PREFIX}${fileName}`)); 
+   const thumbFilePathDisplay = path.normalize(path.join(fileDir, `${DISPLAY_PREFIX}${fileName}`)); 
 
-  //Exit if this is a auto generated display image
-  if (fileName.startsWith(DISPLAY_PREFIX)){
+   const tempLocalFile = path.join(os.tmpdir(), filePath);   
+   const tempLocalDir = path.dirname(tempLocalFile);   
+   const tempLocalThumbFile = path.join(os.tmpdir(), thumbFilePath);
+   const tempLocalThumbFileDisplay = path.join(os.tmpdir(), thumbFilePathDisplay);
+
+  // Exit if the image is already a thumbnail or display image
+  if (fileName.startsWith(DISPLAY_PREFIX) || fileName.startsWith(THUMB_PREFIX)) {
+    console.log(`Already a Thumbnail.`);
     return;
   }
 
@@ -72,22 +78,29 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
     return;
   }
 
-  // Exit if the image is already a thumbnail.
-  if (fileName.startsWith(THUMB_PREFIX)) {
-    console.log('Already a Thumbnail.');
-    return;
-  }
-
   // Exit if this is a move or deletion event.
   if (event.data.resourceState === 'not_exists') {
     console.log('This is a deletion event.');
     return;
   }
 
+  // Image width for display size
+  var width;
+  var height;
+  //if witdh > height image is landscape
+  if (event.data.width > event.data.height) {
+	  height = 720;
+	  width = 1280;
+  } else {
+	  height = 2276;
+	  width = 1280;
+  }
+
   // Cloud Storage files.
   const bucket = gcs.bucket(event.data.bucket);
   const file = bucket.file(filePath);
   const thumbFile = bucket.file(thumbFilePath);
+  const thumbFileDisplay = bucket.file(thumbFilePathDisplay);
 
   // Create the temp directory where the storage file will be downloaded.
   return mkdirp(tempLocalDir).then(() => {
@@ -102,11 +115,20 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
     console.log('Thumbnail created at', tempLocalThumbFile);
     // Uploading the Thumbnail.
     return bucket.upload(tempLocalThumbFile, {destination: thumbFilePath});
+  }).then(() => { // Upload the DISPLAY image
+   console.log(`The file for display has been downloaded to`, tempLocalFile);
+    // Generate a MEDIUM thumbnail using ImageMagick.
+    return spawn('convert', [tempLocalFile, `-display`, '${width}x${height}>', tempLocalThumbFileDisplay]); 
   }).then(() => {
-    console.log('Thumbnail uploaded to Storage at', thumbFilePath);
+        console.log(`Display Image created at`, tempLocalThumbFileDisplay);
+        // Uploading the medium Thumbnail.
+        return bucket.upload(tempLocalThumbFileDisplay, { destination: thumbFilePathDisplay});
+  }).then(() => {
+    console.log('Thumbnails uploaded to Storage at', thumbFilePath);
     // Once the image has been uploaded delete the local files to free up disk space.
     fs.unlinkSync(tempLocalFile);
     fs.unlinkSync(tempLocalThumbFile);
+    fs.unlinkSync(tempLocalThumbFileDisplay);
     // Get the Signed URLs for the thumbnail and original image.
     const config = {
       action: 'read',
@@ -114,30 +136,35 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
     };
     return Promise.all([
       thumbFile.getSignedUrl(config),
-      file.getSignedUrl(config)
+      file.getSignedUrl(config),
+      thumbFileDisplay.getSignedUrl(config)
     ]);
   }).then(results => {
     console.log('Got Signed URLs.');
     const thumbResult = results[0];
     const originalResult = results[1];
+    const displayResult = results[2];
+
     const thumbFileUrl = thumbResult[0];
     const fileUrl = originalResult[0];
+    const displayFileUrl = displayResult[0];
     // Add the URLs to the Database
-    return admin.database().ref('images').push({path: fileUrl, thumbnail: thumbFileUrl});
+    return admin.database().ref('images').push({path: fileUrl, thumbnail: thumbFileUrl, displayImage: displayFileUrl});
   });
 
 });
 
+
 /**
  * Modified version of the generateThumbnail to scale pictures on a proper displaying size
- */
+ 
 'use strict';
 /**
  * When an image is uploaded in the Storage bucket We generate a thumbnail automatically using
  * ImageMagick.
  * After the thumbnail has been generated and uploaded to Cloud Storage,
  * we write the public URL to the Firebase Realtime Database.
- */
+ 
    // Max height and width of the thumbnail in pixels.
    var height;
    var width;
@@ -227,6 +254,8 @@ if (fileName.startsWith(THUMB_PREFIX)){
     return admin.database().ref('images').push({path: fileUrl, display: displayFileUrl});
   });
 });
+
+*/
 
 /*
 * Listens for cases being confirmed,
