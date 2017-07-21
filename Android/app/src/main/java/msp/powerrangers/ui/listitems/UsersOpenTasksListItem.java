@@ -29,7 +29,7 @@ public class UsersOpenTasksListItem implements Serializable {
 
     public String taskImageUrlDB;
     public String caseImageUrlDB;
-    public Bitmap taskImage;
+
 
 
     String titleDB;
@@ -37,6 +37,7 @@ public class UsersOpenTasksListItem implements Serializable {
     String countryDB;
     String commentDB;
     String locationDB;
+    String taskImageDB;
 
     Boolean taskCompletedDB;
     Boolean taskVotedDb;
@@ -91,15 +92,17 @@ public class UsersOpenTasksListItem implements Serializable {
                                         commentDB = (String) singleSnapshot.child("comment").getValue();
 
                                         // TODO: get first image for task from db
-                                        taskImageUrlDB = (String) singleSnapshot.child("taskPicture").getValue();
-                                        caseImageUrlDB = (String) singleSnapshot.child("casePicture").getValue();
+                                       // taskImageUrlDB = (String) singleSnapshot.child("taskPicture").getValue();
+                                       // caseImageUrlDB = (String) singleSnapshot.child("casePicture").getValue();
+
+                                        taskImageDB = (String) singleSnapshot.child("taskPicture").getValue();
 
                                         taskIdDB = (String) singleSnapshot.child("taskDbId").getValue();
                                         Log.i("KATJA", "taskDbId in dataSnapshot: "+ taskIdDB);
 
                                         caseIdDB = (String) singleSnapshot.child("caseId").getValue();
 
-                                        data.add(new UsersOpenTasksListItem(titleDB, locationDB, commentDB, taskIdDB, caseIdDB, taskImageUrlDB, taskCompletedDB));
+                                        data.add(new UsersOpenTasksListItem(titleDB, locationDB, commentDB, taskIdDB, caseIdDB, taskImageDB, taskCompletedDB));
 
                                         Log.i("This", this.toString());
                                         Log.i("Data add", data.toString());
@@ -144,14 +147,6 @@ public class UsersOpenTasksListItem implements Serializable {
 
     public String getCaseId() {
         return caseIdDB;
-    }
-
-    public Bitmap getTaskBitmap() {
-        return taskImage;
-    }
-
-    public void setTaskBitmap(Bitmap image) {
-        this.taskImage = image;
     }
 
     public String getTaskUrl() {

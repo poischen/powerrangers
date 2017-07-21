@@ -133,6 +133,8 @@ public class FragmentUsersOpenTasks extends Fragment {
                         bundle.putString("taskImageUrl", mAdapter.getItem(position).taskImageUrlDB);
                         bundle.putString("caseImageUrl", mAdapter.getItem(position).caseImageUrlDB);
                         Log.i("BUNDLE IN UOT", bundle.toString());
+
+
                         fragmentDetailUsersOpenTask.setArguments(bundle);
                         ((BaseContainerFragment)getParentFragment()).replaceFragmentDetailOpenTask(fragmentDetailUsersOpenTask);
 
@@ -197,8 +199,37 @@ public class FragmentUsersOpenTasks extends Fragment {
             String cas = listItem.get(position).taskImageUrlDB;
             Log.i("Viki: TaskImageURLDB", taskImageUrlDB);
 
+            // set image
+            if (taskImageUrlDB != null) {     // no bitmap from bundle
 
-            try{
+                try {   // download pic
+                    final File localFile = File.createTempFile("images", "jpg");
+                    StorageReference riversRef = storageRef.child(Global.getThumbUrl(taskImageUrlDB));
+                    riversRef.getFile(localFile)
+                            .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                    Log.i("Viki DetailVotingTask", "download erfolgreich, imageAfter");
+                                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                    holder.imageView.setImageBitmap(bitmap);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Log.i("Viki DetailVotingTask", exception.getMessage());
+                        }
+                    });
+                } catch (Exception e) {
+                    Log.i("Viki DetailVotingTask", e.getMessage());
+                }
+
+            }
+
+
+
+
+
+            /*try{
                 Log.v("Viki", "in try");
 
                 final File localFile = File.createTempFile("images", "jpg");
@@ -225,7 +256,7 @@ public class FragmentUsersOpenTasks extends Fragment {
             } catch (Exception e){
                 Log.i("Viki", "in catch");
                 holder.imageView.setImageResource(R.drawable.placeholder_task);
-            }
+            }*/
 
 
         }

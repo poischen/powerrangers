@@ -41,7 +41,6 @@ import msp.powerrangers.ui.listitems.VotingTasksListItem;
  */
 
 
-// TODO WICHTIG!!!!!!!!!!!!!!!!!!!!!!! DB Eintrag von ImageAfter!!!
 public class FragmentVotingTasks extends Fragment {
 
     private static final String TAG = "VotingTasksFragment";

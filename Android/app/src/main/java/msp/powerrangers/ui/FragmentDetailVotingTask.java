@@ -50,7 +50,7 @@ public class FragmentDetailVotingTask extends Fragment {
     // firebase
     private StorageReference storageRef;
     private DatabaseReference dbRefTasks;
-    private DatabaseReference refPathCurrentUser;
+    private DatabaseReference refPathRanger;
 
     // current user from shared preferences
     SharedPreferences sharedPrefs;
@@ -95,7 +95,6 @@ public class FragmentDetailVotingTask extends Fragment {
         sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
         userDbID = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
 
-        refPathCurrentUser = FirebaseDatabase.getInstance().getReference().child("users").child(userDbID);
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
 
         // Set action bar menu
@@ -193,13 +192,15 @@ public class FragmentDetailVotingTask extends Fragment {
 
                                 rangerDbId = (String) singleSnapshot.child("rangerDbId").getValue();
 
+                                refPathRanger = FirebaseDatabase.getInstance().getReference().child("users").child(rangerDbId);
+
                                 // ranger can`t vote for his own task :)
                                 if (rangerDbId.equals(userDbID)) {
                                     Toast.makeText(getContext(), R.string.errorRangerVotesHisOwnTask, Toast.LENGTH_LONG).show();
                                 } else {
                                     // when voted: update in user opentasks and completedtasks,
                                     // in task : set taskVoted true
-                                    refPathCurrentUser.addListenerForSingleValueEvent(
+                                    refPathRanger.addListenerForSingleValueEvent(
                                             new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnap) {
@@ -223,6 +224,7 @@ public class FragmentDetailVotingTask extends Fragment {
                                             });
 
                                     dbRefTasks.child(taskDBId).child("taskVoted").setValue(true);
+                                    Toast.makeText(getContext(), R.string.votingNotOk, Toast.LENGTH_LONG).show();
                                 }
 
                                 // go back to FragmentStart
@@ -258,6 +260,7 @@ public class FragmentDetailVotingTask extends Fragment {
                                         DataSnapshot singleSnapshot = (DataSnapshot) iter.next();
 
                                         rangerDbId = String.valueOf(singleSnapshot.child("rangerDbId").getValue());
+                                        refPathRanger = FirebaseDatabase.getInstance().getReference().child("users").child(rangerDbId);
 
                                         // ranger can`t vote for his own task :)
                                         if (rangerDbId.equals(userDbID)) {
@@ -266,7 +269,7 @@ public class FragmentDetailVotingTask extends Fragment {
 
                                             // when voted,
                                             // update user opentasks
-                                            refPathCurrentUser.addListenerForSingleValueEvent(
+                                            refPathRanger.addListenerForSingleValueEvent(
                                                     new ValueEventListener() {
                                                         @Override
                                                         public void onDataChange(DataSnapshot dataSnap) {
@@ -296,6 +299,7 @@ public class FragmentDetailVotingTask extends Fragment {
                                                     });
 
                                             dbRefTasks.child(taskDBId).child("taskVoted").setValue(true);
+                                            Toast.makeText(getContext(), R.string.votingOk, Toast.LENGTH_LONG).show();
                                         }
 
                                         // go back to FragmentStart

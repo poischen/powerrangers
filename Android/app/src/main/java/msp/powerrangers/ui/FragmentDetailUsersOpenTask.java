@@ -132,6 +132,70 @@ public class FragmentDetailUsersOpenTask extends Fragment {
         FragmentDetailUsersOpenTask.ImageAdapter adapter = new FragmentDetailUsersOpenTask.ImageAdapter(this.getContext());
         viewPager.setAdapter(adapter);
 
+
+        if (taskImageUrl != null) {
+            try {
+                final File localFileTask = File.createTempFile("images", "jpg");
+                StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                StorageReference riversRefTask = storageRef.child(Global.getDisplayUrl(taskImageUrl));
+                riversRefTask.getFile(localFileTask)
+                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                Log.v("FragmentStart", "download erfolgreich");
+                                Bitmap bmp = BitmapFactory.decodeFile(localFileTask.getAbsolutePath());
+                                pictureBitmapList.add(bmp);
+                                updateImageViews();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Log.d("FragmentStart", exception.getMessage());
+                    }
+                });
+            } catch (Exception e) {
+                Log.d("FragmentStart", "no image available or some other error occured");
+            }
+        }
+
+
+
+
+
+
+        // neu, wie setze ich das bild
+        /*
+        if (taskImageUrl != null) {     // no bitmap from bundle
+
+            try {   // download pic before
+                final File localFile = File.createTempFile("images", "jpg");
+                StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                StorageReference riversRef = storageRef.child(Global.getThumbUrl(taskImageUrl));
+                riversRef.getFile(localFile)
+                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                Log.i("Viki DetailVotingTask", "download erfolgreich, imageBefore");
+                                Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                pictureBitmapList.set(0, bitmap);
+                                //imageBefore.setImageBitmap(bitmap);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Log.i("Viki DetailVotingTask", exception.getMessage());
+                    }
+                });
+            } catch (Exception e) {
+                Log.i("Viki DetailVotingTask", e.getMessage());
+            }
+
+        }
+
+*/
+
+
+/*
         if (taskImageUrl != null) {
             try {
                 final File localFileTask = File.createTempFile("images", "jpg");
@@ -180,6 +244,7 @@ public class FragmentDetailUsersOpenTask extends Fragment {
                 }
             }
         }
+        */
         tvTaskDesc = (TextView) view.findViewById(R.id.taskDescUOT);
         tvTaskDesc.setText(taskDescription);
 

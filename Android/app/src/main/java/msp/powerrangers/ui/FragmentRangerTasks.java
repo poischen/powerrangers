@@ -86,15 +86,9 @@ public class FragmentRangerTasks extends Fragment {
                         FragmentDetailRangerTask fragmentDetailRangerTask = new FragmentDetailRangerTask();
                         Bundle bundle = new Bundle();
                         bundle.putInt("PositionRanger", position);
+                        bundle.putString("taskImageUrl", mAdapter.getItem(position).getTaskUrl());
+                        bundle.putString("caseImageUrl", mAdapter.getItem(position).getCaseUrl());
 
-                        try{
-                            Bitmap taskImage = mAdapter.getItem(position).getTaskBitmap();
-                            ByteArrayOutputStream bs = new ByteArrayOutputStream();
-                            taskImage.compress(Bitmap.CompressFormat.JPEG, 50, bs);
-                            bundle.putByteArray("taskImageByteArray", bs.toByteArray());
-                        } catch (Exception e){
-                            bundle.putString("taskImageUrl", mAdapter.getItem(position).getTaskUrl());
-                        }
 
                         fragmentDetailRangerTask.setArguments(bundle);
                         ((BaseContainerFragment)getParentFragment()).replaceFragmentDetailRanger(fragmentDetailRangerTask);

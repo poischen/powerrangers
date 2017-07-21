@@ -367,6 +367,9 @@ public class FragmentDetailConfirmerCase extends Fragment {
                                     }
 
                                 });
+
+                                Toast.makeText(getContext(), R.string.detailConfirmerCaseConfirmMessage, Toast.LENGTH_LONG).show();
+
                             }
 
                         }

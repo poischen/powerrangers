@@ -77,9 +77,9 @@ public class VotingTasksListItem implements Serializable {
                                 // get data for each case from the db
                                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
 
-                                    //taskVoted = (Boolean) singleSnapshot.child("taskVoted").getValue();
-                                    // TODO : check if userDbiD equals rangerID
-                                    //if (!taskVoted) {
+                                    taskVoted = (Boolean) singleSnapshot.child("taskVoted").getValue();
+
+                                    if (!taskVoted) {
 
                                         taskIdDB = (String) singleSnapshot.child("taskDbId").getValue();
                                         titleDB = (String) singleSnapshot.child("name").getValue();
@@ -94,7 +94,7 @@ public class VotingTasksListItem implements Serializable {
 
                                         data.add(new VotingTasksListItem(taskIdDB, titleDB, locationDB, imageBeforeDB, imageAfterDB, rewardDB));
                                         Log.i("KATJA", "This is the data for voting: " + data);
-                                   // }
+                                    }
                                 }
 
                                 // TODO: checken, ob wirklich true sein soll (es gibt einen besonderen tag bei voting... kP)

@@ -105,6 +105,7 @@
     <string name="detailConfirmerCaseCaseTitle">Confirm a case</string>
     <string name="detailConfirmerCaseConfirmButton">Confirm this case</string>
     <string name="detailConfirmerCaseDectiveError">Sorry, you can\'t confirm your own case! </string>
+    <string name="detailConfirmerCaseConfirmMessage">Thank you for confirming this case :-)!</string>
 
 
     <!-- FragmentRangerTasks & DetailRangerTask-->
@@ -128,6 +129,8 @@
     <!-- FragmentVotingTasks-->
     <string name="titleVotingTasks">Voting Tasks</string>
     <string name="errorRangerVotesHisOwnTask">Sorry, you can not vote for your own task! ;-)</string>
+    <string name="votingNotOk">Thank you for voting, ranger won\'t get his reward ;-(</string>
+    <string name="votingOk">Thank you for voting, ranger will get his reward ;-)</string>
 
     <!-- ListItems-->
     <string name="placeholderTitle">Title Placeholder</string>
