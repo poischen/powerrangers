@@ -81,8 +81,7 @@ public class UsersOpenTasksListItem implements Serializable {
                                     taskCompletedDB = (Boolean) singleSnapshot.child("taskCompleted").getValue();
                                     taskVotedDb = (Boolean) singleSnapshot.child("taskVoted").getValue();
 
-
-                                    if (!taskCompletedDB && taskVotedDb) {
+                                    if (!taskCompletedDB && !taskVotedDb) {
                                         titleDB = (String) singleSnapshot.child("name").getValue();
 
                                         cityDB = (String) singleSnapshot.child("city").getValue();
