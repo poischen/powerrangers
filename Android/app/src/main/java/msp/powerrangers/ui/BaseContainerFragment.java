@@ -77,6 +77,14 @@ public class BaseContainerFragment extends Fragment {
         getChildFragmentManager().executePendingTransactions();
     }
 
+    public void replaceFragmentDetailVoting(FragmentDetailVotingTask fragment) {
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.container_framelayout, fragment);
+        transaction.commit();
+        getChildFragmentManager().executePendingTransactions();
+    }
+
     public void replaceFragmentDetailOpenTask(FragmentDetailUsersOpenTask fragment) {
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.addToBackStack(null);

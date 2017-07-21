@@ -54,10 +54,6 @@ public class FragmentRangerTasks extends Fragment {
     private RangerTasksListItem tasksListItem;
     private StorageReference storageRef;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public FragmentRangerTasks() {
     }
 
@@ -87,12 +83,6 @@ public class FragmentRangerTasks extends Fragment {
                     public void onItemClick(View view, int position) {
 
                         //show FragmentDetailRangerTask
-                        /*FragmentDetailRangerTask fragmentDetailRangerTask = new FragmentDetailRangerTask();
-                        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                        Bundle bundles = new Bundle();
-                        bundles.putInt("PositionRanger", position);
-                        bundles.putString("caseImageUrl", mAdapter.getItem(position).getCaseUrl());*/
-
                         FragmentDetailRangerTask fragmentDetailRangerTask = new FragmentDetailRangerTask();
                         Bundle bundle = new Bundle();
                         bundle.putInt("PositionRanger", position);
@@ -109,13 +99,6 @@ public class FragmentRangerTasks extends Fragment {
                         fragmentDetailRangerTask.setArguments(bundle);
                         ((BaseContainerFragment)getParentFragment()).replaceFragmentDetailRanger(fragmentDetailRangerTask);
 
-                        /*fragmentDetailRangerTask.setArguments(bundles);
-                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        ft.replace(R.id.activity_main_fragment_container, fragmentDetailRangerTask);
-                        ft.addToBackStack(null);
-
-                        ft.commit();*/
-
                     }
 
                     @Override
@@ -130,9 +113,7 @@ public class FragmentRangerTasks extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // 3. Create an adapter
-        Log.i("KATJA","befor getData");
         mAdapter = new Recycler_View_Adapter(tasksListItem.getData(), getContext());
-        Log.i("KATJA","after getData");
 
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);
@@ -167,7 +148,8 @@ public class FragmentRangerTasks extends Fragment {
 
         @Override
         public void onBindViewHolder(final View_Holder holder, final int position) {
-            //Use the provided View Holder on the onCreateViewHolder method to populate the current row on the RecyclerView
+
+            // populate the current row on the RecyclerView
             holder.title.setText(listItem.get(position).title);
             holder.location.setText(listItem.get(position).city + ", " + listItem.get(position).country);
             holder.comment.setText(listItem.get(position).comment);

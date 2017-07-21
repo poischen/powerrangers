@@ -39,6 +39,7 @@ public class UsersOpenTasksListItem implements Serializable {
     String locationDB;
 
     Boolean taskCompletedDB;
+    Boolean taskVotedDb;
     String taskIdDB;
     String caseIdDB;
 
@@ -60,13 +61,13 @@ public class UsersOpenTasksListItem implements Serializable {
 
     }
 
-    public void fill_with_data(final FragmentWait fragmentWait, String userID) {
+    public void fill_with_data(final FragmentWait fragmentWait, String userDbId) {
         DatabaseReference dbRefTasks;
 
         // get the reference to the db tasks
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
 
-        dbRefTasks.orderByChild("rangerID").equalTo(userID)
+        dbRefTasks.orderByChild("rangerDbId").equalTo(userDbId)
                 .addValueEventListener(
                         new ValueEventListener() {
 
@@ -78,8 +79,9 @@ public class UsersOpenTasksListItem implements Serializable {
                                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
 
                                     taskCompletedDB = (Boolean) singleSnapshot.child("taskCompleted").getValue();
+                                    taskVotedDb = (Boolean) singleSnapshot.child("taskVoted").getValue();
 
-                                    if (!taskCompletedDB) {
+                                    if (!taskCompletedDB && !taskVotedDb) {
                                         titleDB = (String) singleSnapshot.child("name").getValue();
 
                                         cityDB = (String) singleSnapshot.child("city").getValue();

@@ -53,7 +53,6 @@ import msp.powerrangers.logic.User;
 public class FragmentDetailRangerTask extends Fragment {
 
     private TextView rangerTaskName;
-    //private ImageView rangerTaskDetailImage;
     private TextView textRangerReward;
     private TextView textNumberRangers;
     private TextView textPollutionLevel;
@@ -108,8 +107,6 @@ public class FragmentDetailRangerTask extends Fragment {
         // Set action bar menu
         setHasOptionsMenu(true);
 
-//        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
     }
 
     @Override
@@ -143,16 +140,11 @@ public class FragmentDetailRangerTask extends Fragment {
         Query filteredTasks = dbRefTasks.orderByChild("assigned").equalTo(false);
         filteredTasks.addValueEventListener( new ValueEventListener() {
 
-
-        //dbRefTasks.addListenerForSingleValueEvent(new ValueEventListener() {
-
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 Iterator iter = dataSnapshot.getChildren().iterator();
-
                 for(int i = 0; i < position; i++) {
-
                     iter.next();
                 }
 
@@ -255,7 +247,6 @@ public class FragmentDetailRangerTask extends Fragment {
 
 
         // set some fancy icons
-
         buttonJoin = (Button) view.findViewById(R.id.buttonJoinAsRanger);
         buttonJoin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -280,7 +271,7 @@ public class FragmentDetailRangerTask extends Fragment {
 
                         // Create a new Ranger and fill additional information in the DB Tasks
                         Ranger ranger = new Ranger(userInfo, taskID);
-                        dbRefTasks.child(taskDBId).child("rangerID").setValue(ranger.getId());
+                        dbRefTasks.child(taskDBId).child("rangerDbId").setValue(ranger.getDbId());
                         dbRefTasks.child(taskDBId).child("assigned").setValue(true);
 
                         // update the number of rangers open tasks

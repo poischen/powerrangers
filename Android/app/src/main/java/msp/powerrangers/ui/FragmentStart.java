@@ -252,7 +252,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                 UsersOpenTasksListItem uotList = new UsersOpenTasksListItem();
 
                 //TODO: ggf. erst aus Fragment Wait aufrufen während call von replaceFragmentWait?
-                fw.initReplacingFragmentOpenTasks(uotList, u.getId());
+                fw.initReplacingFragmentOpenTasks(uotList, u.getDbId());
 
                 ((BaseContainerFragment)getParentFragment()).replaceFragmentWait(fw);
 

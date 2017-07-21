@@ -127,6 +127,7 @@
 
     <!-- FragmentVotingTasks-->
     <string name="titleVotingTasks">Voting Tasks</string>
+    <string name="errorRangerVotesHisOwnTask">Sorry, you can not vote for your own task! ;-)</string>
 
     <!-- ListItems-->
     <string name="placeholderTitle">Title Placeholder</string>
