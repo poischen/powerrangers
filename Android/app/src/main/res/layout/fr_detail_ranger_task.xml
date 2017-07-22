@@ -39,7 +39,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_below="@+id/fRangerTaskDetailViewPager"
                 android:layout_weight="3"
-                android:layout_marginTop="10pt">
+                android:layout_marginTop="7pt">
                 <!-- Reward -->
                 <LinearLayout
                     android:orientation="horizontal"
@@ -114,8 +114,8 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/textScalePollution"
                         android:textColor="@color/colorPrimaryDark"
-                        android:textSize="18sp"
-                        android:layout_marginTop="7dp"
+                        android:textSize="16sp"
+                        android:layout_marginTop="4dp"
                         android:gravity="center_vertical|center_horizontal"
                          />
                 </LinearLayout>
@@ -140,7 +140,7 @@
                 android:layout_marginRight="15dp"
                 android:text="@string/buttonJoinAsRanger"
                 android:layout_below="@+id/detailTaskDescription"
-                android:layout_marginTop="15pt"/>
+                android:layout_marginTop="12pt"/>
         </RelativeLayout>
 
 </ScrollView>

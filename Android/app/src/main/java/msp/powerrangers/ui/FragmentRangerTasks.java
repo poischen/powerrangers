@@ -54,10 +54,6 @@ public class FragmentRangerTasks extends Fragment {
     private RangerTasksListItem tasksListItem;
     private StorageReference storageRef;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public FragmentRangerTasks() {
     }
 
@@ -87,34 +83,15 @@ public class FragmentRangerTasks extends Fragment {
                     public void onItemClick(View view, int position) {
 
                         //show FragmentDetailRangerTask
-                        /*FragmentDetailRangerTask fragmentDetailRangerTask = new FragmentDetailRangerTask();
-                        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                        Bundle bundles = new Bundle();
-                        bundles.putInt("PositionRanger", position);
-                        bundles.putString("caseImageUrl", mAdapter.getItem(position).getCaseUrl());*/
-
                         FragmentDetailRangerTask fragmentDetailRangerTask = new FragmentDetailRangerTask();
                         Bundle bundle = new Bundle();
                         bundle.putInt("PositionRanger", position);
+                        bundle.putString("taskImageUrl", mAdapter.getItem(position).getTaskUrl());
+                        bundle.putString("caseImageUrl", mAdapter.getItem(position).getCaseUrl());
 
-                        try{
-                            Bitmap taskImage = mAdapter.getItem(position).getTaskBitmap();
-                            ByteArrayOutputStream bs = new ByteArrayOutputStream();
-                            taskImage.compress(Bitmap.CompressFormat.JPEG, 50, bs);
-                            bundle.putByteArray("taskImageByteArray", bs.toByteArray());
-                        } catch (Exception e){
-                            bundle.putString("taskImageUrl", mAdapter.getItem(position).getTaskUrl());
-                        }
 
                         fragmentDetailRangerTask.setArguments(bundle);
                         ((BaseContainerFragment)getParentFragment()).replaceFragmentDetailRanger(fragmentDetailRangerTask);
-
-                        /*fragmentDetailRangerTask.setArguments(bundles);
-                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        ft.replace(R.id.activity_main_fragment_container, fragmentDetailRangerTask);
-                        ft.addToBackStack(null);
-
-                        ft.commit();*/
 
                     }
 
@@ -130,9 +107,7 @@ public class FragmentRangerTasks extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // 3. Create an adapter
-        Log.i("KATJA","befor getData");
         mAdapter = new Recycler_View_Adapter(tasksListItem.getData(), getContext());
-        Log.i("KATJA","after getData");
 
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);
@@ -167,35 +142,41 @@ public class FragmentRangerTasks extends Fragment {
 
         @Override
         public void onBindViewHolder(final View_Holder holder, final int position) {
-            //Use the provided View Holder on the onCreateViewHolder method to populate the current row on the RecyclerView
+
+            // populate the current row on the RecyclerView
             holder.title.setText(listItem.get(position).title);
             holder.location.setText(listItem.get(position).city + ", " + listItem.get(position).country);
             holder.comment.setText(listItem.get(position).comment);
 
             String taskImageUrlDB = listItem.get(position).taskImageUrlDB;
-            Log.v("FragmentRangerTasks", "taskImageUrlDB: " + taskImageUrlDB);
-            try {
-                final File localFile = File.createTempFile("images", "jpg");
-                StorageReference riversRef = storageRef.child(Global.getThumbUrl(taskImageUrlDB));
-                riversRef.getFile(localFile)
-                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                Log.v("FragmentRangerTasks", "download erfolgreich");
-                                Bitmap taskImage = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                listItem.get(position).setTaskBitmap(blur(taskImage));
-                                holder.image.setImageBitmap(listItem.get(position).getTaskBitmap());
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Log.d("FragmentRangerTasks", "download nicht erfolgreich (1)");
-                        holder.image.setImageResource(R.drawable.placeholder_task);
-                    }
-                });
-            } catch (Exception e) {
-                Log.d("FragmentRangerTasks", "download nicht erfolgreich (2)");
-                holder.image.setImageResource(R.drawable.placeholder_task);
+            Log.i("KATJA FrRangerTasks", "taskImageUrlDB: " + taskImageUrlDB);
+
+            // set image
+            if (taskImageUrlDB != null) {     //  url from bundle is set
+
+                try { // download image
+                    final File localFile = File.createTempFile("images", "jpg");
+                    StorageReference riversRef = storageRef.child(Global.getThumbUrl(taskImageUrlDB));
+                    riversRef.getFile(localFile)
+                            .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                    Log.i(" KATJA FrRangerTasks", "download erfolgreich");
+                                    Bitmap taskImage = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                    // set blurred task image
+                                    holder.image.setImageBitmap(blur(taskImage));
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Log.i("KATJA FrRangerTasks", "download nicht erfolgreich (1)");
+                            holder.image.setImageResource(R.drawable.placeholder_task);
+                        }
+                    });
+                } catch (Exception e) {
+                    Log.i("KATJA FrRangerTasks", "download nicht erfolgreich (2)");
+                    holder.image.setImageResource(R.drawable.placeholder_task);
+                }
             }
 
         }

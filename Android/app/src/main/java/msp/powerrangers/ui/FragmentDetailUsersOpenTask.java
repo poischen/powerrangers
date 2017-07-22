@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
@@ -30,8 +31,11 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -45,6 +49,8 @@ import java.util.List;
 
 import msp.powerrangers.R;
 import msp.powerrangers.logic.Global;
+import msp.powerrangers.logic.Ranger;
+import msp.powerrangers.logic.User;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -78,6 +84,11 @@ public class FragmentDetailUsersOpenTask extends Fragment {
     private Uri uriAfterImage;
     private static final int CHOOSE_IMAGE_REQUEST = 123;
 
+    // current user
+    SharedPreferences sharedPrefs;
+    DatabaseReference refPathCurrentUser;
+    String userDbID;
+
     public FragmentDetailUsersOpenTask() {
         // Required empty public constructor
     }
@@ -85,6 +96,10 @@ public class FragmentDetailUsersOpenTask extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
+        userDbID = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
+        refPathCurrentUser = FirebaseDatabase.getInstance().getReference().child("users").child(userDbID);
 
         Bundle bundle = getArguments();
         position = bundle.getInt("PositionUsersOpenTask");
@@ -112,12 +127,12 @@ public class FragmentDetailUsersOpenTask extends Fragment {
         tvTaskName = (TextView) view.findViewById(R.id.taskNameUOT);
         tvTaskName.setText(taskTitle);
 
-        //ivTaskImage = (ImageView) view.findViewById(R.id.taskImageUOT);
         viewPager = (ViewPager) view.findViewById(R.id.taskImagesUOT);
         FragmentDetailUsersOpenTask.ImageAdapter adapter = new FragmentDetailUsersOpenTask.ImageAdapter(this.getContext());
         viewPager.setAdapter(adapter);
 
         if (taskImageUrl != null) {
+            Log.i("KATJA", "task image url is not null: "+ taskImageUrl);
             try {
                 final File localFileTask = File.createTempFile("images", "jpg");
                 StorageReference storageRef = FirebaseStorage.getInstance().getReference();
@@ -126,7 +141,7 @@ public class FragmentDetailUsersOpenTask extends Fragment {
                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                Log.v("FragmentStart", "download erfolgreich");
+                                Log.v("FrDetailUsersOpenTask", "download erfolgreich");
                                 Bitmap bmp = BitmapFactory.decodeFile(localFileTask.getAbsolutePath());
                                 pictureBitmapList.add(bmp);
                                 updateImageViews();
@@ -134,37 +149,14 @@ public class FragmentDetailUsersOpenTask extends Fragment {
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        Log.d("FragmentStart", exception.getMessage());
+                        Log.d("FrDetailUsersOpenTask", exception.getMessage());
                     }
                 });
             } catch (Exception e) {
-                Log.d("FragmentStart", "no image available or some other error occured");
-            }
-            if (caseImageUrl != null) {
-                try {
-                    final File localFileCase = File.createTempFile("images", "jpg");
-                    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                    StorageReference riversRefCase = storageRef.child(Global.getDisplayUrl(caseImageUrl));
-                    riversRefCase.getFile(localFileCase)
-                            .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                    Log.v("FragmentStart", "download erfolgreich");
-                                    Bitmap bmp = BitmapFactory.decodeFile(localFileCase.getAbsolutePath());
-                                    pictureBitmapList.add(bmp);
-                                    updateImageViews();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            Log.d("FragmentStart", exception.getMessage());
-                        }
-                    });
-                } catch (Exception e) {
-                    Log.d("FragmentStart", "no image available or some other error occured");
-                }
+                Log.d("FrDetailUsersOpenTask", "no image available or some other error occured");
             }
         }
+
         tvTaskDesc = (TextView) view.findViewById(R.id.taskDescUOT);
         tvTaskDesc.setText(taskDescription);
 
@@ -244,8 +236,8 @@ public class FragmentDetailUsersOpenTask extends Fragment {
 
         //upload picture
         final String storageAndDBPath;
-        //TODO: pictureName anpassen: Position?!
         storageAndDBPath = "images/cases/" + caseID + "/" + position + "_after.jpg";
+        Log.i("KATJA", "DUOT nach storageDBPath");
 
         //upload to Firebase Storage
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
@@ -255,16 +247,34 @@ public class FragmentDetailUsersOpenTask extends Fragment {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         //write picture into db and change taskstatus
-                        DatabaseReference db = FirebaseDatabase.getInstance().getReference("tasks").child(taskID);
-                        db.child(getString(R.string.tasks_taskCompleted)).setValue(true);
-                        db.child(getString(R.string.tasks_taskPictureAfter)).setValue(storageAndDBPath);
+                        DatabaseReference refTasks = FirebaseDatabase.getInstance().getReference("tasks").child(taskID);
+                        refTasks.child(getString(R.string.tasks_taskCompleted)).setValue(true);
+                        refTasks.child(getString(R.string.tasks_taskPictureAfter)).setValue(storageAndDBPath);
+
+                        // update bubble user completed tasks
+                        refPathCurrentUser.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                String currentCount = String.valueOf(dataSnapshot.child("numberCompletedTasks").getValue());
+                                Log.i("KATJA", "DUOT current NOT: "+currentCount);
+                                int newCount = Integer.valueOf(currentCount) + 1;
+                                Log.i("KATJA", "DUOT new NOT: "+currentCount);
+                                refPathCurrentUser.child("numberCompletedTasks").setValue(String.valueOf(newCount));
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         Toast.makeText(getContext(), R.string.errorUpload, Toast.LENGTH_LONG).show();
-                        Log.d("DetailUsersOpenTask", exception.getMessage());
+                        Log.i("KATJA DUsersOpenTask", exception.getMessage());
                     }
                 })
                 .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {

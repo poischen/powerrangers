@@ -172,9 +172,9 @@ public class FragmentWait extends BaseContainerFragment {
         }*/
     }
 
-    public void initReplacingFragmentOpenTasks(UsersOpenTasksListItem fragment, String userID){
+    public void initReplacingFragmentOpenTasks(UsersOpenTasksListItem fragment, String userDbId){
         usersOpenTaksListItem = fragment;
-        fragment.fill_with_data(this, userID);
+        fragment.fill_with_data(this, userDbId);
 
 
     }

@@ -57,8 +57,6 @@ public class FragmentUsersOpenTasks extends Fragment {
     String taskId;
     String caseId;
 
-
-
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -124,52 +122,19 @@ public class FragmentUsersOpenTasks extends Fragment {
                         Bundle bundle = new Bundle();
                         bundle.putInt("PositionUsersOpenTask", position);
 
-
                         bundle.putString("TitleUsersOpenTask", mAdapter.getItem(position).title);
                         bundle.putString("LocationUsersOpenTask", mAdapter.getItem(position).location);
                         bundle.putString("DescriptionUsersOpenTask", mAdapter.getItem(position).comment);
                         bundle.putBoolean("StatusUsersOpenTask", mAdapter.getItem(position).getTaskCompleted());
-                        //bundle.putString("OpenTaskID", taskId);
+
                         bundle.putString("OpenTaskID", taskId);
                         bundle.putString("OpenTaskCaseID", caseId);
-
-/*
-                        try{
-                            Bitmap taskImage = mAdapter.getItem(position).getTaskBitmap();
-                            ByteArrayOutputStream bs = new ByteArrayOutputStream();
-                            taskImage.compress(Bitmap.CompressFormat.JPEG, 50, bs);
-                            bundle.putByteArray("taskImageByteArray", bs.toByteArray());
-                        } catch (Exception e){
-                            bundle.putString("taskImageUrl", mAdapter.getItem(position).getTaskUrl());
-                        }
-*/
-
-
-
-/*
-                        try{
-                            Bitmap taskImage = mAdapter.getItem(position).getTaskBitmap();
-                            ByteArrayOutputStream bs = new ByteArrayOutputStream();
-                            taskImage.compress(Bitmap.CompressFormat.JPEG, 50, bs);
-                            bundle.putByteArray("ImageUsersOpenTask",bs.toByteArray());
-
-                        } catch (Exception e){
-                            bundle.putString("taskImageUrl", mAdapter.getItem(position).taskImageUrlDB);
-                        }
-*/
                         bundle.putString("taskImageUrl", mAdapter.getItem(position).taskImageUrlDB);
                         bundle.putString("caseImageUrl", mAdapter.getItem(position).caseImageUrlDB);
                         Log.i("BUNDLE IN UOT", bundle.toString());
+
                         fragmentDetailUsersOpenTask.setArguments(bundle);
                         ((BaseContainerFragment)getParentFragment()).replaceFragmentDetailOpenTask(fragmentDetailUsersOpenTask);
-
-                        /*
-                         Intent intent = new Intent(getActivity(), ActivityDetailContainer.class);
-                        intent.putExtra(String.valueOf(R.string.activityDetailContainer_targetFr), "FragmentDetailUsersOpenTask");
-                        startActivity(intent);
-                         */
-
-
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
@@ -182,12 +147,9 @@ public class FragmentUsersOpenTasks extends Fragment {
         return rootView;
     }
 
-
     public String getCurrentUserId(){
         return ((MainActivity)getActivity()).getUser().getId();
     }
-
-
 
 
     /**
@@ -228,39 +190,32 @@ public class FragmentUsersOpenTasks extends Fragment {
            // holder.imageView.setImageResource(listItem.get(position).imageID);
 
             String taskImageUrlDB = listItem.get(position).taskImageUrlDB;
-            String cas = listItem.get(position).taskImageUrlDB;
             Log.i("Viki: TaskImageURLDB", taskImageUrlDB);
 
+            // set image
+            if (taskImageUrlDB != null) {     //  url from bundle is set
 
-            try{
-                Log.v("Viki", "in try");
-
-                final File localFile = File.createTempFile("images", "jpg");
-                StorageReference riversRef = storageRef.child(Global.getThumbUrl(taskImageUrlDB));
-                riversRef.getFile(localFile)
-                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                Log.v("FragmentUsersOpenTasks", "download erfolgreich");
-                                Bitmap taskImage = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                listItem.get(position).setTaskBitmap(taskImage);
-                                Log.i("Viki", taskImage.toString());
-                                holder.imageView.setImageBitmap(listItem.get(position).getTaskBitmap());
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Log.d("FragmentUsersOpenTasks", "download nicht erfolgreich (1)");
-
-                        holder.imageView.setImageResource(R.drawable.placeholder_task);
-                    }
-                });
-
-            } catch (Exception e){
-                Log.i("Viki", "in catch");
-                holder.imageView.setImageResource(R.drawable.placeholder_task);
+                try {   // download pic
+                    final File localFile = File.createTempFile("images", "jpg");
+                    StorageReference riversRef = storageRef.child(Global.getThumbUrl(taskImageUrlDB));
+                    riversRef.getFile(localFile)
+                            .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                    Log.i("Viki DetailVotingTask", "download erfolgreich, imageAfter");
+                                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                    holder.imageView.setImageBitmap(bitmap);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Log.i("Viki DetailVotingTask", exception.getMessage());
+                        }
+                    });
+                } catch (Exception e) {
+                    Log.i("Viki DetailVotingTask", e.getMessage());
+                }
             }
-
 
         }
 

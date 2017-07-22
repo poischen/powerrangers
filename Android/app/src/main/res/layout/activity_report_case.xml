@@ -83,14 +83,14 @@
                         android:layout_marginBottom="7dp"
                         android:background="@drawable/edittext_white"/>
 
-                        <!-- Country -->
+                        <!-- City -->
                         <EditText
                             android:id="@+id/editTextCaseCity"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:ems="15"
-                            android:hint="Add a Country"
+                            android:hint="Add a City"
                             android:padding="10dp"
                             android:textSize="17dp"
                             android:fontFamily="sans-serif-light"
@@ -99,7 +99,7 @@
                             android:layout_marginBottom="7dp"
                             android:background="@drawable/edittext_white"/>
 
-                        <!-- City -->
+                        <!-- Country -->
                         <EditText
                             android:id="@+id/editTextCaseCountry"
                             android:layout_width="match_parent"

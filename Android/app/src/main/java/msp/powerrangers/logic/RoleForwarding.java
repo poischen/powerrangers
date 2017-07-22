@@ -25,6 +25,9 @@ public abstract class RoleForwarding extends Role {
         user.setName(newName);
     }
 
+    public String getDbId(){
+        return user.getDbId();
+    }
 
     @Override
     public List<Role> getRoles(){

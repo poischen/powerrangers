@@ -29,16 +29,16 @@ public class UsersOpenTasksListItem implements Serializable {
 
     public String taskImageUrlDB;
     public String caseImageUrlDB;
-    public Bitmap taskImage;
-
 
     String titleDB;
     String cityDB;
     String countryDB;
     String commentDB;
     String locationDB;
+    String taskImageDB;
 
     Boolean taskCompletedDB;
+    Boolean taskVotedDb;
     String taskIdDB;
     String caseIdDB;
 
@@ -60,13 +60,13 @@ public class UsersOpenTasksListItem implements Serializable {
 
     }
 
-    public void fill_with_data(final FragmentWait fragmentWait, String userID) {
+    public void fill_with_data(final FragmentWait fragmentWait, String userDbId) {
         DatabaseReference dbRefTasks;
 
         // get the reference to the db tasks
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
 
-        dbRefTasks.orderByChild("rangerID").equalTo(userID)
+        dbRefTasks.orderByChild("rangerDbId").equalTo(userDbId)
                 .addValueEventListener(
                         new ValueEventListener() {
 
@@ -78,8 +78,11 @@ public class UsersOpenTasksListItem implements Serializable {
                                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
 
                                     taskCompletedDB = (Boolean) singleSnapshot.child("taskCompleted").getValue();
+                                    Log.i("KATJA", "taskCompleted: "+ taskCompletedDB.toString());
+                                    taskVotedDb = (Boolean) singleSnapshot.child("taskVoted").getValue();
+                                    Log.i("KATJA", "taskVoted: "+ taskVotedDb.toString());
 
-                                    if (!taskCompletedDB) {
+                                    if (!taskCompletedDB || !taskVotedDb) {
                                         titleDB = (String) singleSnapshot.child("name").getValue();
 
                                         cityDB = (String) singleSnapshot.child("city").getValue();
@@ -89,15 +92,17 @@ public class UsersOpenTasksListItem implements Serializable {
                                         commentDB = (String) singleSnapshot.child("comment").getValue();
 
                                         // TODO: get first image for task from db
-                                        taskImageUrlDB = (String) singleSnapshot.child("taskPicture").getValue();
-                                        caseImageUrlDB = (String) singleSnapshot.child("casePicture").getValue();
+                                       // taskImageUrlDB = (String) singleSnapshot.child("taskPicture").getValue();
+                                       // caseImageUrlDB = (String) singleSnapshot.child("casePicture").getValue();
+
+                                        taskImageDB = (String) singleSnapshot.child("taskPicture").getValue();
 
                                         taskIdDB = (String) singleSnapshot.child("taskDbId").getValue();
                                         Log.i("KATJA", "taskDbId in dataSnapshot: "+ taskIdDB);
 
                                         caseIdDB = (String) singleSnapshot.child("caseId").getValue();
 
-                                        data.add(new UsersOpenTasksListItem(titleDB, locationDB, commentDB, taskIdDB, caseIdDB, taskImageUrlDB, taskCompletedDB));
+                                        data.add(new UsersOpenTasksListItem(titleDB, locationDB, commentDB, taskIdDB, caseIdDB, taskImageDB, taskCompletedDB));
 
                                         Log.i("This", this.toString());
                                         Log.i("Data add", data.toString());
@@ -142,14 +147,6 @@ public class UsersOpenTasksListItem implements Serializable {
 
     public String getCaseId() {
         return caseIdDB;
-    }
-
-    public Bitmap getTaskBitmap() {
-        return taskImage;
-    }
-
-    public void setTaskBitmap(Bitmap image) {
-        this.taskImage = image;
     }
 
     public String getTaskUrl() {
