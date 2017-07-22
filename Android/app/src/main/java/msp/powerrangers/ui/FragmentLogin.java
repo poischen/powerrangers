@@ -3,7 +3,13 @@ package msp.powerrangers.ui;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -15,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +48,7 @@ public class FragmentLogin extends Fragment {
     private EditText editTextMail;
     private EditText editTextPassword;
     private EditText editTextName;
+    private RelativeLayout backgroundLayout;
     private Button buttonRegisterSignin;
     private TextView textViewSwitchRegisterSignin;
     private ProgressDialog progressDialog;
@@ -63,6 +71,7 @@ public class FragmentLogin extends Fragment {
         buttonRegisterSignin = (Button) view.findViewById(R.id.buttonRegisterSignin);
         textViewSwitchRegisterSignin = (TextView) view.findViewById(R.id.textViewSignin);
         progressDialog = new ProgressDialog(getContext());
+
         //set flag to decive if the view shall show the option to register or to signin
         wantsUserToRegister = true;
         /*set OnClick Listener on Button for registering unregistered users via email or sign in registered users
@@ -387,4 +396,5 @@ public class FragmentLogin extends Fragment {
             textViewSwitchRegisterSignin.setText(R.string.fLogin_AlreadyRegistered);
         }
     }
+
 }

@@ -17,11 +17,12 @@
         <TextView
             android:id="@+id/titleRangerTasks"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="16dp"
             android:textSize="13pt"
+            android:gravity="center_horizontal"
+            android:paddingTop="30dp"
+            android:layout_height="140dp"
+            android:background="@color/colorBackgroundOpacity55"
             android:textColor="@color/colorPrimaryDark"
-            android:gravity="center"
             android:text="@string/titleRangerTasks" />
 
         <!-- Recycler View -->
@@ -31,6 +32,7 @@
             android:layout_below="@+id/titleRangerTasks"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="-60dp"
             app:layoutManager="LinearLayoutManager"
             xmlns:tools="http://schemas.android.com/tools"
             tools:context="msp.powerrangers.ui.FragmentRangerTasks"

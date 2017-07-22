@@ -149,7 +149,7 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
     const fileUrl = originalResult[0];
     const displayFileUrl = displayResult[0];
     // Add the URLs to the Database
-    return admin.database().ref('images').push({path: fileUrl, thumbnail: thumbFileUrl, displayImage: displayFileUrl});
+    return admin.database().ref('images').push({path: fileUrl, thumbnail: thumbFileUrl, display: displayFileUrl});
   });
 
 });
@@ -365,6 +365,8 @@ exports.completeTask = functions.database.ref('/tasks/{taskId}/taskCompleted')
 });
 
 
+
+
 /*
 * Listens for tasks being confirmed (more than 5 upvotes), and writes isConfirmed true into db
 */
@@ -379,10 +381,11 @@ exports.upvotedTask = functions.database.ref('/tasks/{taskId}/numberUpvotes')
             console.log("Number of Upvotes: ", numberUpvotes);
           }
 });
+    
 
 /*
 * Listens for tasks being aborted (more than 5 downvotes), and writes isConfirmed false into db
-*/
+
 exports.downvotedTask = functions.database.ref('/tasks/{taskId}/numberDownvotes')
     .onWrite(event => {
       const numberDownvotes = event.data.val();
@@ -394,3 +397,4 @@ exports.downvotedTask = functions.database.ref('/tasks/{taskId}/numberDownvotes'
             console.log("Number of downvotes: ", numberDownvotes);
           }
 });
+*/

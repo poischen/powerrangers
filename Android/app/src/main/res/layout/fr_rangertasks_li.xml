@@ -10,15 +10,18 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    app:cardBackgroundColor="@color/colorCardViewBackground"
+    app:cardBackgroundColor="@color/colorWhite"
     app:cardCornerRadius="5dp"
     app:cardElevation="5dp"
+    android:layout_marginLeft="14dp"
+    android:layout_marginRight="14dp"
+    android:layout_marginBottom="7dp"
+    android:layout_marginTop="7dp"
     card_view:cardPreventCornerOverlap="false">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="170dp"
-        android:padding="0dp">
+        android:layout_height="170dp">
 
         <!-- Placeholder for thumbnail of a task (actually case) -->
         <ImageView

@@ -104,8 +104,8 @@ public class ActivityReportCase extends AppCompatActivity {
         pictureUrisList = new ArrayList<>();
         pictureBitmapList = new ArrayList<>();
 
-        Bitmap defaultPic = BitmapFactory.decodeResource(getResources(), R.drawable.nopicsyet);
-        pictureBitmapList.add(defaultPic);
+        //Bitmap defaultPic = BitmapFactory.decodeResource(getResources(), R.drawable.nopicsyet);
+        //pictureBitmapList.add(defaultPic);
 
         casePictures = new ArrayList<>();
         isDefaultPic = true;
@@ -174,6 +174,9 @@ public class ActivityReportCase extends AppCompatActivity {
                 radioButtonCaseHigh.setChecked(false);
                 radioButtonCaseMiddle.setChecked(false);
                 radioButtonCaseLow.setChecked(true);
+                radioButtonCaseLow.setBackground(getDrawable(R.drawable.radiobutton_background_checked));
+                radioButtonCaseMiddle.setBackground(getDrawable(R.drawable.radiobutton_background));
+                radioButtonCaseHigh.setBackground(getDrawable(R.drawable.radiobutton_background));
             }
         });
 
@@ -186,6 +189,9 @@ public class ActivityReportCase extends AppCompatActivity {
                 radioButtonCaseLow.setChecked(false);
                 radioButtonCaseHigh.setChecked(false);
                 radioButtonCaseMiddle.setChecked(true);
+                radioButtonCaseLow.setBackground(getDrawable(R.drawable.radiobutton_background));
+                radioButtonCaseMiddle.setBackground(getDrawable(R.drawable.radiobutton_background_checked));
+                radioButtonCaseHigh.setBackground(getDrawable(R.drawable.radiobutton_background));
             }
         });
 
@@ -198,6 +204,9 @@ public class ActivityReportCase extends AppCompatActivity {
                 radioButtonCaseLow.setChecked(false);
                 radioButtonCaseMiddle.setChecked(false);
                 radioButtonCaseHigh.setChecked(true);
+                radioButtonCaseLow.setBackground(getDrawable(R.drawable.radiobutton_background));
+                radioButtonCaseMiddle.setBackground(getDrawable(R.drawable.radiobutton_background));
+                radioButtonCaseHigh.setBackground(getDrawable(R.drawable.radiobutton_background_checked));
             }
         });
 
@@ -333,6 +342,7 @@ public class ActivityReportCase extends AppCompatActivity {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
                 pictureBitmapList.add(bitmap);
                 viewPagerTaskPics.getAdapter().notifyDataSetChanged();
+                viewPagerTaskPics.setBackground(null);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -344,6 +354,7 @@ public class ActivityReportCase extends AppCompatActivity {
                 bmpUri = data.getData();
                 bmpCaseImgage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), bmpUri);
                 imgViewCasePic.setImageBitmap(bmpCaseImgage);
+                imgViewCasePic.setBackground(null);
             } catch (Exception e){
                 e.printStackTrace();
             }
@@ -508,7 +519,7 @@ public class ActivityReportCase extends AppCompatActivity {
             ImageView imageView = new ImageView(context);
             int padding = 10;
             imageView.setPadding(padding, padding, padding, padding);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setImageBitmap(pictureBitmapList.get(position));
             ((ViewPager) container).addView(imageView, 0);
             return imageView;

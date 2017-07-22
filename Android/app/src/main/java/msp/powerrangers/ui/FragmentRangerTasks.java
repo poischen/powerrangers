@@ -260,7 +260,7 @@ public class FragmentRangerTasks extends Fragment {
     }
 
     //Set the radius of the Blur. Supported range 0 < radius <= 25
-    private static final float BLUR_RADIUS = 2;
+    private static final float BLUR_RADIUS = 4;
 
     public Bitmap blur(Bitmap image) {
         if (null == image) return null;

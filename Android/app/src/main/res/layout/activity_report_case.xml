@@ -9,6 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/colorPrimaryBackground"
     tools:context="msp.powerrangers.ui.ActivityReportCase">
 
     <RelativeLayout
@@ -32,16 +33,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
-                    android:layout_weight="1.5">
+                    android:layout_weight="1.5"
+                    android:layout_marginBottom="10dp">
 
                     <TextView
                         android:id="@+id/textViewStepOne"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:text="1"
-                        android:textColor="@color/colorWhite"
+                        android:textColor="@color/colorGrey"
                         android:gravity="center_vertical|center_horizontal"
                         android:textSize="17dp"
+                        android:textStyle="bold"
                         android:layout_marginRight="15dp"
                         android:background="@drawable/startcircle_tasks"/>
                     <TextView
@@ -49,194 +52,332 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorGrey"
                         android:text="General Information"
-                        android:textSize="20dp"/>
+                        android:textSize="18dp"/>
 
                 </LinearLayout>
 
+                    <!-- General Information -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical">
-                        <!--
-                    <TextView
-                        android:id="@+id/textViewCaseTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="13dp"
-                        android:text="@string/reportTitleOfCase" />
-                        -->
+                        android:orientation="vertical"
+                        android:layout_marginLeft="30dp"
+                        android:background="@color/colorPrimaryBackground">
 
+                    <!-- Title -->
                     <EditText
                         android:id="@+id/editTextCaseTitle"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ems="15"
-                        android:hint="Add a Case Title"
+                        android:hint="Add a Title"
+                        android:padding="10dp"
+                        android:textSize="17dp"
+                        android:fontFamily="sans-serif-light"
                         android:inputType="textPersonName"
-                        android:text="" />
+                        android:text=""
+                        android:layout_marginBottom="7dp"
+                        android:background="@drawable/edittext_white"/>
+
+                        <!-- Country -->
+                        <EditText
+                            android:id="@+id/editTextCaseCity"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="15"
+                            android:hint="Add a Country"
+                            android:padding="10dp"
+                            android:textSize="17dp"
+                            android:fontFamily="sans-serif-light"
+                            android:inputType="textPersonName"
+                            android:text=""
+                            android:layout_marginBottom="7dp"
+                            android:background="@drawable/edittext_white"/>
+
+                        <!-- City -->
+                        <EditText
+                            android:id="@+id/editTextCaseCountry"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="15"
+                            android:textSize="17dp"
+                            android:hint="Add a Country"
+                            android:padding="10dp"
+                            android:fontFamily="sans-serif-light"
+                            android:inputType="textPersonName"
+                            android:text=""
+                            android:background="@drawable/edittext_white"/>
+
                 </LinearLayout>
 
+
+                <!-- Step 2 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_weight="1.5"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="30dp">
 
                     <TextView
-                        android:id="@+id/textViewCaseCity"
+                        android:id="@+id/textViewStepTwo"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:text="2"
+                        android:textColor="@color/colorGrey"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:textSize="17dp"
+                        android:textStyle="bold"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/startcircle_tasks"/>
+                    <TextView
+                        android:id="@+id/textViewStepTwoTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:fontFamily="casual"
-                        android:text="@string/reportCityOfCase" />
+                        android:textColor="@color/colorGrey"
+                        android:textStyle="bold"
+                        android:text="Area Size"
+                        android:textSize="18dp"/>
 
-                    <EditText
-                        android:id="@+id/editTextCaseCity"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:inputType="textPersonName"
-                        android:text="" />
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textViewCaseAreaCoordinates"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-light"
+                    android:layout_marginLeft="40dp"
+                    android:textSize="15dp"
+                    android:textColor="@color/colorGrey"
+                    android:text="@string/reportAreaCoordinates" />
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:layout_height="130dp"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="15dp">
 
-                    <TextView
-                        android:id="@+id/textViewCaseCountry"
+                    <!-- Number Picker 1 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_margin="10dp"
+                        android:padding="10dp"
+                        android:background="@color/colorWhite">
+
+                        <TextView
+                            android:id="@+id/textViewCaseXCoordinate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:textAllCaps="true"
+                            android:letterSpacing="0.05"
+                            android:textSize="14dp"
+                            android:layout_marginBottom="15dp"
+                            android:text="@string/reportXCoordinateOfCase" />
+
+                        <NumberPicker
+                            android:id="@+id/numberPickerCaseXCoordinate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:scaleX="1.5"
+                            android:scaleY="1.5"
+                            android:background="@color/colorWhite"
+                            android:theme="@style/DefaultNumberPickerTheme"/>
+
+                    </LinearLayout>
+
+                    <!-- Number Picker 2 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_margin="10dp"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:background="@color/colorWhite">
+
+                        <TextView
+                            android:id="@+id/textViewCaseYCoordinate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:textAllCaps="true"
+                            android:letterSpacing="0.05"
+                            android:textSize="14dp"
+                            android:layout_marginBottom="15dp"
+                            android:text="@string/reportYCoordinateOfCase" />
+
+                    <NumberPicker
+                        android:id="@+id/numberPickerCaseYCoordinate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:fontFamily="casual"
-                        android:text="@string/reportCountryOfCase" />
+                        android:scaleX="1.5"
+                        android:scaleY="1.5"
+                        android:theme="@style/DefaultNumberPickerTheme"/>
 
-                    <EditText
-                        android:id="@+id/editTextCaseCountry"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:inputType="textPersonName"
-                        android:text="" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
+
+
+                <!-- Step 3 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_weight="1.5"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="30dp">
 
                     <TextView
-                        android:id="@+id/textViewCaseScala"
+                        android:id="@+id/textViewStepThree"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:text="3"
+                        android:textColor="@color/colorGrey"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:textSize="17dp"
+                        android:textStyle="bold"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/startcircle_tasks"/>
+                    <TextView
+                        android:id="@+id/textViewStepThreeTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:fontFamily="casual"
-                        android:text="@string/reportScalaOfCase" />
+                        android:textColor="@color/colorGrey"
+                        android:textStyle="bold"
+                        android:text="Pollution"
+                        android:textSize="18dp"/>
+
+                </LinearLayout>
+
+                <!-- Pollution -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="30dp"
+                    android:weightSum="3">
 
                     <RadioButton
                         android:id="@+id/radioButtonCaseLow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:fontFamily="casual"
-                        android:text="@string/reportCaseCheckboxLow" />
+                        android:background="@drawable/radiobutton_drawable_bg"
+                        android:text="@string/reportCaseCheckboxLow"
+                        android:textSize="14dp"
+                        android:drawablePadding="7dp"
+                        android:letterSpacing="0.05"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:fontFamily="sans-serif-light"
+                        android:drawableTop="@drawable/radiobutton_icon_low"
+                        android:gravity="center"
+                        android:button="@android:color/transparent"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="10dp"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginLeft="5dp"/>
 
                     <RadioButton
                         android:id="@+id/radioButtonCaseMiddle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:fontFamily="casual"
-                        android:text="@string/reportCaseCheckboxMiddle" />
+                        android:background="@drawable/radiobutton_drawable_bg"
+                        android:text="@string/reportCaseCheckboxMiddle"
+                        android:textSize="14dp"
+                        android:drawablePadding="7dp"
+                        android:letterSpacing="0.05"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:fontFamily="sans-serif-light"
+                        android:drawableTop="@drawable/radiobutton_icon_medium"
+                        android:gravity="center"
+                        android:button="@android:color/transparent"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"/>
 
                     <RadioButton
                         android:id="@+id/radioButtonCaseHigh"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:fontFamily="casual"
-                        android:text="@string/reportCaseCheckboxHigh" />
+                        android:background="@drawable/radiobutton_drawable_bg"
+                        android:text="@string/reportCaseCheckboxHigh"
+                        android:textSize="14dp"
+                        android:drawablePadding="7dp"
+                        android:letterSpacing="0.05"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:fontFamily="sans-serif-light"
+                        android:drawableTop="@drawable/radiobutton_icon_high"
+                        android:gravity="center"
+                        android:button="@android:color/transparent"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="10dp"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:layout_marginLeft="5dp"/>
 
 
                 </LinearLayout>
 
+
+                <!-- Step 4 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_weight="1.5"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="30dp">
 
                     <TextView
-                        android:id="@+id/textViewCaseAreaCoordinates"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="casual"
-                        android:text="@string/reportAreaCoordinates" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
+                        android:id="@+id/textViewStepFour"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:text="4"
+                        android:textColor="@color/colorGrey"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:textSize="17dp"
+                        android:textStyle="bold"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/startcircle_tasks"/>
                     <TextView
-                        android:id="@+id/textViewCaseXCoordinate"
+                        android:id="@+id/textViewStepFourTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:fontFamily="casual"
-                        android:text="@string/reportXCoordinateOfCase" />
+                        android:textColor="@color/colorGrey"
+                        android:text="Set Case Pictures"
+                        android:textStyle="bold"
+                        android:textSize="18dp"/>
 
-                    <TextView
-                        android:id="@+id/textViewCaseYCoordinate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="casual"
-                        android:text="@string/reportYCoordinateOfCase" />
-
-                    <!--<EditText
-                        android:id="@+id/editTextCaseXCoordinate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:inputType="number" />-->
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="78dp"
-                    android:orientation="horizontal">
-
-                    <NumberPicker
-                        android:id="@+id/numberPickerCaseXCoordinate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-
-                    <NumberPicker
-                        android:id="@+id/numberPickerCaseYCoordinate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                    <!--                    <EditText
-                                            android:id="@+id/editTextCaseYCoordinate"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_weight="1"
-                                            android:ems="10"
-                                            android:inputType="number"
-                                            android:text="" /> -->
                 </LinearLayout>
 
                 <!-- Case Pic -->
@@ -248,99 +389,113 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="casual"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif-light"
+                        android:layout_marginLeft="40dp"
+                        android:textSize="15dp"
+                        android:textColor="@color/colorGrey"
                         android:text="@string/reportInstructionManualUploadPics1" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="vertical"
+                    android:layout_marginLeft="30dp">
 
                     <ImageButton
                         android:id="@+id/imageButtonUploadPictureCase"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:layout_gravity="center"
                         android:layout_weight="1"
-                        app:srcCompat="@android:drawable/ic_menu_upload" />
+                        android:layout_margin="10dp"
+                        android:background="@drawable/cameracircle"
+                        app:srcCompat="@drawable/photo" />
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/textViewUploadedPictureCase"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="casual"
-                        android:text="@string/reportUploadedPicture"
-                        android:visibility="gone" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
 
                     <ImageView
                         android:id="@+id/aReportCaseTaskPicture"
                         android:layout_width="match_parent"
-                        android:layout_height="210dp"
-                        android:src="@drawable/nopicyet"
-                        android:scaleType="centerInside"/>
+                        android:layout_height="200dp"
+                        android:background="@drawable/image_selector"
+                        android:scaleType="centerCrop"/>
 
                 </LinearLayout>
 
-
                 <!-- Task Pics -->
-
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="10dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="casual"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif-light"
+                        android:layout_marginLeft="40dp"
+                        android:textSize="15dp"
+                        android:textColor="@color/colorGrey"
                         android:text="@string/reportInstructionManualUploadPics2" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="vertical"
+                    android:layout_marginLeft="30dp">
 
                     <ImageButton
                         android:id="@+id/imageButtonUploadPictureTask"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:src="@android:drawable/ic_menu_upload" />
+                        android:layout_margin="10dp"
+                        android:background="@drawable/cameracircle"
+                        app:srcCompat="@drawable/photo" />
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
 
                     <android.support.v4.view.ViewPager
                         android:id="@+id/aReportCaseViewPager"
                         android:layout_width="match_parent"
-                        android:layout_height="210dp" />
+                        android:background="@drawable/image_selector"
+                        android:layout_height="200dp" />
+
+                </LinearLayout>
+
+                <!-- Step 5 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_weight="1.5"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="30dp">
+
+                    <TextView
+                        android:id="@+id/textViewStepFive"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:text="5"
+                        android:textColor="@color/colorGrey"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:textSize="17dp"
+                        android:textStyle="bold"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/startcircle_tasks"/>
+                    <TextView
+                        android:id="@+id/textViewStepThreeFive"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/colorGrey"
+                        android:textStyle="bold"
+                        android:text="Case Description"
+                        android:textSize="18dp"/>
+
                 </LinearLayout>
 
 
@@ -348,22 +503,23 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/textViewCaseInformation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="casual"
-                        android:text="@string/reportInformationOfCase" />
+                    android:orientation="vertical"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginBottom="30dp">
 
                     <EditText
                         android:id="@+id/editTextCaseInformation"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:ems="10"
+                        android:ems="15"
+                        android:hint="Add a Description"
+                        android:padding="10dp"
+                        android:textSize="17dp"
+                        android:fontFamily="sans-serif-light"
+                        android:text=""
+                        android:layout_marginBottom="7dp"
+                        android:background="@drawable/edittext_white"
                         android:inputType="textMultiLine" />
 
                 </LinearLayout>
@@ -377,7 +533,7 @@
                         android:id="@+id/buttonCaseReport"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorAccent"
+                        android:background="@drawable/shape_mainbutton"
                         android:text="@string/reportACase"
                         android:textColor="@color/colorWhite" />
                 </LinearLayout>

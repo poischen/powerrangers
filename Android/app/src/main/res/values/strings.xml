@@ -61,7 +61,7 @@
     <!-- FragmentLogin-->
     <string name="fLogin_Signin">Sign in</string>
     <string name="fLogin_Register">Register</string>
-    <string name="fLogin_AlreadyRegistered">Already registered? <b>Sign in.</b></string>
+    <string name="fLogin_AlreadyRegistered">Already a Power Ranger? <b>Sign in.</b></string>
     <string name="fLogin_NotRegisteredYet">Do not have an account? Register now!</string>
     <string name="fLogin_EnterPassword">Enter your password</string>
     <string name="fLogin_EnterName">Enter your name</string>
@@ -80,7 +80,7 @@
     <string name="reportCityOfCase">City</string>
     <string name="reportCountryOfCase">Country</string>
     <string name="reportScalaOfCase">Pollution Scale:</string>
-    <string name="reportAreaCoordinates">Area coordinates in meters:</string>
+    <string name="reportAreaCoordinates">Estimate the size of the whole polluted area in x and y in meters.</string>
     <string name="reportXCoordinateOfCase">Width</string>
     <string name="reportYCoordinateOfCase">Height</string>
     <string name="reportPictureOfCase">Upload picture</string>
@@ -94,8 +94,8 @@
     <string name="reportException">Something went wrong!</string>
     <string name="reportCaseSuccess">Case was reported successfully</string>
     <string name="reportCaseFillFields">Please give all necessary inforamtion!</string>
-    <string name="reportInstructionManualUploadPics1">Show us some pictures! First load up an image of the hole trashy area. then seperate the area in equal parts and load a picture for each.</string>
-    <string name="reportInstructionManualUploadPics2">Now seperate the area in equal parts and load a picture for each one.</string>
+    <string name="reportInstructionManualUploadPics1">First take a photo of the whole area.</string>
+    <string name="reportInstructionManualUploadPics2">Now seperate the area in equal parts and take a photo of each.</string>
     <string name="uploadPictureFailed">Uploading of picture failed! Sorry</string>
     <string name="reportChooseCasePic">Choose a picture of the hole trashy area</string>
     <string name="reportChooseTaskPics">Choose pictures of the seperated area</string>
