@@ -154,9 +154,9 @@ public class FragmentConfirmerCases extends Fragment {
         @Override
         public void onBindViewHolder(final View_Holder holder, int position) {
             //Use the provided View Holder on the onCreateViewHolder method to populate the current row on the RecyclerView
-            //holder.title.setText(listItem.get(position).title);
+            holder.title.setText(listItem.get(position).title);
             holder.location.setText(listItem.get(position).city + ", " + listItem.get(position).country);
-            holder.comment.setText(listItem.get(position).comment);
+            //holder.comment.setText(listItem.get(position).comment);
 
             String imageURL = listItem.get(position).caseImageUrlDB;
             Log.v("FragmentConfirmerCases", "imageURL: " + imageURL);
@@ -226,17 +226,17 @@ public class FragmentConfirmerCases extends Fragment {
 
         // from layout
         CardView cv;
-        //TextView title;
+        TextView title;
         TextView location;
-        TextView comment;
+        //TextView comment;
         ImageView image;
 
         View_Holder(View itemView) {
             super(itemView);
             cv = (CardView) itemView.findViewById(R.id.cvCC);
-            //title = (TextView) itemView.findViewById(R.id.titleCC);
+            title = (TextView) itemView.findViewById(R.id.titleCC);
             location = (TextView) itemView.findViewById(R.id.locationCC);
-            comment = (TextView) itemView.findViewById(R.id.descriptionCC);
+            //comment = (TextView) itemView.findViewById(R.id.descriptionCC);
             image = (ImageView) itemView.findViewById(R.id.ivCC);
         }
     }

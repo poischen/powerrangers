@@ -146,7 +146,7 @@ public class FragmentRangerTasks extends Fragment {
             // populate the current row on the RecyclerView
             holder.title.setText(listItem.get(position).title);
             holder.location.setText(listItem.get(position).city + ", " + listItem.get(position).country);
-            holder.comment.setText(listItem.get(position).comment);
+            //holder.comment.setText(listItem.get(position).comment);
 
             String taskImageUrlDB = listItem.get(position).taskImageUrlDB;
             Log.i("KATJA FrRangerTasks", "taskImageUrlDB: " + taskImageUrlDB);
@@ -235,7 +235,7 @@ public class FragmentRangerTasks extends Fragment {
             cv = (CardView) itemView.findViewById(R.id.cvRT);
             title = (TextView) itemView.findViewById(R.id.titleRT);
             location = (TextView) itemView.findViewById(R.id.locationRT);
-            comment = (TextView) itemView.findViewById(R.id.descriptionRT);
+            //comment = (TextView) itemView.findViewById(R.id.descriptionRT);
             image = (ImageView) itemView.findViewById(R.id.ivRT);
         }
     }

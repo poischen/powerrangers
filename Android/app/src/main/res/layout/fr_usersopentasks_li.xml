@@ -8,60 +8,71 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginBottom="4dp"
+    android:layout_marginTop="4dp"
     android:foreground="?android:attr/selectableItemBackground"
-    app:cardBackgroundColor="@color/colorCardViewBackground"
-    app:cardCornerRadius="5dp"
-    app:cardElevation="5dp"
-    app:cardUseCompatPadding="true">
+    app:cardBackgroundColor="@color/colorWhite"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="0dp"
+    app:cardUseCompatPadding="false">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:layout_height="140dp">
+
 
         <!-- Placeholder for thumbnail of a task (actually case) -->
         <ImageView
             android:id="@+id/ivUOT"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginEnd="8dp" />
+            android:layout_marginEnd="0dp"
+            android:scaleType="centerCrop" />
 
-        <!-- Title  -->
-        <TextView
-            android:id="@+id/titleUOT"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_margin="@dimen/text_margin"
-            android:layout_toEndOf="@+id/ivUOT"
-            android:text="@string/placeholderTitle"
-            android:textAppearance="?attr/textAppearanceListItem"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold" />
+        <!-- Image Overlay -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|center_vertical"
+            android:background="@color/colorBackgroundOpacity55">
 
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/icon_location_white"
+            android:layout_marginBottom="3dp" />
 
         <!-- Location  -->
         <TextView
             android:id="@+id/locationOUT"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/titleUOT"
-            android:layout_toEndOf="@+id/ivUOT"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="4dp"
+            android:textSize="20dp"
             android:text="@string/placeholderLocation"
-            android:textColor="@color/colorPrimaryDark" />
+            android:textColor="@color/colorWhite"
+            android:layout_gravity="center_horizontal"  />
 
-        <!-- Description (some details of the task)
-        [PLACEHOLDER FOR SOMETHING]  -->
+        <!-- Title  -->
         <TextView
-            android:id="@+id/descriptionUOT"
+            android:id="@+id/titleUOT"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/locationOUT"
-            android:layout_toEndOf="@+id/ivUOT"
-            android:text="@string/placeholderDesc" />
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:layout_toEndOf="@+id/ivRT"
+            android:text="@string/placeholderTitle"
+            android:textColor="@color/colorWhite"
+            android:textSize="12dp"
+            android:textAllCaps="true"
+            android:letterSpacing=".1"/>
+
+        </LinearLayout>
 
     </RelativeLayout>
 

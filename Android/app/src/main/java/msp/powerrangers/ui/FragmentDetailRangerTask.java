@@ -214,7 +214,7 @@ public class FragmentDetailRangerTask extends Fragment {
                 Log.i("KATJA", "taskDBID: "+taskDBId);
                 Log.i("KATJA", "isAssigned: "+isAssigned.toString());
 
-                rangerTaskName.setText( city + " , " + country);
+                rangerTaskName.setText( city + ", " + country);
                 textRangerReward.setText(reward);
 
                 String numberRangers = String.valueOf(singleSnapshot.child("numberRangers").getValue());
@@ -223,7 +223,6 @@ public class FragmentDetailRangerTask extends Fragment {
                 textNumberRangers.setText(numberRangers);
 
                 textPollutionLevel.setText(convertScaleToText(scale));
-                comment = comment + getString(R.string.detailRangerTaskComment);
                 rangerTaskDescription.setText(comment);
 
                 // set appropriate icon
@@ -312,7 +311,7 @@ public class FragmentDetailRangerTask extends Fragment {
                 result = "Low";
                 break;
             case("2"):
-                result = "Middle";
+                result = "Medium";
                 break;
             case("3"):
                 result = "High";

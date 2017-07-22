@@ -114,7 +114,8 @@
     <string name="titleRangerTasks">Ranger Tasks</string>
     <string name="searchView">Search...</string>
     <string name="taskDescriptionDetail">Here comes the task description</string>
-    <string name="pollutionDetail">Pollution</string>
+    <string name="pollutionDetail">Pollution:</string>
+    <string name="rangersDetail">Rangers</string>
     <string name="buttonJoinAsRanger">Join as Ranger</string>
     <string name="detailRangerTaskComment">\nWe need you!</string>
 

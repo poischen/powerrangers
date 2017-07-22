@@ -80,6 +80,7 @@
                                 android:id="@+id/numberDonatedPower"
                                 android:layout_width="80dp"
                                 android:layout_height="40dp"
+                                android:fontFamily="sans-serif-light"
                                 android:gravity="center_vertical|center_horizontal"
                                 android:textColor="@color/colorPrimaryDark"
                                 android:textSize="30sp" />
@@ -107,6 +108,7 @@
                                 android:id="@+id/numberBalance"
                                 android:layout_height="40dp"
                                 android:layout_width="80dp"
+                                android:fontFamily="sans-serif-light"
                                 android:textColor="@color/colorPrimaryDark"
                                 android:textSize="30sp"
                                 android:gravity="center_vertical|center_horizontal"

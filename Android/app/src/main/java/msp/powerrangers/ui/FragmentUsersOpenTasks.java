@@ -186,7 +186,7 @@ public class FragmentUsersOpenTasks extends Fragment {
 
             holder.title.setText(listItem.get(position).title);
             holder.location.setText(listItem.get(position).location);
-            holder.description.setText(listItem.get(position).comment);
+            //holder.description.setText(listItem.get(position).comment);
            // holder.imageView.setImageResource(listItem.get(position).imageID);
 
             String taskImageUrlDB = listItem.get(position).taskImageUrlDB;
@@ -276,7 +276,6 @@ public class FragmentUsersOpenTasks extends Fragment {
             cv = (CardView) itemView.findViewById(R.id.cvUOT);
             title = (TextView) itemView.findViewById(R.id.titleUOT);
             location = (TextView) itemView.findViewById(R.id.locationOUT);
-            description = (TextView) itemView.findViewById(R.id.descriptionUOT);
             imageView = (ImageView) itemView.findViewById(R.id.ivUOT);
         }
     }

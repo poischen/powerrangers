@@ -13,21 +13,21 @@
     app:cardBackgroundColor="@color/colorWhite"
     app:cardCornerRadius="5dp"
     app:cardElevation="5dp"
-    android:layout_marginLeft="14dp"
-    android:layout_marginRight="14dp"
-    android:layout_marginBottom="7dp"
-    android:layout_marginTop="7dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginBottom="4dp"
+    android:layout_marginTop="4dp"
     card_view:cardPreventCornerOverlap="false">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="170dp">
+        android:layout_height="140dp">
 
         <!-- Placeholder for thumbnail of a task (actually case) -->
         <ImageView
             android:id="@+id/ivRT"
             android:layout_width="match_parent"
-            android:layout_height="170dp"
+            android:layout_height="140dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginEnd="0dp"
@@ -41,12 +41,11 @@
             android:gravity="center_horizontal|center_vertical"
             android:background="@color/colorBackgroundOpacity55">
 
-
         <ImageView
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:background="@drawable/icon_location_white"
-            android:layout_marginBottom="5dp" />
+            android:layout_marginBottom="3dp" />
 
         <!-- Location  -->
         <TextView
@@ -69,12 +68,11 @@
                 android:layout_toEndOf="@+id/ivRT"
                 android:text="@string/placeholderTitle"
                 android:textColor="@color/colorWhite"
-                android:textStyle="bold"
                 android:textSize="12dp"
                 android:textAllCaps="true"
                 android:letterSpacing=".1"/>
 
-        <!-- Comment -->
+        <!-- Comment
         <TextView
             android:id="@+id/descriptionRT"
             android:layout_width="wrap_content"
@@ -83,7 +81,7 @@
             android:layout_marginTop="14dp"
             android:layout_gravity="center_horizontal"
             android:textSize="13dp"
-            android:text="@string/placeholderDesc" />
+            android:text="@string/placeholderDesc" />-->
 
         </LinearLayout>
 
