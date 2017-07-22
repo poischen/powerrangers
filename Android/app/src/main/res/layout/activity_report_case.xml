@@ -41,12 +41,12 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:text="1"
-                        android:textColor="@color/colorGrey"
+                        android:textColor="@color/colorWhite"
                         android:gravity="center_vertical|center_horizontal"
                         android:textSize="17dp"
                         android:textStyle="bold"
                         android:layout_marginRight="15dp"
-                        android:background="@drawable/startcircle_tasks"/>
+                        android:background="@drawable/reportcircle"/>
                     <TextView
                         android:id="@+id/textViewStepOneTitle"
                         android:layout_width="wrap_content"
@@ -76,6 +76,8 @@
                         android:ems="15"
                         android:hint="Add a Title"
                         android:padding="10dp"
+                        android:drawableLeft="@drawable/pencil_title"
+                        android:drawablePadding="8dp"
                         android:textSize="17dp"
                         android:fontFamily="sans-serif-light"
                         android:inputType="textPersonName"
@@ -131,12 +133,13 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:text="2"
-                        android:textColor="@color/colorGrey"
+                        android:textColor="@color/colorWhite"
                         android:gravity="center_vertical|center_horizontal"
                         android:textSize="17dp"
                         android:textStyle="bold"
                         android:layout_marginRight="15dp"
-                        android:background="@drawable/startcircle_tasks"/>
+                        android:background="@drawable/reportcircle"/>
+
                     <TextView
                         android:id="@+id/textViewStepTwoTitle"
                         android:layout_width="wrap_content"
@@ -253,12 +256,12 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:text="3"
-                        android:textColor="@color/colorGrey"
+                        android:textColor="@color/colorWhite"
                         android:gravity="center_vertical|center_horizontal"
                         android:textSize="17dp"
                         android:textStyle="bold"
                         android:layout_marginRight="15dp"
-                        android:background="@drawable/startcircle_tasks"/>
+                        android:background="@drawable/reportcircle"/>
                     <TextView
                         android:id="@+id/textViewStepThreeTitle"
                         android:layout_width="wrap_content"
@@ -362,12 +365,12 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:text="4"
-                        android:textColor="@color/colorGrey"
+                        android:textColor="@color/colorWhite"
                         android:gravity="center_vertical|center_horizontal"
                         android:textSize="17dp"
                         android:textStyle="bold"
                         android:layout_marginRight="15dp"
-                        android:background="@drawable/startcircle_tasks"/>
+                        android:background="@drawable/reportcircle"/>
                     <TextView
                         android:id="@+id/textViewStepFourTitle"
                         android:layout_width="wrap_content"
@@ -480,12 +483,12 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:text="5"
-                        android:textColor="@color/colorGrey"
+                        android:textColor="@color/colorWhite"
                         android:gravity="center_vertical|center_horizontal"
                         android:textSize="17dp"
                         android:textStyle="bold"
                         android:layout_marginRight="15dp"
-                        android:background="@drawable/startcircle_tasks"/>
+                        android:background="@drawable/reportcircle"/>
                     <TextView
                         android:id="@+id/textViewStepThreeFive"
                         android:layout_width="wrap_content"
@@ -518,6 +521,8 @@
                         android:textSize="17dp"
                         android:fontFamily="sans-serif-light"
                         android:text=""
+                        android:drawableLeft="@drawable/info_description"
+                        android:drawablePadding="8dp"
                         android:layout_marginBottom="7dp"
                         android:background="@drawable/edittext_white"
                         android:inputType="textMultiLine" />

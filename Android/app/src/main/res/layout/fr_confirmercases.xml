@@ -17,13 +17,9 @@
         <TextView
             android:id="@+id/titleConfirmerCases"
             android:layout_width="match_parent"
-<<<<<<< HEAD
             android:layout_height="140dp"
-=======
-            android:layout_height="match_parent"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
->>>>>>> d8b5c3b6da3b873976c29f5103f8b7e0397a7da7
             android:textSize="13pt"
             android:textColor="@color/colorPrimaryDark"
             android:gravity="center_horizontal"

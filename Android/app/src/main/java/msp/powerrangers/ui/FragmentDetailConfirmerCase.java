@@ -148,14 +148,9 @@ public class FragmentDetailConfirmerCase extends Fragment {
 
         // find UI elements
         // text Views
-        textViewConfirmCaseTitle = (TextView) view.findViewById(R.id.textViewConfirmCaseTitle);
-        textViewConfirmCaseCity = (TextView) view.findViewById(R.id.textViewConfirmCaseCity);
-        textViewConfirmCaseCountry = (TextView) view.findViewById(R.id.textViewConfirmCaseCountry);
-        textViewConfirmCaseScala = (TextView) view.findViewById(R.id.textViewConfirmCaseScala);
         textViewConfirmCaseAreaCoordinates = (TextView) view.findViewById(R.id.textViewConfirmCaseAreaCoordinates);
         textViewConfirmCaseXCoordinate = (TextView) view.findViewById(R.id.textViewConfirmCaseXCoordinate);
         textViewConfirmCaseYCoordinate = (TextView) view.findViewById(R.id.textViewConfirmCaseYCoordinate);
-        textViewConfirmCaseInformation = (TextView) view.findViewById(R.id.textViewConfirmCaseInformation);
         viewPager = (ViewPager) view.findViewById(R.id.fConfirmCaseViewPager);
         FragmentDetailConfirmerCase.ImageAdapter adapter = new FragmentDetailConfirmerCase.ImageAdapter(this.getContext());
         viewPager.setAdapter(adapter);
@@ -252,14 +247,17 @@ public class FragmentDetailConfirmerCase extends Fragment {
 
                             case "1":
                                 radioButtonConfirmCaseLow.setChecked(true);
+                                radioButtonConfirmCaseLow.setBackground(getResources().getDrawable(R.drawable.radiobutton_background_checked, null));
                                 break;
 
                             case "2":
                                 radioButtonConfirmCaseMiddle.setChecked(true);
+                                radioButtonConfirmCaseMiddle.setBackground(getResources().getDrawable(R.drawable.radiobutton_background_checked, null));
                                 break;
 
                             case "3":
                                 radioButtonConfirmCaseHigh.setChecked(true);
+                                radioButtonConfirmCaseHigh.setBackground(getResources().getDrawable(R.drawable.radiobutton_background_checked, null));
                                 break;
 
                         }
@@ -281,6 +279,10 @@ public class FragmentDetailConfirmerCase extends Fragment {
                 radioButtonConfirmCaseHigh.setChecked(false);
                 radioButtonConfirmCaseMiddle.setChecked(false);
                 radioButtonConfirmCaseLow.setChecked(true);
+
+                radioButtonConfirmCaseLow.setBackground(getResources().getDrawable(R.drawable.radiobutton_background_checked, null));
+                radioButtonConfirmCaseMiddle.setBackground(getResources().getDrawable(R.drawable.radiobutton_background, null));
+                radioButtonConfirmCaseHigh.setBackground(getResources().getDrawable(R.drawable.radiobutton_background, null));
             }
         });
 
@@ -293,6 +295,10 @@ public class FragmentDetailConfirmerCase extends Fragment {
                 radioButtonConfirmCaseLow.setChecked(false);
                 radioButtonConfirmCaseHigh.setChecked(false);
                 radioButtonConfirmCaseMiddle.setChecked(true);
+
+                radioButtonConfirmCaseLow.setBackground(getResources().getDrawable(R.drawable.radiobutton_background, null));
+                radioButtonConfirmCaseMiddle.setBackground(getResources().getDrawable(R.drawable.radiobutton_background_checked, null));
+                radioButtonConfirmCaseHigh.setBackground(getResources().getDrawable(R.drawable.radiobutton_background, null));
             }
         });
 
@@ -305,6 +311,10 @@ public class FragmentDetailConfirmerCase extends Fragment {
                 radioButtonConfirmCaseLow.setChecked(false);
                 radioButtonConfirmCaseMiddle.setChecked(false);
                 radioButtonConfirmCaseHigh.setChecked(true);
+
+                radioButtonConfirmCaseLow.setBackground(getResources().getDrawable(R.drawable.radiobutton_background, null));
+                radioButtonConfirmCaseMiddle.setBackground(getResources().getDrawable(R.drawable.radiobutton_background, null));
+                radioButtonConfirmCaseHigh.setBackground(getResources().getDrawable(R.drawable.radiobutton_background_checked, null));
             }
         });
 

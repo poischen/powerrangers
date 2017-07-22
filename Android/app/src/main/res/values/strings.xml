@@ -83,7 +83,7 @@
     <string name="reportScalaOfCase">Pollution Scale:</string>
     <string name="reportAreaCoordinates">Estimate the size of the whole polluted area in x and y in meters.</string>
     <string name="reportXCoordinateOfCase">Width</string>
-    <string name="reportYCoordinateOfCase">Height</string>
+    <string name="reportYCoordinateOfCase">Length</string>
     <string name="reportPictureOfCase">Upload picture</string>
     <string name="reportInformationOfCase">Comment</string>
     <string name="reportCaseButton">Report Case</string>
@@ -107,6 +107,7 @@
     <string name="detailConfirmerCaseConfirmButton">Confirm this case</string>
     <string name="detailConfirmerCaseDectiveError">Sorry, you can\'t confirm your own case! </string>
     <string name="detailConfirmerCaseConfirmMessage">Thank you for confirming this case :-)!</string>
+    <string name="detailsConfirmerCaseExplanation">Check the information below and edit if necessary.</string>
 
 
     <!-- FragmentRangerTasks & DetailRangerTask-->
