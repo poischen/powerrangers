@@ -75,7 +75,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     TextView tvUserName;
     Button donateButton;
     Button reportACaseButton;
-    Button logoutButton;
+   // Button logoutButton;
 
     Bitmap userPicBmp;
 
@@ -112,8 +112,8 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
 
         //find View elements
         //logout button
-        logoutButton = (Button) view.findViewById(R.id.logoutButton);
-        logoutButton.setOnClickListener(this);
+       // logoutButton = (Button) view.findViewById(R.id.logoutButton);
+        //logoutButton.setOnClickListener(this);
         // display user name
         tvUserName = (TextView) view.findViewById(R.id.textViewUserName);
         Log.v("FragmentStart", "userName: " + u.getName());
@@ -271,8 +271,9 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                 }
                 break;
 
-            // gibt es nicht mehr
-            case R.id.logoutButton:
+
+           /* case R.id.logoutButton:
+                Log.i("KATJA", "FrStart, want to log out");
                 FirebaseAuth.getInstance().signOut();
                 fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentTransaction = fragmentManager.beginTransaction();
@@ -280,6 +281,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                 fragmentTransaction.replace(R.id.activity_main_fragment_container, fl);
                 fragmentTransaction.commit();
                 break;
+                */
 
             case R.id.donateButton:
                 Intent intentDonate = new Intent(getActivity(), ActivityDonate.class);

@@ -25,7 +25,7 @@ public class BaseContainerFragment extends Fragment {
             bundles.putSerializable(getString(R.string.confirmCasesSerializable), fragmentWait.getCasesListItem());
             bundles.putString("tag", tag);
             confirmerCasesFragment.setArguments(bundles);
-            transaction.commit();
+            transaction.commitAllowingStateLoss();
             getChildFragmentManager().executePendingTransactions();
         } else if (tag.equals(getString(R.string.votingTasksTag))) {
             FragmentVotingTasks fragmentVotingTasks = new FragmentVotingTasks();

@@ -97,6 +97,8 @@
                             android:textSize="17dp"
                             android:fontFamily="sans-serif-light"
                             android:inputType="textPersonName"
+                            android:drawableLeft="@drawable/icon_pin_city"
+                            android:drawablePadding="8dp"
                             android:text=""
                             android:layout_marginBottom="7dp"
                             android:background="@drawable/edittext_white"/>
@@ -111,6 +113,8 @@
                             android:textSize="17dp"
                             android:hint="Add a Country"
                             android:padding="10dp"
+                            android:drawableLeft="@drawable/icon_globe"
+                            android:drawablePadding="8dp"
                             android:fontFamily="sans-serif-light"
                             android:inputType="textPersonName"
                             android:text=""
