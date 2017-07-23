@@ -43,7 +43,7 @@ public class BaseContainerFragment extends Fragment {
             bundles.putSerializable(getString(R.string.rangerTasksSerializable), fragmentWait.getRangerTasksListItem());
             bundles.putString("tag", tag);
             fragmentRangerTasks.setArguments(bundles);
-            transaction.commit();
+            transaction.commitAllowingStateLoss();
             getChildFragmentManager().executePendingTransactions();
         } else if (tag.equals(getString(R.string.startTag))) {
             FragmentStart fragmentStart = new FragmentStart();

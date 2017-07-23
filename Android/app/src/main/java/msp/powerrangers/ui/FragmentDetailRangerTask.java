@@ -1,4 +1,5 @@
 package msp.powerrangers.ui;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -75,7 +76,7 @@ public class FragmentDetailRangerTask extends Fragment {
 
     // task ID
     private String taskID;
-    private  String taskDBId;
+    private String taskDBId;
     Boolean isAssigned;
 
     SharedPreferences sharedPrefs;
@@ -187,18 +188,74 @@ public class FragmentDetailRangerTask extends Fragment {
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
         Query filteredTasks = dbRefTasks.orderByChild("assigned").equalTo(false);
 
-        filteredTasks.addValueEventListener( new ValueEventListener() {
+        filteredTasks.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.i("KATJA", "filtered tasks, onDataChange");
-                Iterator iter = dataSnapshot.getChildren().iterator();
-                for(int i = 0; i < position; i++) {
-                    iter.next();
+                // OLD Iterator iter = dataSnapshot.getChildren().iterator();
+                Iterable<DataSnapshot> tasks = dataSnapshot.getChildren();
+                int taskPosition = 0;
+
+                for(DataSnapshot task: tasks){
+                    if (taskPosition == position){
+                        // Fetch the data from the DB
+                        String city = (String) task.child("city").getValue();
+                        String country = (String) task.child("country").getValue();
+                        String reward = String.valueOf(task.child("reward").getValue());
+                        String scale = String.valueOf(task.child("scale").getValue());
+                        String comment = (String) task.child("comment").getValue();
+
+                        taskID = (String) task.child("taskId").getValue();
+                        taskDBId = (String) task.child("taskDbId").getValue();
+                        isAssigned = (Boolean) task.child("assigned").getValue();
+                        Log.i("KATJA", "taskDBID: " + taskDBId);
+                        Log.i("KATJA", "isAssigned: " + isAssigned.toString());
+
+                        rangerTaskName.setText(city + ", " + country);
+                        textRangerReward.setText(reward);
+
+                        String numberRangers = String.valueOf(task.child("numberRangers").getValue());
+                        textNumberRangers.setText(numberRangers);
+
+                        textPollutionLevel.setText(convertScaleToText(scale));
+                        rangerTaskDescription.setText(comment);
+
+                        // set appropriate icon
+                        switch (scale) {
+
+                            case "1":
+                                iconPollution.setImageResource(R.drawable.icon_pollution_low);
+                                break;
+
+                            case "2":
+                                iconPollution.setImageResource(R.drawable.icon_pollution_medium);
+                                break;
+
+                            case "3":
+                                iconPollution.setImageResource(R.drawable.icon_pollution_high);
+                                break;
+                        }
+                    }
+                    taskPosition++;
                 }
 
-                DataSnapshot singleSnapshot = (DataSnapshot) iter.next();
+             /*   DataSnapshot singleSnapshot;
 
+                for (int i = 0; i < position; i++) {
+
+                    iter.next();
+
+                }
+
+                if (!iter.hasNext()) {
+
+                    singleSnapshot = (DataSnapshot) dataSnapshot.getChildren().
+
+                } else {
+
+                    singleSnapshot = (DataSnapshot) iter.next();
+                }
                 // Fetch the data from the DB
                 String city = (String) singleSnapshot.child("city").getValue();
                 String country = (String) singleSnapshot.child("country").getValue();
@@ -206,13 +263,13 @@ public class FragmentDetailRangerTask extends Fragment {
                 String scale = String.valueOf(singleSnapshot.child("scale").getValue());
                 String comment = (String) singleSnapshot.child("comment").getValue();
 
-                taskID =  (String) singleSnapshot.child("taskId").getValue();
+                taskID = (String) singleSnapshot.child("taskId").getValue();
                 taskDBId = (String) singleSnapshot.child("taskDbId").getValue();
                 isAssigned = (Boolean) singleSnapshot.child("assigned").getValue();
-                Log.i("KATJA", "taskDBID: "+taskDBId);
-                Log.i("KATJA", "isAssigned: "+isAssigned.toString());
+                Log.i("KATJA", "taskDBID: " + taskDBId);
+                Log.i("KATJA", "isAssigned: " + isAssigned.toString());
 
-                rangerTaskName.setText( city + ", " + country);
+                rangerTaskName.setText(city + ", " + country);
                 textRangerReward.setText(reward);
 
                 String numberRangers = String.valueOf(singleSnapshot.child("numberRangers").getValue());
@@ -222,7 +279,7 @@ public class FragmentDetailRangerTask extends Fragment {
                 rangerTaskDescription.setText(comment);
 
                 // set appropriate icon
-                switch(scale){
+                switch (scale) {
 
                     case "1":
                         iconPollution.setImageResource(R.drawable.icon_pollution_low);
@@ -236,7 +293,9 @@ public class FragmentDetailRangerTask extends Fragment {
                         iconPollution.setImageResource(R.drawable.icon_pollution_high);
                         break;
                 }
+                */
             }
+
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -257,7 +316,7 @@ public class FragmentDetailRangerTask extends Fragment {
 
                 DatabaseReference db = FirebaseDatabase.getInstance().getReference();
                 refPathCurrentUser = db.child("users").child(userDbID);
-                Log.i("KATJA", "current user:" +userDbID);
+                Log.i("KATJA", "current user:" + userDbID);
 
                 refPathCurrentUser.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -269,14 +328,14 @@ public class FragmentDetailRangerTask extends Fragment {
                         // Create a new Ranger and fill additional information in the DB Tasks
                         Ranger ranger = new Ranger(userInfo, taskID);
                         dbRefTasks.child(taskDBId).child("rangerDbId").setValue(ranger.getDbId());
-                        Log.i("KATJA", "rangerDbId is set: "+ranger.getDbId());
+                        Log.i("KATJA", "rangerDbId is set: " + ranger.getDbId());
                         dbRefTasks.child(taskDBId).child("assigned").getRef().setValue(true);
 
                         // update the number of user open tasks
                         String currentNOT = String.valueOf(dataSnapshot.child("numberOpenTasks").getValue());
-                        Log.i("KATJA", "currentNOT:" +currentNOT);
+                        Log.i("KATJA", "currentNOT:" + currentNOT);
                         int newNOT = Integer.parseInt(currentNOT) + 1;
-                        Log.i("KATJA", "newNOT:" +newNOT);
+                        Log.i("KATJA", "newNOT:" + newNOT);
                         refPathCurrentUser.child("numberOpenTasks").setValue(newNOT);
 
                     }
@@ -292,7 +351,7 @@ public class FragmentDetailRangerTask extends Fragment {
                 // move to Main Activity (FragmentStart)
                 Intent i = new Intent(getActivity(), MainActivity.class);
                 startActivity(i);
-                ((Activity) getActivity()).overridePendingTransition(0,0);
+                ((Activity) getActivity()).overridePendingTransition(0, 0);
 
             }
         });
@@ -301,18 +360,18 @@ public class FragmentDetailRangerTask extends Fragment {
     }
 
 
-    public String convertScaleToText(String scale){
+    public String convertScaleToText(String scale) {
 
         String result = "";
 
-        switch(scale){
+        switch (scale) {
             case ("1"):
                 result = "Low";
                 break;
-            case("2"):
+            case ("2"):
                 result = "Medium";
                 break;
-            case("3"):
+            case ("3"):
                 result = "High";
                 break;
         }
@@ -320,7 +379,7 @@ public class FragmentDetailRangerTask extends Fragment {
         return result;
     }
 
-    public void updateImageViews(){
+    public void updateImageViews() {
         viewPager.getAdapter().notifyDataSetChanged();
     }
 
@@ -333,7 +392,7 @@ public class FragmentDetailRangerTask extends Fragment {
 
         @Override
         public int getItemPosition(Object object) {
-            if (pictureBitmapList.contains((View) object)){
+            if (pictureBitmapList.contains((View) object)) {
                 return pictureBitmapList.indexOf((View) object);
             } else {
                 return POSITION_NONE;
@@ -396,7 +455,7 @@ public class FragmentDetailRangerTask extends Fragment {
         switch (item.getItemId()) {
             case android.R.id.home:
                 getActivity().onBackPressed();
-                ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                 return true;
             default:
                 return false;
