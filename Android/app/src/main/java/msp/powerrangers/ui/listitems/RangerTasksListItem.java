@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import msp.powerrangers.R;
+import msp.powerrangers.logic.Ranger;
 import msp.powerrangers.ui.FragmentWait;
 
 /**
@@ -60,12 +61,13 @@ public class RangerTasksListItem implements Serializable {
         // get the reference to the db cases
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
         dbRefTasks.orderByChild("assigned").equalTo(false)
-                .addListenerForSingleValueEvent(
+                .addValueEventListener(
                         new ValueEventListener() {
 
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
+                                data = new ArrayList<RangerTasksListItem>();
                                 // get data for each task from the db
                                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
 
