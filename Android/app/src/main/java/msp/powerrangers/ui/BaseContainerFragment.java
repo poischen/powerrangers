@@ -129,6 +129,7 @@ public class BaseContainerFragment extends Fragment {
 
 
     public void replaceFragmentUOT(FragmentWait fw){
+        if (!isAdded()) return;
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         Log.v("BaseContainer", "replace Fragment, UsersOpenTasks");
         FragmentUsersOpenTasks fragmentUsersOpenTasks = new FragmentUsersOpenTasks();

@@ -24,6 +24,17 @@
             android:layout_height="match_parent"
             android:layout_marginTop="14dp">
 
+            <!-- Logout button -->
+            <Button
+                android:id="@+id/logoutButton"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:text="@string/frStart_logout"
+                android:textSize="10sp"
+                android:layout_marginStart="20dp"
+                android:visibility="visible"
+                android:theme="@style/AppTheme.Button" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -126,16 +137,6 @@
                         </LinearLayout>
 
                     </LinearLayout>
-
-                    <!-- Logout button -->
-                    <Button
-                        android:id="@+id/logoutButton"
-                        android:layout_width="100dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="0.13"
-                        android:text="@string/frStart_logout"
-                        android:textSize="9sp"
-                        android:theme="@style/AppTheme.Button" />
 
                 </LinearLayout>
 

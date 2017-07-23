@@ -82,9 +82,10 @@
                 android:layout_width="55dp"
                 android:layout_height="55dp"
                 android:layout_gravity="center"
+                android:layout_weight="1"
                 android:layout_margin="10dp"
-                app:srcCompat="@drawable/icon_checked_blue"
-                android:background="@drawable/cameracircle"/>
+                android:background="@drawable/cameracircle"
+                app:srcCompat="@drawable/photo" />
 
         </LinearLayout>
 

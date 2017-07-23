@@ -77,6 +77,7 @@ public class VotingTasksListItem implements Serializable {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
+                                data = new ArrayList<VotingTasksListItem>();
                                 // get data for each case from the db
                                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
 

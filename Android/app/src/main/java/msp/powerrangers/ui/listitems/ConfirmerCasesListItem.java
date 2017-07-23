@@ -46,7 +46,7 @@ public class ConfirmerCasesListItem implements Serializable {
     }
 
 
-    public List<ConfirmerCasesListItem> getData(){
+    public List<ConfirmerCasesListItem> getData() {
         return data;
     }
 
@@ -59,30 +59,34 @@ public class ConfirmerCasesListItem implements Serializable {
         // get the reference to the db cases
         dbRefCases = FirebaseDatabase.getInstance().getReference("cases");
 
-        dbRefCases.orderByChild("confirmed").equalTo(false).addValueEventListener(new ValueEventListener() {
+        dbRefCases.orderByChild("confirmed").equalTo(false)
+                .addValueEventListener(
+                        new ValueEventListener() {
 
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // get data for each case from the db
-                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    titleDB = (String) singleSnapshot.child("name").getValue();
-                    cityDB = (String) singleSnapshot.child("city").getValue();
-                    countryDB = (String) singleSnapshot.child("country").getValue();
-                    commentDB = (String) singleSnapshot.child("comment").getValue();
-                    caseImageUrlDB = (String) singleSnapshot.child("pictureURL").child("0").getValue();
-                    data.add(new ConfirmerCasesListItem(titleDB, cityDB, countryDB, commentDB, caseImageUrlDB));
-                }
+                                data = new ArrayList<ConfirmerCasesListItem>();
+                                // get data for each case from the db
+                                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
 
-                fragmentWait.changeToContentView(false);
-            }
+                                    titleDB = (String) singleSnapshot.child("name").getValue();
+                                    cityDB = (String) singleSnapshot.child("city").getValue();
+                                    countryDB = (String) singleSnapshot.child("country").getValue();
+                                    commentDB = (String) singleSnapshot.child("comment").getValue();
+                                    caseImageUrlDB = (String) singleSnapshot.child("pictureURL").child("0").getValue();
+                                    data.add(new ConfirmerCasesListItem(titleDB, cityDB, countryDB, commentDB, caseImageUrlDB));
+                                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                                fragmentWait.changeToContentView(false);
+                            }
 
-            }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
 
-        });
+                            }
+
+                        });
 
     }
 
