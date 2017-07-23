@@ -9,7 +9,6 @@ public class Ranger extends RoleForwarding{
 
     }
 
-
     public void completeTask(){
         System.out.println("Ranger Task completed");
     }

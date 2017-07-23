@@ -10,7 +10,6 @@ import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,23 +22,17 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
 import msp.powerrangers.R;
-import msp.powerrangers.logic.Confirmer;
 import msp.powerrangers.logic.Global;
-import msp.powerrangers.logic.User;
 import msp.powerrangers.ui.listitems.ConfirmerCasesListItem;
-import msp.powerrangers.ui.listitems.RangerTasksListItem;
 
 
 /**
@@ -54,10 +47,6 @@ public class FragmentConfirmerCases extends Fragment {
     private StorageReference storageRef;
     private ConfirmerCasesListItem confirmerCasesListItem;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public FragmentConfirmerCases() {
     }
 
@@ -65,7 +54,6 @@ public class FragmentConfirmerCases extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         storageRef = FirebaseStorage.getInstance().getReference();
-
         Bundle bund = getArguments();
         confirmerCasesListItem = (ConfirmerCasesListItem) bund.getSerializable(getString(R.string.confirmCasesSerializable));
     }
@@ -80,27 +68,24 @@ public class FragmentConfirmerCases extends Fragment {
         // 1. Get a reference to recyclerView & set the onClickListener
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewCC);
         mRecyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
+                new RecyclerItemClickListener(getContext(),
+                        mRecyclerView,
+                        new RecyclerItemClickListener.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
 
-                        FragmentDetailConfirmerCase confirmCaseFragment = new FragmentDetailConfirmerCase();
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("PositionConfirm", position);
-                        confirmCaseFragment.setArguments(bundle);
+                                FragmentDetailConfirmerCase confirmCaseFragment = new FragmentDetailConfirmerCase();
+                                Bundle bundle = new Bundle();
+                                bundle.putInt("PositionConfirm", position);
+                                confirmCaseFragment.setArguments(bundle);
+                                ((BaseContainerFragment) getParentFragment()).replaceFragmentDetailConfirmer(confirmCaseFragment);
+                            }
 
-                        confirmCaseFragment.setArguments(bundle);
-                        ((BaseContainerFragment)getParentFragment()).replaceFragmentDetailConfirmer(confirmCaseFragment);
-
-                    }
-
-                    @Override
-                    public void onLongItemClick(View view, int position) {
-                        // TODO: do whatever
-                    }
-                })
+                            @Override
+                            public void onLongItemClick(View view, int position) {
+                            }
+                        })
         );
-
 
         // 2. Set layoutManager (defines how the elements are laid out)
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -108,11 +93,12 @@ public class FragmentConfirmerCases extends Fragment {
 
         List<ConfirmerCasesListItem> dataCC = confirmerCasesListItem.getData();
 
-        if (dataCC.size()==0) {
-            Log.i("KATJA", "confirmer cases list is empty");
+        if (dataCC.size() == 0) {
+            Log.i("FrConfirmerCases", "Confirmer cases list is empty!");
             TextView tvEmptyList = (TextView) rootView.findViewById(R.id.textEmptyListCC);
             tvEmptyList.setVisibility(View.VISIBLE);
         }
+
         // 3. Create an adapter and fill
         mAdapter = new Recycler_View_Adapter(dataCC, getContext());
 
@@ -133,15 +119,14 @@ public class FragmentConfirmerCases extends Fragment {
         List<ConfirmerCasesListItem> listItem = Collections.emptyList();
         Context context;
 
-
         Recycler_View_Adapter(List<ConfirmerCasesListItem> listItem, Context context) {
             this.listItem = listItem;
             this.context = context;
         }
 
-
         @Override
         public View_Holder onCreateViewHolder(ViewGroup parent, int viewType) {
+
             //Inflate the layout, initialize the View Holder
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.fr_confirmercases_li, parent, false);
@@ -150,12 +135,11 @@ public class FragmentConfirmerCases extends Fragment {
 
         @Override
         public void onBindViewHolder(final View_Holder holder, int position) {
+
             //Use the provided View Holder on the onCreateViewHolder method to populate the current row on the RecyclerView
             holder.title.setText(listItem.get(position).title);
             holder.location.setText(listItem.get(position).city + ", " + listItem.get(position).country);
-
             String imageURL = listItem.get(position).caseImageUrlDB;
-            Log.i("KATJA", "onBind imageURL: " + imageURL);
 
             try {
                 final File localFile = File.createTempFile("images", "jpg");
@@ -164,22 +148,20 @@ public class FragmentConfirmerCases extends Fragment {
                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                Log.i("KATJA", "CC image download erfolgreich");
+                                Log.i("FrConfirmerCases", "Image download success");
                                 Bitmap caseImage = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                                 holder.image.setImageBitmap(blur(caseImage));
-                                Log.i("KATJA", "CC image set");
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        Log.i("KATJA", "CC image download micht erfolgreich");
+                        Log.i("FrConfirmerCases", "Image download failure");
                         holder.image.setImageResource(R.drawable.placeholder_case);
                     }
                 });
             } catch (Exception e) {
-                Log.i("KATJA", "download nicht erfolgreich");
+                Log.i("FrConfirmerCases", "Image download failure");
                 holder.image.setImageResource(R.drawable.placeholder_case);
-
             }
         }
 
@@ -225,7 +207,6 @@ public class FragmentConfirmerCases extends Fragment {
         CardView cv;
         TextView title;
         TextView location;
-        //TextView comment;
         ImageView image;
 
         View_Holder(View itemView) {
@@ -233,7 +214,6 @@ public class FragmentConfirmerCases extends Fragment {
             cv = (CardView) itemView.findViewById(R.id.cvCC);
             title = (TextView) itemView.findViewById(R.id.titleCC);
             location = (TextView) itemView.findViewById(R.id.locationCC);
-            //comment = (TextView) itemView.findViewById(R.id.descriptionCC);
             image = (ImageView) itemView.findViewById(R.id.ivCC);
         }
     }
@@ -242,8 +222,8 @@ public class FragmentConfirmerCases extends Fragment {
     private static final float BLUR_RADIUS = 4;
 
     public Bitmap blur(Bitmap image) {
-        if (null == image) return null;
 
+        if (null == image) return null;
         Bitmap outputBitmap = Bitmap.createBitmap(image);
         final RenderScript renderScript = RenderScript.create(getActivity());
         Allocation tmpIn = Allocation.createFromBitmap(renderScript, image);
@@ -257,7 +237,6 @@ public class FragmentConfirmerCases extends Fragment {
         tmpOut.copyTo(outputBitmap);
         return outputBitmap;
     }
-
 }
 
 

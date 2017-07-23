@@ -10,12 +10,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import msp.powerrangers.ui.FragmentConfirmerCases;
 import msp.powerrangers.ui.FragmentWait;
 
 /**
- * == Data
- * Tutorial: https://www.sitepoint.com/mastering-complex-lists-with-the-android-recyclerview/
+ * Data for ConfirmerCases in RecyclerView
  */
 public class ConfirmerCasesListItem implements Serializable {
 
@@ -65,8 +63,8 @@ public class ConfirmerCasesListItem implements Serializable {
 
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-
                                 data = new ArrayList<ConfirmerCasesListItem>();
+
                                 // get data for each case from the db
                                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
 
@@ -85,9 +83,6 @@ public class ConfirmerCasesListItem implements Serializable {
                             public void onCancelled(DatabaseError databaseError) {
 
                             }
-
                         });
-
     }
-
 }

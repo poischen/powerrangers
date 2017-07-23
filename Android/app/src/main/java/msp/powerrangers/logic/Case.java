@@ -21,7 +21,6 @@ public class Case {
 
 
     public Case(){
-        // Needed for Firebase
     };
 
     public Case(String dbId, String detectiveId, String caseId, String name, String city, String country,

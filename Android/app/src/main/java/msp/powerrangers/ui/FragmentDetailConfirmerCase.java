@@ -13,8 +13,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -38,9 +36,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.Transaction;
+
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -53,7 +50,6 @@ import java.util.List;
 
 import msp.powerrangers.R;
 import msp.powerrangers.logic.Global;
-import msp.powerrangers.logic.User;
 
 
 public class FragmentDetailConfirmerCase extends Fragment {
@@ -92,10 +88,8 @@ public class FragmentDetailConfirmerCase extends Fragment {
 
     private int position;
 
-    // firebase storage Ref
+    // firebase
     private StorageReference storageRef;
-
-    // firebase db instances
     private DatabaseReference dbRefCases;
 
     // current user from shared preferences
@@ -105,9 +99,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
     String detectiveID; // DETECTIVE
 
     public FragmentDetailConfirmerCase() {
-        // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,13 +117,8 @@ public class FragmentDetailConfirmerCase extends Fragment {
         userDbID = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
         refPathCurrentUser = FirebaseDatabase.getInstance().getReference().child("users").child(userDbID);
 
-
         // Set action bar menu
         setHasOptionsMenu(true);
-
-        //((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
     }
 
     @Override
@@ -163,12 +150,10 @@ public class FragmentDetailConfirmerCase extends Fragment {
         editTextConfirmCaseYCoordinate = (EditText) view.findViewById(R.id.editTextConfirmCaseYCoordinate);
         editTextConfirmCaseInformation = (EditText) view.findViewById(R.id.editTextConfirmCaseInformation);
 
-
         // radio buttons scale
         radioButtonConfirmCaseLow = (RadioButton) view.findViewById(R.id.radioButtonConfirmCaseLow);
         radioButtonConfirmCaseMiddle = (RadioButton) view.findViewById(R.id.radioButtonConfirmCaseMiddle);
         radioButtonConfirmCaseHigh = (RadioButton) view.findViewById(R.id.radioButtonConfirmCaseHigh);
-
 
         // buttons
         buttonConfirmCaseReport = (Button) view.findViewById(R.id.buttonConfirmCaseReport);
@@ -180,8 +165,10 @@ public class FragmentDetailConfirmerCase extends Fragment {
         final Query filteredCases = dbRefCases.orderByChild("confirmed").equalTo(false);
         filteredCases.addListenerForSingleValueEvent(
                 new ValueEventListener() {
+
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+
                         Iterator iter = dataSnapshot.getChildren().iterator();
 
                         for (int i = 0; i < position; i++) {
@@ -232,7 +219,6 @@ public class FragmentDetailConfirmerCase extends Fragment {
                             } catch (Exception e) {
                                 Log.d("DetailConfirmerCase", e.getMessage());
                             }
-
                         }
 
                         // set all data in the Detail View except of pictures
@@ -259,9 +245,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
                                 radioButtonConfirmCaseHigh.setChecked(true);
                                 radioButtonConfirmCaseHigh.setBackground(getResources().getDrawable(R.drawable.radiobutton_background_checked, null));
                                 break;
-
                         }
-
                     }
 
                     @Override
@@ -269,7 +253,6 @@ public class FragmentDetailConfirmerCase extends Fragment {
 
                     }
                 });
-
 
         radioButtonConfirmCaseLow.setOnClickListener(new View.OnClickListener()
 
@@ -286,7 +269,6 @@ public class FragmentDetailConfirmerCase extends Fragment {
             }
         });
 
-
         radioButtonConfirmCaseMiddle.setOnClickListener(new View.OnClickListener()
 
         {
@@ -301,7 +283,6 @@ public class FragmentDetailConfirmerCase extends Fragment {
                 radioButtonConfirmCaseHigh.setBackground(getResources().getDrawable(R.drawable.radiobutton_background, null));
             }
         });
-
 
         radioButtonConfirmCaseHigh.setOnClickListener(new View.OnClickListener()
 
@@ -326,151 +307,83 @@ public class FragmentDetailConfirmerCase extends Fragment {
                 filteredCases.addListenerForSingleValueEvent(
                         new ValueEventListener() {
                             @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            Iterator iter = dataSnapshot.getChildren().iterator();
-                            for (int i = 0; i < position; i++) {
-                                iter.next();
+                                Iterator iter = dataSnapshot.getChildren().iterator();
+                                for (int i = 0; i < position; i++) {
+                                    iter.next();
+                                }
+                                DataSnapshot singleSnapshot = (DataSnapshot) iter.next();
+
+                                detectiveID = String.valueOf(singleSnapshot.child("detectiveID").getValue());
+
+                                // detective can`t confirme his own case :)
+                                if (detectiveID.equals(userDbID)) {
+                                    Toast.makeText(getContext(), R.string.detailConfirmerCaseDectiveError, Toast.LENGTH_LONG).show();
+                                }
+
+                                // fill in new values
+                                else {
+                                    singleSnapshot.child("name").getRef().setValue(editTextConfirmCaseTitle.getText().toString());
+                                    singleSnapshot.child("city").getRef().setValue(editTextConfirmCaseCity.getText().toString());
+                                    singleSnapshot.child("country").getRef().setValue(editTextConfirmCaseCountry.getText().toString());
+                                    singleSnapshot.child("comment").getRef().setValue(editTextConfirmCaseInformation.getText().toString());
+                                    singleSnapshot.child("areaX").getRef().setValue(editTextConfirmCaseXCoordinate.getText().toString());
+                                    singleSnapshot.child("areaY").getRef().setValue(editTextConfirmCaseYCoordinate.getText().toString());
+                                    singleSnapshot.child("scale").getRef().setValue(getScaleValue(radioButtonConfirmCaseLow, radioButtonConfirmCaseMiddle, radioButtonConfirmCaseHigh));
+                                    singleSnapshot.child("confirmed").getRef().setValue(true);
+                                    // add the confirmer id to the childs
+                                    singleSnapshot.child("confirmerId").getRef().setValue(userDbID);
+
+                                    // update user balance & number confirmed cases
+                                    refPathCurrentUser.addListenerForSingleValueEvent(
+                                            new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnap) {
+
+                                                    int fixedReward = 5;
+                                                    String currentBalance = String.valueOf(dataSnap.child("balance").getValue());
+                                                    int newBalance = Integer.parseInt(currentBalance) + fixedReward;
+                                                    dataSnap.getRef().child("balance").setValue(newBalance);
+
+                                                    String currentCount = String.valueOf(dataSnap.child("numberConfirmedCases").getValue());
+                                                    int newCount = Integer.parseInt(currentCount) + 1;
+                                                    dataSnap.getRef().child("numberConfirmedCases").setValue(newCount);
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+                                                    Log.e("FrDetailConfirmerCase", "The currentUser read failed: " + databaseError.getMessage());
+                                                }
+
+                                            });
+
+                                    Toast.makeText(getContext(), R.string.detailConfirmerCaseConfirmMessage, Toast.LENGTH_LONG).show();
+
+                                }
                             }
-                            DataSnapshot singleSnapshot = (DataSnapshot) iter.next();
 
-                            detectiveID = String.valueOf(singleSnapshot.child("detectiveID").getValue());
-
-                            // detective can`t confirme his own case :)
-                            if (detectiveID.equals(userDbID)) {
-                                Toast.makeText(getContext(), R.string.detailConfirmerCaseDectiveError, Toast.LENGTH_LONG).show();
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.e("FrDetailConfirmerCase", "The currentCase read failed: " + databaseError.getMessage());
                             }
-
-                            // fill in new values
-                            else {
-                                singleSnapshot.child("name").getRef().setValue(editTextConfirmCaseTitle.getText().toString());
-                                singleSnapshot.child("city").getRef().setValue(editTextConfirmCaseCity.getText().toString());
-                                singleSnapshot.child("country").getRef().setValue(editTextConfirmCaseCountry.getText().toString());
-                                singleSnapshot.child("comment").getRef().setValue(editTextConfirmCaseInformation.getText().toString());
-                                singleSnapshot.child("areaX").getRef().setValue(editTextConfirmCaseXCoordinate.getText().toString());
-                                singleSnapshot.child("areaY").getRef().setValue(editTextConfirmCaseYCoordinate.getText().toString());
-                                singleSnapshot.child("scale").getRef().setValue(getScaleValue(radioButtonConfirmCaseLow, radioButtonConfirmCaseMiddle, radioButtonConfirmCaseHigh));
-                                singleSnapshot.child("confirmed").getRef().setValue(true);
-                                // add the confirmer id to the childs
-                                singleSnapshot.child("confirmerId").getRef().setValue(userDbID);
-
-                                // update user balance & number confirmed cases
-                                refPathCurrentUser.addListenerForSingleValueEvent(
-                                        new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnap) {
-
-                                        int fixedReward = 5;
-                                        String currentBalance = String.valueOf(dataSnap.child("balance").getValue());
-                                        int newBalance =Integer.parseInt(currentBalance)+fixedReward;
-                                        dataSnap.getRef().child("balance").setValue(newBalance);
-
-                                        String currentCount = String.valueOf(dataSnap.child("numberConfirmedCases").getValue());
-                                        int newCount = Integer.parseInt(currentCount)+1;
-                                        dataSnap.getRef().child("numberConfirmedCases").setValue(newCount);
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-                                        Log.e("FrDetailConfirmerCase", "The currentUser read failed: " + databaseError.getMessage());
-                                    }
-
-                                });
-
-                                Toast.makeText(getContext(), R.string.detailConfirmerCaseConfirmMessage, Toast.LENGTH_LONG).show();
-
-                            }
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Log.e("FrDetailConfirmerCase", "The currentCase read failed: " + databaseError.getMessage());
-                        }
-                    });
-
+                        });
 
                 // go back to FragmentStart
                 Intent i = new Intent(getActivity(), MainActivity.class);
                 startActivity(i);
                 ((Activity) getActivity()).overridePendingTransition(0, 0);
-
             }
         });
 
         progressDialog.cancel();
-        // Inflate the layout for this fragment
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        /*if (pictureBitmapList.size() != pictureURLs.size()) {
-            for (int i=0; i<=pictureURLs.size(); i++){
-                try {final File localFile = File.createTempFile("images", "jpg");
-                    StorageReference riversRef = storageRef.child(pictureURLs.get(i));
-                    riversRef.getFile(localFile)
-                            .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                    Log.v("Download", "download erfolgreich");
-                                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                    pictureBitmapList.add(bitmap);
-                                    Log.v("DetailConfirmerCase", "picture Bitmap List new entry: " + bitmap);
-
-                                    getActivity().runOnUiThread(new Runnable() {
-
-                                        @Override
-                                        public void run() {
-                                            viewPager.getAdapter().notifyDataSetChanged();
-                                        }
-                                    });
-
-                                    //viewPager.getAdapter().notifyDataSetChanged();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            Log.d("DetailConfirmerCase", exception.getMessage());
-                        }
-                    });
-
-
-                } catch (Exception e) {
-                    Log.d("DetailConfirmerCase", e.getMessage());
-                }
-            }
-
-        }*/
-
     }
-
-
-
-    //TODO: add childEventListener for new added entrys
-    /*ref.addChildEventListener(new ChildEventListener() {
-        @Override
-        public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
-            Post newPost = dataSnapshot.getValue(Post.class);
-            System.out.println("Author: " + newPost.author);
-            System.out.println("Title: " + newPost.title);
-            System.out.println("Previous Post ID: " + prevChildKey);
-        }
-
-        @Override
-        public void onChildChanged(DataSnapshot dataSnapshot, String prevChildKey) {}
-
-        @Override
-        public void onChildRemoved(DataSnapshot dataSnapshot) {}
-
-        @Override
-        public void onChildMoved(DataSnapshot dataSnapshot, String prevChildKey) {}
-
-        @Override
-        public void onCancelled(DatabaseError databaseError) {}
-    });*/
-
 
     /**
      * Get the value of a checkbox
@@ -480,7 +393,6 @@ public class FragmentDetailConfirmerCase extends Fragment {
      * @param high
      * @return
      */
-
     public int getScaleValue(RadioButton low, RadioButton medium, RadioButton high) {
         if (low.isChecked()) return 1;
         if (medium.isChecked()) return 2;
@@ -488,7 +400,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
         else return -1;
     }
 
-    public void updateImageViews(){
+    public void updateImageViews() {
         viewPager.getAdapter().notifyDataSetChanged();
     }
 
@@ -502,7 +414,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
 
         @Override
         public int getItemPosition(Object object) {
-            if (pictureBitmapList.contains((View) object)){
+            if (pictureBitmapList.contains((View) object)) {
                 return pictureBitmapList.indexOf((View) object);
             } else {
                 return POSITION_NONE;
@@ -567,11 +479,10 @@ public class FragmentDetailConfirmerCase extends Fragment {
         switch (item.getItemId()) {
             case android.R.id.home:
                 getActivity().onBackPressed();
-                ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                 return true;
             default:
                 return false;
         }
     }
-
 }

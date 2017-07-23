@@ -8,7 +8,6 @@ public class Donation {
     private double value;
 
     public Donation(){
-        // Needed for Firebase
     };
 
     public Donation(String donationDbId,String userDbId, double value){
@@ -16,7 +15,6 @@ public class Donation {
         this.userDbId = userDbId;
         this.value = value;
     }
-
 
     // getter
     public String getDonationDbId() {

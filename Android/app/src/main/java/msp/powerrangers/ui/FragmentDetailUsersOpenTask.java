@@ -50,8 +50,6 @@ import java.util.List;
 
 import msp.powerrangers.R;
 import msp.powerrangers.logic.Global;
-import msp.powerrangers.logic.Ranger;
-import msp.powerrangers.logic.User;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -61,7 +59,6 @@ import static android.app.Activity.RESULT_OK;
 public class FragmentDetailUsersOpenTask extends Fragment {
 
     private TextView tvTaskName;
-    //private ImageView ivTaskImage;
     private TextView tvTaskDesc;
     private TextView tvActionToUpload;
     private ImageButton buttonUploadImages;
@@ -91,7 +88,6 @@ public class FragmentDetailUsersOpenTask extends Fragment {
     String userDbID;
 
     public FragmentDetailUsersOpenTask() {
-        // Required empty public constructor
     }
 
     @Override
@@ -105,14 +101,11 @@ public class FragmentDetailUsersOpenTask extends Fragment {
         Bundle bundle = getArguments();
         position = bundle.getInt("PositionUsersOpenTask");
         taskTitle = bundle.getString("TitleUsersOpenTask");
-        //TODO: key anpassen
         taskID = bundle.getString("OpenTaskID");
         caseID = bundle.getString("OpenTaskCaseID");
         taskDescription = bundle.getString("DescriptionUsersOpenTask");
-
         taskImageUrl = bundle.getString("taskImageUrl");
         caseImageUrl = bundle.getString("caseImageUrl");
-
         isTaskAlreadyCompleted = bundle.getBoolean("StatusUsersOpenTask");
 
         pictureBitmapList = new ArrayList<>();
@@ -127,13 +120,11 @@ public class FragmentDetailUsersOpenTask extends Fragment {
 
         tvTaskName = (TextView) view.findViewById(R.id.taskNameUOT);
         tvTaskName.setText(taskTitle);
-
         viewPager = (ViewPager) view.findViewById(R.id.taskImagesUOT);
         FragmentDetailUsersOpenTask.ImageAdapter adapter = new FragmentDetailUsersOpenTask.ImageAdapter(this.getContext());
         viewPager.setAdapter(adapter);
 
         if (taskImageUrl != null) {
-            Log.i("KATJA", "task image url is not null: "+ taskImageUrl);
             try {
                 final File localFileTask = File.createTempFile("images", "jpg");
                 StorageReference storageRef = FirebaseStorage.getInstance().getReference();
@@ -142,7 +133,7 @@ public class FragmentDetailUsersOpenTask extends Fragment {
                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                Log.v("FrDetailUsersOpenTask", "download erfolgreich");
+                                Log.v("FrDetailUsersOpenTask", "Image download success");
                                 Bitmap bmp = BitmapFactory.decodeFile(localFileTask.getAbsolutePath());
                                 pictureBitmapList.add(bmp);
                                 updateImageViews();
@@ -154,12 +145,9 @@ public class FragmentDetailUsersOpenTask extends Fragment {
                     }
                 });
             } catch (Exception e) {
-                Log.d("FrDetailUsersOpenTask", "no image available or some other error occured");
+                Log.d("FrDetailUsersOpenTask", "No image available or some other error occured");
             }
         }
-
-        //tvTaskDesc = (TextView) view.findViewById(R.id.taskDescUOT);
-        //tvTaskDesc.setText(taskDescription);
 
         // hint to upload an image
         tvActionToUpload = (TextView) view.findViewById(R.id.textImagesToUpload);
@@ -186,12 +174,10 @@ public class FragmentDetailUsersOpenTask extends Fragment {
             buttonUploadImages.setEnabled(false);
             buttonCompleteTask.setEnabled(false);
             tvActionToUpload.setText(getString(R.string.textNoNeedToUpload));
-            //TODO: show uploaded picture, if task was already completed
             ivUploadedImage.setVisibility(View.GONE);
             buttonUploadImages.setVisibility(View.GONE);
             buttonCompleteTask.setVisibility(View.GONE);
         }
-
         return view;
     }
 
@@ -209,7 +195,6 @@ public class FragmentDetailUsersOpenTask extends Fragment {
         getimageintent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         getimageintent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(getimageintent, getResources().getString(R.string.chooseProfilePicture)), CHOOSE_IMAGE_REQUEST);
-
     }
 
     /**
@@ -240,7 +225,6 @@ public class FragmentDetailUsersOpenTask extends Fragment {
         //upload picture
         final String storageAndDBPath;
         storageAndDBPath = "images/cases/" + caseID + "/" + position + "_after.jpg";
-        Log.i("KATJA", "DUOT nach storageDBPath");
 
         //upload to Firebase Storage
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
@@ -259,9 +243,7 @@ public class FragmentDetailUsersOpenTask extends Fragment {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 String currentCount = String.valueOf(dataSnapshot.child("numberCompletedTasks").getValue());
-                                Log.i("KATJA", "DUOT current NOT: "+currentCount);
                                 int newCount = Integer.valueOf(currentCount) + 1;
-                                Log.i("KATJA", "DUOT new NOT: "+currentCount);
                                 refPathCurrentUser.child("numberCompletedTasks").setValue(newCount);
                             }
 
@@ -277,7 +259,6 @@ public class FragmentDetailUsersOpenTask extends Fragment {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         Toast.makeText(getContext(), R.string.errorUpload, Toast.LENGTH_LONG).show();
-                        Log.i("KATJA DUsersOpenTask", exception.getMessage());
                     }
                 })
                 .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -374,5 +355,4 @@ public class FragmentDetailUsersOpenTask extends Fragment {
                 return false;
         }
     }
-
 }
