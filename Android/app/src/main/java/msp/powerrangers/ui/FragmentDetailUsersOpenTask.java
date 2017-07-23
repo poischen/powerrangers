@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -63,7 +64,7 @@ public class FragmentDetailUsersOpenTask extends Fragment {
     //private ImageView ivTaskImage;
     private TextView tvTaskDesc;
     private TextView tvActionToUpload;
-    private Button buttonUploadImages;
+    private ImageButton buttonUploadImages;
     private ImageView ivUploadedImage;
     private Button buttonCompleteTask;
 
@@ -157,14 +158,14 @@ public class FragmentDetailUsersOpenTask extends Fragment {
             }
         }
 
-        tvTaskDesc = (TextView) view.findViewById(R.id.taskDescUOT);
-        tvTaskDesc.setText(taskDescription);
+        //tvTaskDesc = (TextView) view.findViewById(R.id.taskDescUOT);
+        //tvTaskDesc.setText(taskDescription);
 
         // hint to upload an image
         tvActionToUpload = (TextView) view.findViewById(R.id.textImagesToUpload);
         ivUploadedImage = (ImageView) view.findViewById(R.id.taskUploadedImageRanger);
 
-        buttonUploadImages = (Button) view.findViewById(R.id.buttonUploadImageUOT);
+        buttonUploadImages = (ImageButton) view.findViewById(R.id.buttonUploadImageUOT);
         buttonUploadImages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,6 +188,8 @@ public class FragmentDetailUsersOpenTask extends Fragment {
             tvActionToUpload.setText(getString(R.string.textNoNeedToUpload));
             //TODO: show uploaded picture, if task was already completed
             ivUploadedImage.setVisibility(View.GONE);
+            buttonUploadImages.setVisibility(View.GONE);
+            buttonCompleteTask.setVisibility(View.GONE);
         }
 
         return view;

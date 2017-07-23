@@ -13,7 +13,7 @@
     <string name="start">start</string>
     <string name="confirmTasks">voting</string>
     <string name="confirmCases">confirm</string>
-    <string name="findYorJob">get a job</string>
+    <string name="findYorJob">jobs</string>
 
     <!-- Tags for tabnames -->
     <string name="startTag">startTag</string>
@@ -125,10 +125,11 @@
 
     <!-- FragmentUsersOpenTasks & DetailUsersOpenTask-->
     <string name="titleUsersOpenTasks">Open Tasks</string>
+    <string name="waitUsersOpenTasks">Wait for voting to be completed!</string>
     <string name="buttonUploadImage">Upload image</string>
     <string name="completeTask">Complete Task</string>
-    <string name="textToUpload">Please take a picture of the same area shown above - BUT CLEAN :).</string>
-    <string name="textNoNeedToUpload">You already completed this task. Wait for the confirmation of your job!</string>
+    <string name="textToUpload">To complete this task, take a picture of the cleaned area and upload it.</string>
+    <string name="textNoNeedToUpload">You have already completed this task. Wait for the confirmation of your job!</string>
 
     <!-- FragmentVotingTasks-->
     <string name="titleVotingTasks">Voting Tasks</string>

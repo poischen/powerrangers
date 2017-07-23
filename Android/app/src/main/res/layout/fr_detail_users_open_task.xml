@@ -15,9 +15,10 @@
             android:id="@+id/taskNameUOT"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop = "true"
+            android:layout_alignParentTop="true"
             android:layout_marginTop="20dp"
             android:textSize="13pt"
+            android:fontFamily="sans-serif-light"
             android:textColor="@color/colorPrimaryDark"
             android:gravity="center" />
 
@@ -42,7 +43,7 @@
             />
 
 
-        <!--Task description -->
+        <!--Task description
         <TextView
             android:id="@+id/taskDescUOT"
             android:layout_width="match_parent"
@@ -51,54 +52,57 @@
             android:layout_below="@+id/taskImagesUOT"
             android:layout_marginTop="20dp"
             />
+        -->
 
 
         <LinearLayout
             android:id="@+id/linLayoutOUT"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/taskDescUOT">
+            android:layout_below="@+id/taskImagesUOT"
+            android:orientation="vertical">
 
             <!-- text hint -->
             <TextView
                 android:id="@+id/textImagesToUpload"
-                android:layout_width="200dp"
-                android:layout_height="60dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="@string/textToUpload"
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="20dp"
+                android:textSize="16sp"
+                android:padding="10dp"
+                android:gravity="center"
                 android:visibility="visible"/>
 
             <!-- button upload image -->
-            <Button
+            <ImageButton
                 android:id="@+id/buttonUploadImageUOT"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/buttonUploadImage"
-                android:gravity="center_horizontal|center_vertical"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="15dp"
-                android:layout_weight="0.4"
-                />
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                app:srcCompat="@drawable/icon_checked_blue"
+                android:background="@drawable/cameracircle"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:layout_below="@+id/linLayoutOUT">
 
             <!-- thumbnail of the task image-->
             <ImageView
                 android:id="@+id/taskUploadedImageRanger"
                 android:layout_width="match_parent"
-                android:layout_height="210dp"
-                android:src="@drawable/nopicyet"
-                android:layout_marginTop="20dp"
-                android:scaleType="centerInside"/>
+                android:layout_height="200dp"
+                android:background="@drawable/image_selector"
+                android:scaleType="centerCrop"/>
 
             <!-- Button Complete Task -->
             <Button
@@ -108,6 +112,8 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:text="@string/completeTask"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/shape_mainbutton"
                 android:layout_marginTop="20dp"/>
 
         </LinearLayout>

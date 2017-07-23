@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -192,6 +193,14 @@ public class FragmentUsersOpenTasks extends Fragment {
             String taskImageUrlDB = listItem.get(position).taskImageUrlDB;
             Log.i("Viki: TaskImageURLDB", taskImageUrlDB);
 
+            // Check if task is completed, but not voted yet
+            Boolean isTaskCompleted = listItem.get(position).getTaskCompleted();
+
+            if(isTaskCompleted) {
+                holder.layoutOverlay.setBackground(getResources().getDrawable(R.drawable.overlay_uot, null));
+                holder.waitText.setVisibility(View.VISIBLE);
+            }
+
             // set image
             if (taskImageUrlDB != null) {     //  url from bundle is set
 
@@ -270,6 +279,8 @@ public class FragmentUsersOpenTasks extends Fragment {
         TextView location;
         TextView description;
         ImageView imageView;
+        LinearLayout layoutOverlay;
+        TextView waitText;
 
         View_Holder(View itemView) {
             super(itemView);
@@ -277,6 +288,8 @@ public class FragmentUsersOpenTasks extends Fragment {
             title = (TextView) itemView.findViewById(R.id.titleUOT);
             location = (TextView) itemView.findViewById(R.id.locationOUT);
             imageView = (ImageView) itemView.findViewById(R.id.ivUOT);
+            layoutOverlay = (LinearLayout) itemView.findViewById(R.id.overlayUOT);
+            waitText = (TextView) itemView.findViewById(R.id.waitTextview);
         }
     }
 

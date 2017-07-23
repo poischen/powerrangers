@@ -13,6 +13,7 @@
     <color name="colorBackgroundUOT">#F5F3D9</color>
    <!--  <color name="colorBackgroundUOT">#FFFDE7</color> -->
     <color name="colorBackgroundOpacity55">#29222222</color>
+    <color name="colorGreenOpacity10">#CC222222</color>
     <color name="colorPink">#E65C70</color>
     <color name="colorGrey">#787978</color>
     <color name="colorBlue">#265272</color>
