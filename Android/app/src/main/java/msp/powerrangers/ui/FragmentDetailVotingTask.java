@@ -245,7 +245,7 @@ public class FragmentDetailVotingTask extends Fragment {
             public void onClick(View v) {
 
                 dbRefTasks.orderByChild("taskCompleted").equalTo(true)
-                        .addListenerForSingleValueEvent(
+                        .addValueEventListener(
                                 new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
