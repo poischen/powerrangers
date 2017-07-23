@@ -32,48 +32,77 @@
                     android:textSize="13pt"
                     android:textColor="@color/colorPrimaryDark"
                     android:gravity="center"
+                    android:fontFamily="sans-serif-light"
                     android:layout_marginBottom="12dp"
                     android:text="@string/placeholderTitle"/>
 
-                <TextView
-                    android:id="@+id/textViewVotingLocation"
+                <LinearLayout
+                    android:id="@+id/linLayout0"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/placeholderLocation"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:layout_marginBottom="12pt"
+                    android:orientation="horizontal"
+                    android:layout_below="@+id/textViewVotingTitle"
+                    android:layout_gravity="center"
                     android:gravity="center"
-                    android:layout_below="@+id/textViewVotingTitle"/>
+                    android:layout_marginBottom="30dp">
+                    <ImageView
+                        android:layout_width="19dp"
+                        android:layout_height="19dp"
+                        android:background="@drawable/location"
+                        android:layout_marginRight="7dp" />
+                    <TextView
+                        android:id="@+id/textViewVotingLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/placeholderLocation"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_below="@+id/textViewVotingTitle"/>
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/linlayout1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_below="@+id/textViewVotingLocation"
+                    android:layout_below="@+id/linLayout0"
                     android:layout_marginBottom="12pt"
                     android:orientation="horizontal"
                     android:weightSum="2">
 
-                    <ImageView
-                        android:id="@+id/ivVotingPic1"
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:scaleType="centerInside"
+                        android:orientation="vertical"
+                        android:layout_weight="1">
+
+
+                    <ImageView
+                        android:id="@+id/ivVotingPic1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="centerCrop"
                         android:adjustViewBounds="true"
-                        android:layout_weight="1"
                         android:layout_marginEnd="8dp"
                         app:srcCompat="@drawable/clean_beach"
                         />
 
+                    </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+
+
                     <ImageView
                         android:id="@+id/ivVotingPic2"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:scaleType="centerInside"
+                        android:scaleType="fitCenter"
                         android:adjustViewBounds="true"
-                        android:layout_weight="1"
                         app:srcCompat="@drawable/clean_beach"
                         />
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -84,29 +113,28 @@
                     android:layout_height="match_parent"
                     android:layout_below="@+id/linlayout1"
                     android:orientation="horizontal"
-                    android:weightSum="2"
-                    android:layout_marginStart="20dp">
-
-                    <Button
-                        android:id="@+id/buttonNotOk"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@color/colorAccent"
-                        android:textColor="@color/colorWhite"
-                        android:layout_weight="1"
-                        android:layout_marginEnd="20dp"
-                        android:text="Not OK" />
+                    android:gravity="center">
 
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/buttonOk"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@color/colorAccent"
-                        android:text="OK"
-                        android:layout_weight="1"
+                        android:layout_width="42dp"
+                        android:layout_height="45dp"
+                        android:background="@null"
+                        android:layout_marginRight="20dp"
                         android:textColor="@color/colorWhite"
+                        android:src="@drawable/voting_button_like"
                         />
+
+
+                    <ImageButton
+                        android:id="@+id/buttonNotOk"
+                        android:layout_width="42dp"
+                        android:layout_height="45dp"
+                        android:textColor="@color/colorWhite"
+                        android:layout_marginLeft="20dp"
+                        android:background="@null"
+                        android:src="@drawable/voting_button_dislike" />
                 </LinearLayout>
 
 

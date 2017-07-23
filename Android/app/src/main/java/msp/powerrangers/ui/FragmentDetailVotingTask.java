@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,8 +43,8 @@ public class FragmentDetailVotingTask extends Fragment {
     //  ui elements
     private TextView textViewVotingTitle;
     private TextView textViewVotingLocation;
-    private Button buttonOk;
-    private Button buttonNotOK;
+    private ImageButton buttonOk;
+    private ImageButton buttonNotOk;
     private ImageView imageBefore;
     private ImageView imageAfter;
 
@@ -114,8 +115,8 @@ public class FragmentDetailVotingTask extends Fragment {
         // find UI elements
         final TextView textViewVotingTitle = (TextView) view.findViewById(R.id.textViewVotingTitle);
         final TextView textViewVotingLocation = (TextView) view.findViewById(R.id.textViewVotingLocation);
-        Button buttonOk = (Button) view.findViewById(R.id.buttonOk);
-        Button buttonNotOk = (Button) view.findViewById(R.id.buttonNotOk);
+        buttonOk = (ImageButton) view.findViewById(R.id.buttonOk);
+        buttonNotOk = (ImageButton) view.findViewById(R.id.buttonNotOk);
         final ImageView imageBefore = (ImageView) view.findViewById(R.id.ivVotingPic1);
         final ImageView imageAfter = (ImageView) view.findViewById(R.id.ivVotingPic2);
 
@@ -124,7 +125,7 @@ public class FragmentDetailVotingTask extends Fragment {
 
             try {   // download pic before
                 final File localFile = File.createTempFile("images", "jpg");
-                StorageReference riversRef = storageRef.child(Global.getThumbUrl(imgBeforeURL));
+                StorageReference riversRef = storageRef.child(Global.getDisplayUrl(imgBeforeURL));
                 riversRef.getFile(localFile)
                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                             @Override
@@ -150,7 +151,7 @@ public class FragmentDetailVotingTask extends Fragment {
 
             try {   // download pic before
                 final File localFile = File.createTempFile("images", "jpg");
-                StorageReference riversRef = storageRef.child(Global.getThumbUrl(imgAfterURL));
+                StorageReference riversRef = storageRef.child(Global.getDisplayUrl(imgAfterURL));
                 riversRef.getFile(localFile)
                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                             @Override
