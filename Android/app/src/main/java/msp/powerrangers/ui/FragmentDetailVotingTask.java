@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -93,7 +92,6 @@ public class FragmentDetailVotingTask extends Fragment {
         imgBeforeURL = bund.getString("imageBeforeUrl");
         imgAfterURL = bund.getString("imageAfterUrl");
 
-
         // get the current user
         sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
         userDbID = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
@@ -130,18 +128,17 @@ public class FragmentDetailVotingTask extends Fragment {
                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                Log.i("KATJA DetailVotingTask", "download erfolgreich, imageBefore");
                                 Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                                 imageBefore.setImageBitmap(bitmap);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        Log.i("Viki DetailVotingTask", exception.getMessage());
+                        Log.i("FDVotingTask", exception.getMessage());
                     }
                 });
             } catch (Exception e) {
-                Log.i("Viki DetailVotingTask", e.getMessage());
+                Log.i("FDVotingTask", e.getMessage());
             }
 
         }
@@ -156,18 +153,17 @@ public class FragmentDetailVotingTask extends Fragment {
                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                Log.i("KATJA DetailVotingTask", "download erfolgreich, imageAfter");
                                 Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                                 imageAfter.setImageBitmap(bitmap);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        Log.i("Viki DetailVotingTask", exception.getMessage());
+                        Log.i("FDVotingTask", exception.getMessage());
                     }
                 });
             } catch (Exception e) {
-                Log.i("Viki DetailVotingTask", e.getMessage());
+                Log.i("FDVotingTask", e.getMessage());
             }
 
         }
@@ -180,7 +176,6 @@ public class FragmentDetailVotingTask extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Log.i("KATJA", "button notOk clicked");
                 dbRefTasks.orderByChild("taskCompleted").equalTo(true)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -196,17 +191,12 @@ public class FragmentDetailVotingTask extends Fragment {
                                 rangerDbId = (String) singleSnapshot.child("rangerDbId").getValue();
                                 refPathRanger = FirebaseDatabase.getInstance().getReference().child("users").child(rangerDbId);
 
-                                Log.i("KATJA", "rangerDBID: "+ rangerDbId);
-                                Log.i("KATJA", "userDBID: "+ userDbID);
-
                                 // ranger can`t vote for his own task :)
                                 if (rangerDbId.equals(userDbID)) {
-                                    Log.i("KATJA", "ranger==user");
                                     Toast.makeText(getContext(), R.string.errorRangerVotesHisOwnTask, Toast.LENGTH_LONG).show();
                                 } else {
                                     // when voted: update in user opentasks and completedtasks,
                                     // in task : set taskVoted true
-                                    Log.i("KATJA", "ranger!=user");
                                     refPathRanger.addListenerForSingleValueEvent(
                                             new ValueEventListener() {
                                                 @Override
@@ -225,7 +215,7 @@ public class FragmentDetailVotingTask extends Fragment {
 
                                                 @Override
                                                 public void onCancelled(DatabaseError databaseError) {
-                                                    Log.e("FrDetailVotingTask", "The currentUser read failed: " + databaseError.getMessage());
+                                                    Log.e("FDVotingTask", "The currentUser read failed: " + databaseError.getMessage());
                                                 }
 
                                             });
@@ -254,7 +244,6 @@ public class FragmentDetailVotingTask extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Log.i("KATJA", "button ok clicked");
                 dbRefTasks.orderByChild("taskCompleted").equalTo(true)
                         .addListenerForSingleValueEvent(
                                 new ValueEventListener() {
@@ -270,15 +259,11 @@ public class FragmentDetailVotingTask extends Fragment {
                                         rangerDbId = String.valueOf(singleSnapshot.child("rangerDbId").getValue());
                                         refPathRanger = FirebaseDatabase.getInstance().getReference().child("users").child(rangerDbId);
 
-                                        Log.i("KATJA", "rangerDBID: "+ rangerDbId);
-                                        Log.i("KATJA", "userDBID: "+ userDbID);
-
                                         // ranger can`t vote for his own task :)
                                         if (rangerDbId.equals(userDbID)) {
-                                            Log.i("KATJA", "ranger==user");
                                             Toast.makeText(getContext(), R.string.errorRangerVotesHisOwnTask, Toast.LENGTH_LONG).show();
                                         } else {
-                                            Log.i("KATJA", "ranger!=user");
+
                                             // when voted,
                                             // update user opentasks
                                             refPathRanger.addListenerForSingleValueEvent(
@@ -288,24 +273,20 @@ public class FragmentDetailVotingTask extends Fragment {
 
                                                             // decrement bubble number opentasks
                                                             String currentNOT = String.valueOf(dataSnap.child("numberOpenTasks").getValue());
-                                                            Log.i("KATJA", "currentNOT: " + currentNOT);
                                                             int newNOT = Integer.parseInt(currentNOT) - 1;
                                                             dataSnap.child("numberOpenTasks").getRef().setValue(newNOT);
-                                                            Log.i("KATJA", "newNOT: " + newNOT);
 
                                                             // update balance with reward
-                                                            //int fixedReward = Integer.valueOf(reward);
                                                             String currentBalance = String.valueOf(dataSnap.child("balance").getValue());
-                                                            Log.i("KATJA", "current balance: " + currentBalance);
                                                             int newBalance = Integer.parseInt(currentBalance) + reward;
                                                             dataSnap.child("balance").getRef().setValue(newBalance);
-                                                            Log.i("KATJA", "new balance: " + newBalance);
+
 
                                                         }
 
                                                         @Override
                                                         public void onCancelled(DatabaseError databaseError) {
-                                                            Log.e("FrDetailVotingTask", "The currentUser read failed: " + databaseError.getMessage());
+                                                            Log.e("FDVotingTask", "The currentUser read failed: " + databaseError.getMessage());
                                                         }
 
                                                     });
@@ -322,7 +303,7 @@ public class FragmentDetailVotingTask extends Fragment {
 
                                     @Override
                                     public void onCancelled(DatabaseError databaseError) {
-                                        Log.e("FrDetailVotingTask", "The currentCase read failed: " + databaseError.getMessage());
+                                        Log.e("FDVotingTask", "The currentCase read failed: " + databaseError.getMessage());
                                     }
                                 });
 

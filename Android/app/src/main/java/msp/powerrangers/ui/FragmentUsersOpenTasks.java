@@ -16,13 +16,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
@@ -43,18 +43,12 @@ public class FragmentUsersOpenTasks extends Fragment {
     protected RecyclerView.LayoutManager mLayoutManager;
     protected Recycler_View_Adapter mAdapter;
 
-
     private UsersOpenTasksListItem usersOpenTasksListItem;
-
-    //private FragmentTabs tabHost;
-
     private String currentUserId;
     private StorageReference storageRef;
 
-
     String taskTitle;
     String taskDescription;
-    //  boolean isTaskAlreadyCompleted = mAdapter.getItem(position).getTaskCompleted();
     String taskId;
     String caseId;
 
@@ -70,12 +64,8 @@ public class FragmentUsersOpenTasks extends Fragment {
         super.onCreate(savedInstanceState);
 
         Bundle bundle = getArguments();
-        //tabHost = (FragmentTabs) bundle.getSerializable(getString(R.string.tabHostSerializable));
         usersOpenTasksListItem = (UsersOpenTasksListItem) bundle.getSerializable(getString(R.string.openTasksSerializable));
-        Log.v("FragmentUsersOpenTasks", "usersOpenTasksListItem: " + usersOpenTasksListItem);
-
-        User userTest = ((FragmentTabs)getActivity()).getUser();
-        Log.v("FragmentUsersOpenTasks", "User: " + userTest);
+        User userTest = ((FragmentTabs) getActivity()).getUser();
         storageRef = FirebaseStorage.getInstance().getReference();
 
 //***********************************************************************************************************************
@@ -94,13 +84,11 @@ public class FragmentUsersOpenTasks extends Fragment {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewUOT);
 
 
-
         // 2. Set layoutManager (defines how the elements are laid out)
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // will be filled with data
-        //usersOpenTasksListItem = new UsersOpenTasksListItem();
 
         // 3. Create an adapter
         mAdapter = new Recycler_View_Adapter(usersOpenTasksListItem.getData(), getContext());
@@ -110,35 +98,32 @@ public class FragmentUsersOpenTasks extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
 
         mRecyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getContext(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
+                new RecyclerItemClickListener(getContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
 
                         // show FragmentDetailUsersOpenTask
-
-                        //  boolean isTaskAlreadyCompleted = mAdapter.getItem(position).getTaskCompleted();
                         taskId = mAdapter.getItem(position).getTaskid();
                         caseId = mAdapter.getItem(position).getCaseId();
 
                         FragmentDetailUsersOpenTask fragmentDetailUsersOpenTask = new FragmentDetailUsersOpenTask();
                         Bundle bundle = new Bundle();
                         bundle.putInt("PositionUsersOpenTask", position);
-
                         bundle.putString("TitleUsersOpenTask", mAdapter.getItem(position).title);
                         bundle.putString("LocationUsersOpenTask", mAdapter.getItem(position).location);
                         bundle.putString("DescriptionUsersOpenTask", mAdapter.getItem(position).comment);
                         bundle.putBoolean("StatusUsersOpenTask", mAdapter.getItem(position).getTaskCompleted());
-
                         bundle.putString("OpenTaskID", taskId);
                         bundle.putString("OpenTaskCaseID", caseId);
                         bundle.putString("taskImageUrl", mAdapter.getItem(position).taskImageUrlDB);
                         bundle.putString("caseImageUrl", mAdapter.getItem(position).caseImageUrlDB);
-                        Log.i("BUNDLE IN UOT", bundle.toString());
 
                         fragmentDetailUsersOpenTask.setArguments(bundle);
-                        ((BaseContainerFragment)getParentFragment()).replaceFragmentDetailOpenTask(fragmentDetailUsersOpenTask);
+                        ((BaseContainerFragment) getParentFragment()).replaceFragmentDetailOpenTask(fragmentDetailUsersOpenTask);
                     }
 
-                    @Override public void onLongItemClick(View view, int position) {
+                    @Override
+                    public void onLongItemClick(View view, int position) {
                         // TODO: do whatever
                     }
                 })
@@ -148,8 +133,8 @@ public class FragmentUsersOpenTasks extends Fragment {
         return rootView;
     }
 
-    public String getCurrentUserId(){
-        return ((MainActivity)getActivity()).getUser().getId();
+    public String getCurrentUserId() {
+        return ((MainActivity) getActivity()).getUser().getId();
     }
 
 
@@ -157,7 +142,6 @@ public class FragmentUsersOpenTasks extends Fragment {
      * ##################################################################################################################
      * ################################        RecyclerViewAdapter       ################################################
      * ##################################################################################################################
-     *
      */
     private class Recycler_View_Adapter extends RecyclerView.Adapter<View_Holder> {
 
@@ -183,20 +167,15 @@ public class FragmentUsersOpenTasks extends Fragment {
         @Override
         public void onBindViewHolder(final View_Holder holder, final int position) {
             //Use the provided View Holder on the onCreateViewHolder method to populate the current row on the RecyclerView
-            Log.i("Viki", "In onBindViewHolder");
-
             holder.title.setText(listItem.get(position).title);
             holder.location.setText(listItem.get(position).location);
-            //holder.description.setText(listItem.get(position).comment);
-           // holder.imageView.setImageResource(listItem.get(position).imageID);
 
             String taskImageUrlDB = listItem.get(position).taskImageUrlDB;
-            Log.i("Viki: TaskImageURLDB", taskImageUrlDB);
 
             // Check if task is completed, but not voted yet
             Boolean isTaskCompleted = listItem.get(position).getTaskCompleted();
 
-            if(isTaskCompleted) {
+            if (isTaskCompleted) {
                 holder.layoutOverlay.setBackground(getResources().getDrawable(R.drawable.overlay_uot, null));
                 holder.waitText.setVisibility(View.VISIBLE);
             }
@@ -211,18 +190,17 @@ public class FragmentUsersOpenTasks extends Fragment {
                             .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                    Log.i("Viki DetailVotingTask", "download erfolgreich, imageAfter");
                                     Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                                     holder.imageView.setImageBitmap(bitmap);
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
-                            Log.i("Viki DetailVotingTask", exception.getMessage());
+                            Log.i("FragmentUsersOpenTasks", exception.getMessage());
                         }
                     });
                 } catch (Exception e) {
-                    Log.i("Viki DetailVotingTask", e.getMessage());
+                    Log.i("FragmentUsersOpenTasks", e.getMessage());
                 }
             }
 
@@ -258,19 +236,16 @@ public class FragmentUsersOpenTasks extends Fragment {
     }
 
 
-
-
     /**
      * ##################################################################################################################
      * ###################################        VIEW HOLDER         ###################################################
      * ##################################################################################################################
-     *
+     * <p>
      * The RecyclerView uses a ViewHolder to store the references to the relevant views for one entry in the RecyclerView.
      * This solution avoids all the findViewById() method calls in the adapter to find the views to be filled with data.
-     *
+     * <p>
      * ##################################################################################################################
      * ##################################################################################################################
-     *
      */
     private class View_Holder extends RecyclerView.ViewHolder {
 
@@ -292,8 +267,6 @@ public class FragmentUsersOpenTasks extends Fragment {
             waitText = (TextView) itemView.findViewById(R.id.waitTextview);
         }
     }
-
-
 
 }
 

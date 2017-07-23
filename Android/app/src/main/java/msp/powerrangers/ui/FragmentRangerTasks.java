@@ -1,7 +1,6 @@
 package msp.powerrangers.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -11,19 +10,15 @@ import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,16 +26,13 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
 import msp.powerrangers.R;
 import msp.powerrangers.logic.Global;
-import msp.powerrangers.ui.listitems.ConfirmerCasesListItem;
 import msp.powerrangers.ui.listitems.RangerTasksListItem;
-import msp.powerrangers.ui.listitems.VotingTasksListItem;
 
 
 /**
@@ -61,7 +53,6 @@ public class FragmentRangerTasks extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("KATJA","onCreate FrRangerTasks");
         storageRef = FirebaseStorage.getInstance().getReference();
 
         Bundle bundle = getArguments();
@@ -74,7 +65,6 @@ public class FragmentRangerTasks extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fr_rangertasks, container, false);
         rootView.setTag(TAG);
-        Log.i("KATJA","onCreateView FrRangerTasks");
 
         // 1. Get a reference to recyclerView & set the onClickListener
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewRT);
@@ -90,15 +80,13 @@ public class FragmentRangerTasks extends Fragment {
                         bundle.putString("taskImageUrl", mAdapter.getItem(position).getTaskUrl());
                         bundle.putString("caseImageUrl", mAdapter.getItem(position).getCaseUrl());
 
-
                         fragmentDetailRangerTask.setArguments(bundle);
-                        ((BaseContainerFragment)getParentFragment()).replaceFragmentDetailRanger(fragmentDetailRangerTask);
+                        ((BaseContainerFragment) getParentFragment()).replaceFragmentDetailRanger(fragmentDetailRangerTask);
 
                     }
 
                     @Override
                     public void onLongItemClick(View view, int position) {
-                        // TODO: do whatever
                     }
                 })
         );
@@ -108,8 +96,7 @@ public class FragmentRangerTasks extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         List<RangerTasksListItem> dataRT = tasksListItem.getData();
-        if (dataRT.size()==0) {
-            Log.i("KATJA", "ranger tasks list is empty");
+        if (dataRT.size() == 0) {
             TextView tvEmptyList = (TextView) rootView.findViewById(R.id.textEmptyListRT);
             tvEmptyList.setVisibility(View.VISIBLE);
         }
@@ -153,10 +140,8 @@ public class FragmentRangerTasks extends Fragment {
             // populate the current row on the RecyclerView
             holder.title.setText(listItem.get(position).title);
             holder.location.setText(listItem.get(position).city + ", " + listItem.get(position).country);
-            //holder.comment.setText(listItem.get(position).comment);
 
             String taskImageUrlDB = listItem.get(position).taskImageUrlDB;
-            Log.i("KATJA FrRangerTasks", "taskImageUrlDB: " + taskImageUrlDB);
 
             // set image
             if (taskImageUrlDB != null) {     //  url from bundle is set
@@ -168,7 +153,6 @@ public class FragmentRangerTasks extends Fragment {
                             .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                    Log.i(" KATJA FrRangerTasks", "download erfolgreich");
                                     Bitmap taskImage = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                                     // set blurred task image
                                     holder.image.setImageBitmap(blur(taskImage));
@@ -176,12 +160,12 @@ public class FragmentRangerTasks extends Fragment {
                             }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
-                            Log.i("KATJA FrRangerTasks", "download nicht erfolgreich (1)");
+                            Log.i("FragmentRangerTasks", "download nicht erfolgreich (1)");
                             holder.image.setImageResource(R.drawable.placeholder_task);
                         }
                     });
                 } catch (Exception e) {
-                    Log.i("KATJA FrRangerTasks", "download nicht erfolgreich (2)");
+                    Log.i("FragmentRangerTasks", "download nicht erfolgreich (2)");
                     holder.image.setImageResource(R.drawable.placeholder_task);
                 }
             }
@@ -242,7 +226,6 @@ public class FragmentRangerTasks extends Fragment {
             cv = (CardView) itemView.findViewById(R.id.cvRT);
             title = (TextView) itemView.findViewById(R.id.titleRT);
             location = (TextView) itemView.findViewById(R.id.locationRT);
-            //comment = (TextView) itemView.findViewById(R.id.descriptionRT);
             image = (ImageView) itemView.findViewById(R.id.ivRT);
         }
     }
@@ -251,6 +234,7 @@ public class FragmentRangerTasks extends Fragment {
     private static final float BLUR_RADIUS = 4;
 
     public Bitmap blur(Bitmap image) {
+
         if (null == image) return null;
 
         Bitmap outputBitmap = Bitmap.createBitmap(image);

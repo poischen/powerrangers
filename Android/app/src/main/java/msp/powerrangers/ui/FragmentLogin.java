@@ -3,16 +3,9 @@ package msp.powerrangers.ui;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.renderscript.Allocation;
-import android.renderscript.Element;
-import android.renderscript.RenderScript;
-import android.renderscript.ScriptIntrinsicBlur;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -59,11 +52,12 @@ public class FragmentLogin extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-        //getActivity().getActionBar().hide();
-        //getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#33000000")));
+
         firebaseAuth = FirebaseAuth.getInstance();
+
         //find UI elements
         editTextMail = (EditText) view.findViewById(R.id.editTextMail);
         editTextPassword = (EditText) view.findViewById(R.id.editTextPassword);
@@ -93,14 +87,15 @@ public class FragmentLogin extends Fragment {
                 }
                 //see, if the firebaseUser wants to fLogin_Register or to sign in
                 if (!wantsUserToRegister) {
+
                     signIn(mail, password);
                     return;
+
                 } else if (wantsUserToRegister && TextUtils.isEmpty(name)) {
-                    Log.v("wantsUserToRegister", wantsUserToRegister + "");
-                    Log.v("TextUtils.isEmpty(name)", TextUtils.isEmpty(name) + "");
-                    Log.v("name", name + "");
+
                     Toast.makeText(getActivity(), "Nah, nah! No name, no power, sorry!", Toast.LENGTH_SHORT).show();
                     return;
+
                 } else {
                     registerUser(mail, password, name);
                 }
@@ -164,44 +159,13 @@ public class FragmentLogin extends Fragment {
                                         });
                             }
                             //write firebaseUser into the database
-                            //Tutorial for database: http://www.androidhive.info/2016/10/android-working-with-firebase-realtime-database/
                             DatabaseReference database = FirebaseDatabase.getInstance().getReference("users");
                             String dbId = database.push().getKey();
                             String userId = currentuser.getUid();
                             //save users db key in shared preferances
                             saveUserInSharedPrefs(dbId);
-                            //create new user object
-                            //user = new User(dbId, userId, currentName, currentMail);
-                            // pushing firebaseUser to 'users' node using the userId
                             database.child(dbId).setValue(createNewUserObject(null, dbId, userId, currentName, currentMail));
-                            //switch to Start
-                            /*FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                            FragmentStart fragmentStart = new FragmentStart();
-                            Bundle bundles = new Bundle();
-                            if (user != null){
-                                bundles.putSerializable("USER" , user);
-                                Log.i("USER" , "IS NOT NULL");
-                            } else {
-                                Log.i("USER" , "IS NULL");
-                            }
-                            fragmentStart.setArguments(bundles);
-                            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.activity_main_fragment_container, fragmentStart).commit();
-                        } else {
-                            Toast.makeText(getActivity(), "Noooooooo! Try again!", Toast.LENGTH_SHORT).show();
-                        }*/
-                            /*FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                            FragmentTabs fragmentTabs = new FragmentTabs();
-                            Bundle bundles = new Bundle();
-                            if (user != null) {
-                                bundles.putSerializable("USER", user);
-                                Log.i("USER", "IS NOT NULL");
-                            } else {
-                                Log.i("USER", "IS NULL");
-                            }
-                            fragmentTabs.setArguments(bundles);
-                            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.activity_main_fragment_container, fragmentTabs).commit();*/
+
                         } else {
                             Toast.makeText(getActivity(), "Noooooooo! Try again!", Toast.LENGTH_SHORT).show();
                         }
@@ -237,16 +201,13 @@ public class FragmentLogin extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+
                             Toast.makeText(getActivity(), "Log in successful!", Toast.LENGTH_SHORT).show();
-
                             FirebaseUser firebaseUser = firebaseAuth.getInstance().getCurrentUser();
-
                             createNewUserObject(firebaseUser, null, null, null, givenMail);
 
-                            /*FragmentTabs ft = new FragmentTabs();
-                            ft.setArguments(getActivity().getIntent().getExtras());
-                            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.activity_main_fragment_container, ft).commit();*/
                         } else {
+
                             Toast.makeText(getActivity(), "Noooooooo! Try again!", Toast.LENGTH_SHORT).show();
                         }
                         progressDialog.dismiss();
@@ -259,19 +220,19 @@ public class FragmentLogin extends Fragment {
     Create a new user object, create a tabhost and give the user to the tabhost, which stores it for all concerning fragments
      */
     public User createNewUserObject(FirebaseUser firebaseUser, String dbId, String userId, String currentName, String currentMail) {
-        //if called by login
+
         if (firebaseUser != null) {
             DatabaseReference db = FirebaseDatabase.getInstance().getReference();
             final String userDbID;
             SharedPreferences sharedPrefs = getContext().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
             String userDbIDFromSharedPrefs = sharedPrefs.getString(getResources().getString(R.string.sharedPrefs_userDbId), null);
             if (userDbIDFromSharedPrefs != null) {
-                Log.v("FragmentLogin", "there is a user id in shared preferences.");
                 userDbID = userDbIDFromSharedPrefs;
                 DatabaseReference refPath = db.child("users").child(userDbID);
                 refPath.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+
                         try {
                             User userInfo = dataSnapshot.getValue(User.class);
                             String name = userInfo.getName();
@@ -281,10 +242,6 @@ public class FragmentLogin extends Fragment {
                             user = new User(dbId, userId, name, mail);
                             ((MainActivity) getActivity()).setUser(user);
                             FragmentTabs ft = new FragmentTabs();
-                            //Bundle bundle = new Bundle();
-                            //bundle.putSerializable(getString(R.string.intent_current_user), user);
-                            //ft.setArguments(bundle);
-                            Log.v("FragmentLogin", "User: " + user);
 
                             Intent intent = new Intent(getActivity(), FragmentTabs.class);
                             Bundle bundle = new Bundle();
@@ -292,14 +249,8 @@ public class FragmentLogin extends Fragment {
                             intent.putExtras(bundle);
                             getActivity().startActivity(intent);
 
-                       /* FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                        transaction.replace(R.id.activity_main_fragment_container, ft, "tabHostFragment");
-                        transaction.addToBackStack(null);
-                        transaction.commit();
-                        Log.v("FragmentLogin", "TAG: " + ft.getTag());*/
-
                         } catch (Exception e) {
-                            Log.d("FragmentStart", "An error occured, user has to be signed out");
+                            Log.d("FragmentLogin", "An error occured, user has to be signed out");
                             FirebaseAuth.getInstance().signOut();
                         }
                     }
@@ -308,29 +259,23 @@ public class FragmentLogin extends Fragment {
                     public void onCancelled(DatabaseError databaseError) {
                     }
                 });
-                //return user;
+
             } else if (userDbIDFromSharedPrefs == null) {
-                Log.v("FragmentLogin", "there is no user id in shared preferences. get from db via mail.");
                 DatabaseReference dbRefUser = FirebaseDatabase.getInstance().getReference("users");
                 dbRefUser.orderByChild("email").equalTo(currentMail).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         try {
-                            Log.v("FragmentLogin", "dataSnapshot: " + dataSnapshot);
 
-                            for (DataSnapshot singeSnapshot : dataSnapshot.getChildren()){
+                            for (DataSnapshot singeSnapshot : dataSnapshot.getChildren()) {
                                 String name = (String) singeSnapshot.child("name").getValue();
                                 String dbId = (String) singeSnapshot.child("dbId").getValue();
                                 String id = (String) singeSnapshot.child("id").getValue();
                                 String email = (String) singeSnapshot.child("email").getValue();
-                                Log.v("FragmentLogin", "userInfo: " + name + ", " + dbId + ", "  + id + ", " + email);
                                 user = new User(dbId, id, name, email);
                                 ((MainActivity) getActivity()).setUser(user);
                                 saveUserInSharedPrefs(dbId);
                             }
-
-
-                            Log.v("FragmentLogin", "User: " + user);
 
                             Intent intent = new Intent(getActivity(), FragmentTabs.class);
                             Bundle bundle = new Bundle();
@@ -347,7 +292,6 @@ public class FragmentLogin extends Fragment {
                     public void onCancelled(DatabaseError databaseError) {
                     }
                 });
-                //return user;
             }
             return user;
 
@@ -360,15 +304,6 @@ public class FragmentLogin extends Fragment {
             bundle.putSerializable(getString(R.string.intent_current_user), user);
             intent.putExtras(bundle);
             getActivity().startActivity(intent);
-
-            /*FragmentTabs ft = new FragmentTabs();
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(getString(R.string.intent_current_user), user);
-            ft.setArguments(bundle);
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.activity_main_fragment_container, ft);
-            transaction.addToBackStack(null);
-            transaction.commit();*/
 
             return user;
 

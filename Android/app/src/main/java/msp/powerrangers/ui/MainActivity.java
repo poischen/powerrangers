@@ -1,12 +1,8 @@
 package msp.powerrangers.ui;
 
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -16,8 +12,6 @@ import java.util.List;
 import msp.powerrangers.R;
 import msp.powerrangers.logic.User;
 import msp.powerrangers.ui.listitems.ConfirmerCasesListItem;
-import msp.powerrangers.ui.listitems.UsersOpenTasksListItem;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,10 +37,9 @@ public class MainActivity extends AppCompatActivity {
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                Log.v("MainActivity", "state changed");
                 //FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                 currentUser = firebaseAuth.getCurrentUser();
-                if (currentUser != null){
+                if (currentUser != null) {
                     changeToLoggedInView();
                 }
             }
@@ -61,21 +54,14 @@ public class MainActivity extends AppCompatActivity {
         //lasse login view das waiting fragment benachrichtigen, welches den login macht
         fl.createNewUserObject(currentUser, null, null, null, null);
 
-
-        /*
-        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        FragmentTabs ft = new FragmentTabs();
-        fragmentTransaction.replace(R.id.activity_main_fragment_container, ft);
-        fragmentTransaction.commit();*/
     }
 
 
-    public void setDataConfirmerCases(List<ConfirmerCasesListItem> data){
+    public void setDataConfirmerCases(List<ConfirmerCasesListItem> data) {
         this.dataConfirmerCases = data;
     }
 
-    public List<ConfirmerCasesListItem> getDataConfirmerCases(){
+    public List<ConfirmerCasesListItem> getDataConfirmerCases() {
         return dataConfirmerCases;
     }
 
@@ -100,11 +86,11 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
-    public void setUser(User user){
+    public void setUser(User user) {
         this.user = user;
     }
 
-    public User getUser(){
+    public User getUser() {
         return user;
     }
 

@@ -1,9 +1,8 @@
 package msp.powerrangers.ui;
 
-import android.app.ActionBar;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -14,7 +13,6 @@ import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,7 +22,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
-import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,7 +40,6 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -75,8 +71,6 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     TextView tvUserName;
     Button donateButton;
     Button reportACaseButton;
-   // Button logoutButton;
-
     Bitmap userPicBmp;
 
     // bubbles to update
@@ -87,14 +81,9 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     TextView nConfirmedCases;
     TextView nCompletedTasks;
     TextView nDonation;
-
     FirebaseUser firebaseUser;
-
     private User u;
-
     private StorageReference storageRef;
-
-    //private FragmentTabs tabHost;
     private boolean isInit = false;
 
     public FragmentStart() {
@@ -111,12 +100,8 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         scrollView.setVisibility(View.GONE);
 
         //find View elements
-        //logout button
-       // logoutButton = (Button) view.findViewById(R.id.logoutButton);
-        //logoutButton.setOnClickListener(this);
         // display user name
         tvUserName = (TextView) view.findViewById(R.id.textViewUserName);
-        Log.v("FragmentStart", "userName: " + u.getName());
         tvUserName.setText(u.getName());
 
         //interactive elements
@@ -150,17 +135,7 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         storageRef = FirebaseStorage.getInstance().getReference();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         //get current User Object
-
-
-        //Bundle bundle = getArguments();
-        //u = (User) bundle.getSerializable(getString(R.string.intent_current_user));
-
-        u = ((FragmentTabs)getActivity()).getUser();
-
-        Log.v("FragmentStart", "User in onCreate: " + u);
-        //tabHost = (FragmentTabs) bundle.getSerializable(getString(R.string.tabHostSerializable));
-       //Log.v(TAG, "tabhost: " + tabHost);
-       //Log.v(TAG, "tabhost: " + tabHost);
+        u = ((FragmentTabs) getActivity()).getUser();
         downloadUserPic();
         setUserInfos();
 
@@ -177,7 +152,6 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        //downloadUserPic(false);
         if (userPicBmp != null) {
             userImage.setImageBitmap(userPicBmp);
         }
@@ -188,16 +162,13 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
         extras = intent.getExtras();
 
         if (extras != null) {
-            //tvUserName.setText(extras.getString("name"));
             balance.setText(extras.getString("balance"));
             nOpenTasks.setText(extras.getString("nOpTasks"));
             nReportedCases.setText(extras.getString("nRepCases"));
             nConfirmedCases.setText(extras.getString("nConfCases"));
             nCompletedTasks.setText(extras.getString("nCompCases"));
             nDonation.setText(extras.getString("nDonPower"));
-            //Toast.makeText(getContext(),value , Toast.LENGTH_LONG).show();
         }
-
     }
 
     @Override
@@ -225,63 +196,32 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
             case R.id.userimage:
                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                        Log.v(this.getClass().getName(), "request permission");
                         ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_REQUEST);
 
                     } else {
-                        Log.v(this.getClass().getName(), "request permission");
                         ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_REQUEST);
                     }
                 } else {
-                    Log.v(this.getClass().getName(), "show file chooser");
                     showFileChooser();
                 }
 
                 break;
             case R.id.usersOpenTasks:
-                /*fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentTransaction = fragmentManager.beginTransaction();
-                FragmentUsersOpenTasks fuot = new FragmentUsersOpenTasks();
-                fragmentTransaction.replace(R.id.activity_main_fragment_container, fuot);
-                fragmentTransaction.commit();*/
-
-                //FragmentUsersOpenTasks fuot = new FragmentUsersOpenTasks();
-                //((BaseContainerFragment)getParentFragment()).replaceFragmentOpenTasks(fuot);
-
                 FragmentWait fw = new FragmentWait();
                 UsersOpenTasksListItem uotList = new UsersOpenTasksListItem();
-
-                //TODO: ggf. erst aus Fragment Wait aufrufen während call von replaceFragmentWait?
                 fw.initReplacingFragmentOpenTasks(uotList, u.getDbId());
-
-                ((BaseContainerFragment)getParentFragment()).replaceFragmentWait(fw);
-
-
+                ((BaseContainerFragment) getParentFragment()).replaceFragmentWait(fw);
                 break;
 
             case R.id.reportACaseButton:
                 if (u != null) {
-                    Log.i("User USERNAME IN START", u.getId());
                     Intent intentReportCase = new Intent(getActivity(), ActivityReportCase.class);
                     intentReportCase.putExtra("USER", u);
-                    Log.i("I AM AFTER PUTEXTRA", "IN REPORT A CASE");
                     startActivity(intentReportCase);
                 } else {
                     FirebaseAuth.getInstance().signOut();
                 }
                 break;
-
-
-           /* case R.id.logoutButton:
-                Log.i("KATJA", "FrStart, want to log out");
-                FirebaseAuth.getInstance().signOut();
-                fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentTransaction = fragmentManager.beginTransaction();
-                FragmentLogin fl = new FragmentLogin();
-                fragmentTransaction.replace(R.id.activity_main_fragment_container, fl);
-                fragmentTransaction.commit();
-                break;
-                */
 
             case R.id.donateButton:
                 Intent intentDonate = new Intent(getActivity(), ActivityDonate.class);
@@ -295,7 +235,6 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
      *
      * @param
      */
-    //private void setUserInfos(DataSnapshot ds) {
     public void setUserInfos() {
         //set listener
         DatabaseReference db = FirebaseDatabase.getInstance().getReference();
@@ -319,8 +258,6 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                //Toast.makeText(getContext(), getResources().getString(R.string.fStart_closeAppError), Toast.LENGTH_LONG).show();
-                //getActivity().finish();
             }
         });
     }
@@ -356,11 +293,6 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     private void uploadFile(Uri filePath) {
         //   FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
-            /*String uid = null;
-            //get UID to identify firebaseUser
-            for (UserInfo profile : firebaseUser.getProviderData()) {
-                uid = profile.getUid();
-            };*/
 
             //give firebaseUser uploading feedback by a progress dialog
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
@@ -372,7 +304,6 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
 
             //create Path in Storage
             final String storageAndDBPath = "images/" + u.getDbId() + "/" + pictureName;
-            Log.v("storageAndDBPath", storageAndDBPath);
 
             //upload to Firebase Storage
             StorageReference riversRef = storageRef.child(storageAndDBPath);
@@ -404,13 +335,12 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                             double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                            //TODO: give feedback - progressDialog.setMessage(((int) progress) + getString(R.string.uploaded));
+
                         }
                     });
         } else {
             Toast.makeText(getContext(), R.string.errorSignUpFirst, Toast.LENGTH_LONG).show();
         }
-
 
     }
 
@@ -424,21 +354,12 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
     }
 
 
-
-    //https://stackoverflow.com/questions/38017765/retrieving-child-value-firebase
-
     /**
      * method gets current firebaseUser profile picture fromk Firebase and shows it
      */
-    //TODO: store profile picture as local file, so it does not have to be downlaoded all the time, and check first, if it is available on the device: "You can also download to device memory using getBytes()"
     private void downloadUserPic() {
-        //   FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
         if (firebaseUser != null) {
-            /*String uid = null;
-            //get UID to identify firebaseUser
-            for (UserInfo profile : firebaseUser.getProviderData()) {
-                uid = profile.getUid();
-            };*/
 
             DatabaseReference db = FirebaseDatabase.getInstance().getReference();
             String userDbId = u.getDbId();
@@ -452,13 +373,11 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                         final File localFile = File.createTempFile("images", "jpg");
                         try {
                             String picUrlFromDB = dataSnapshot.getValue(String.class);
-                            //StorageReference riversRef = storageRef.child(picUrlFromDB);
                             StorageReference riversRef = storageRef.child(Global.getThumbUrl(picUrlFromDB));
                             riversRef.getFile(localFile)
                                     .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                         @Override
                                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                            Log.v("FragmentStart", "download erfolgreich");
                                             userPicBmp = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                                             userImage.setImageBitmap(userPicBmp);
                                         }
@@ -485,8 +404,6 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
 
         } else {
             userImage.setImageBitmap(userPicBmp);
-            Log.v("No Download", "userPicBmp " + userPicBmp);
-
         }
     }
 
@@ -508,7 +425,6 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
 
     /*
     Method to get the picturename of the file from the filechooser
-    https://developer.android.com/guide/topics/providers/document-provider.html
      */
     public String getFileName(Uri uri) {
         String result = null;
