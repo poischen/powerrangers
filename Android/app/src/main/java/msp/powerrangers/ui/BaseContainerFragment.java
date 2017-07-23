@@ -5,10 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
-import java.io.Serializable;
-
 import msp.powerrangers.R;
-import msp.powerrangers.ui.listitems.UsersOpenTasksListItem;
+
 
 public class BaseContainerFragment extends Fragment {
 
@@ -64,8 +62,6 @@ public class BaseContainerFragment extends Fragment {
             transaction.commit();
             getChildFragmentManager().executePendingTransactions();
         }
-
-
     }
 
 
@@ -118,7 +114,7 @@ public class BaseContainerFragment extends Fragment {
     }
 
     public boolean popFragment() {
-        Log.e("test", "pop fragment: " + getChildFragmentManager().getBackStackEntryCount());
+        Log.e("BaseContainer", "pop fragment: " + getChildFragmentManager().getBackStackEntryCount());
         boolean isPop = false;
         if (getChildFragmentManager().getBackStackEntryCount() > 0) {
             isPop = true;
@@ -128,7 +124,7 @@ public class BaseContainerFragment extends Fragment {
     }
 
 
-    public void replaceFragmentUOT(FragmentWait fw){
+    public void replaceFragmentUOT(FragmentWait fw) {
         if (!isAdded()) return;
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         Log.v("BaseContainer", "replace Fragment, UsersOpenTasks");
@@ -136,9 +132,7 @@ public class BaseContainerFragment extends Fragment {
         transaction.addToBackStack(null);
         transaction.replace(R.id.container_framelayout, fragmentUsersOpenTasks);
         Bundle bundles = new Bundle();
-        Log.i("Viki replaceFragmentUOT", "vor put serializable");
         bundles.putSerializable(getString(R.string.openTasksSerializable), fw.getUsersOpenTasksListItem());
-        Log.i("Viki replaceFragmentUOT", "nach put serializable");
         Log.v("BaseContainer", "data: " + fw.getUsersOpenTasksListItem());
         fragmentUsersOpenTasks.setArguments(bundles);
         transaction.commitAllowingStateLoss();

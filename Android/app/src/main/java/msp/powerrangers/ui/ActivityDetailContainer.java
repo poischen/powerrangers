@@ -53,8 +53,6 @@ public class ActivityDetailContainer extends AppCompatActivity {
             frag.add(R.id.activity_detail_container, f).commit();
             frag.addToBackStack(null);
         }
-
-
      }
 
     // Set action bar
@@ -79,6 +77,5 @@ public class ActivityDetailContainer extends AppCompatActivity {
             getFragmentManager().popBackStack();
         }
     }
-
 
 }

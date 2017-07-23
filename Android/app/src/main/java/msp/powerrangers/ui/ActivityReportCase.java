@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
@@ -58,18 +57,14 @@ public class ActivityReportCase extends AppCompatActivity {
     private static final int STORAGE_PERMISSION_REQUEST = 234;
     final long ONE_MEGABYTE = 1024 * 1024;
 
-    // TODO: set all fields in res to requiered!
     // edit Texts
     private EditText editTextCaseTitle;
     private EditText editTextCaseCity;
     private EditText editTextCaseCountry;
-    //private EditText editTextCaseXCoordinate;
     private NumberPicker numberPickerCaseXCoordinate;
-    //private EditText editTextCaseYCoordinate;
     private NumberPicker numberPickerCaseYCoordinate;
     private EditText editTextCaseInformation;
 
-    //TODO: only one button should be selectable!!
     // radio buttons scale
     private RadioButton radioButtonCaseLow;
     private RadioButton radioButtonCaseMiddle;
@@ -88,7 +83,6 @@ public class ActivityReportCase extends AppCompatActivity {
     String userDbId;
 
     private Case c;
-
     private List<Uri> pictureUrisList;
     private List<Bitmap> pictureBitmapList;
     List<String> casePictures;
@@ -104,9 +98,6 @@ public class ActivityReportCase extends AppCompatActivity {
         //stuff for pic upload
         pictureUrisList = new ArrayList<>();
         pictureBitmapList = new ArrayList<>();
-
-        //Bitmap defaultPic = BitmapFactory.decodeResource(getResources(), R.drawable.nopicsyet);
-        //pictureBitmapList.add(defaultPic);
 
         casePictures = new ArrayList<>();
         isDefaultPic = true;
@@ -138,9 +129,6 @@ public class ActivityReportCase extends AppCompatActivity {
         ActivityReportCase.ImageAdapter adapter = new ActivityReportCase.ImageAdapter(this);
         viewPagerTaskPics.setAdapter(adapter);
 
-        // add action bar going back to parent
-        // TODO: im Moment geht man zurück zur MainActivity, trotzdem zur FragmentStart, abchecken wie man das sauber macht
-        //https://stackoverflow.com/questions/18120510/dynamically-changing-the-fragments-inside-a-fragment-tab-host
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -283,7 +271,6 @@ public class ActivityReportCase extends AppCompatActivity {
                         public void onCancelled(DatabaseError databaseError) {
 
                         }
-
                     });
 
                     Toast.makeText(getApplicationContext(), R.string.reportCaseSuccess, Toast.LENGTH_LONG).show();
@@ -291,7 +278,6 @@ public class ActivityReportCase extends AppCompatActivity {
 
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.reportCaseFillFields, Toast.LENGTH_LONG).show();
-
                 }
             }
 
@@ -307,7 +293,6 @@ public class ActivityReportCase extends AppCompatActivity {
      * @param high
      * @return
      */
-
     public int getScaleValue(RadioButton low, RadioButton medium, RadioButton high) {
         if (low.isChecked()) return 1;
         if (medium.isChecked()) return 2;
@@ -322,7 +307,7 @@ public class ActivityReportCase extends AppCompatActivity {
         Intent getimageintent = new Intent();
         getimageintent.setType("image/*");
         getimageintent.setAction(Intent.ACTION_GET_CONTENT);
-        if (requestCode == CHOOSE_CASEIMAGE_REQUEST){
+        if (requestCode == CHOOSE_CASEIMAGE_REQUEST) {
             startActivityForResult(Intent.createChooser(getimageintent, getResources().getString(R.string.reportChooseCasePic)), requestCode);
         } else {
             getimageintent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
@@ -357,13 +342,12 @@ public class ActivityReportCase extends AppCompatActivity {
                 bmpCaseImgage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), bmpUri);
                 imgViewCasePic.setImageBitmap(bmpCaseImgage);
                 imgViewCasePic.setBackground(null);
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
 
-            if (requestCode == CHOOSE_TASKIMAGES_REQUEST && resultCode == RESULT_OK && data != null && data.getClipData() != null) {
+        if (requestCode == CHOOSE_TASKIMAGES_REQUEST && resultCode == RESULT_OK && data != null && data.getClipData() != null) {
             ClipData clipData = data.getClipData();
             if (clipData != null) {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
@@ -405,7 +389,7 @@ public class ActivityReportCase extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Log.i("KATJA", "Case img was uploaded!");
+                        Log.i("ReportCase", "Case img was uploaded!");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -424,7 +408,7 @@ public class ActivityReportCase extends AppCompatActivity {
         //upload task pics
         for (int i = 0; i < pictureUrisList.size(); i++) {
 
-            int j = i+1;
+            int j = i + 1;
             final String storageAndDBPath;
             storageAndDBPath = "images/cases/" + caseID + "/" + j + ".jpg";
 
@@ -438,7 +422,7 @@ public class ActivityReportCase extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Log.i("KATJA", "task img  was uploaded!");
+                            Log.i("ReportCase", "Task img was uploaded!");
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -466,9 +450,7 @@ public class ActivityReportCase extends AppCompatActivity {
 
     /*
     Method to get the picturename of the file from the filechooser
-    https://developer.android.com/guide/topics/providers/document-provider.html
     */
-
     public String getFileName(Uri uri) {
         String result = null;
         if (uri.getScheme().equals("content")) {

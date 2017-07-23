@@ -17,8 +17,7 @@ import msp.powerrangers.logic.Ranger;
 import msp.powerrangers.ui.FragmentWait;
 
 /**
- * == Data
- * Tutorial: https://www.sitepoint.com/mastering-complex-lists-with-the-android-recyclerview/
+ * Data for RangerTasks in RecyclerView
  */
 public class RangerTasksListItem implements Serializable {
 
@@ -26,7 +25,6 @@ public class RangerTasksListItem implements Serializable {
     public String city;
     public String country;
     public String comment;
-    //public int imageId;
     public String taskImageUrlDB;
     public String caseImageUrlDB;
     public Bitmap taskImage;
@@ -39,13 +37,11 @@ public class RangerTasksListItem implements Serializable {
     String commentDB;
     int imageIdDB;
 
-    //public RangerTasksListItem(String title, String city, String country, String comment, int imageID) {
     public RangerTasksListItem(String title, String city, String country, String comment, String taskImageUrlDB, String caseImageUrlDB) {
         this.title = title;
         this.city = city;
         this.country = country;
         this.comment = comment;
-        //this.imageId = imageId;
         this.taskImageUrlDB = taskImageUrlDB;
         this.caseImageUrlDB = caseImageUrlDB;
     }
@@ -57,6 +53,7 @@ public class RangerTasksListItem implements Serializable {
      * Generates RT-Objects for RecyclerView's adapter.
      */
     public void fill_with_data(final FragmentWait fragmentWait) {
+
         DatabaseReference dbRefTasks;
         // get the reference to the db cases
         dbRefTasks = FirebaseDatabase.getInstance().getReference("tasks");
@@ -66,8 +63,8 @@ public class RangerTasksListItem implements Serializable {
 
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-
                                 data = new ArrayList<RangerTasksListItem>();
+
                                 // get data for each task from the db
                                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
 
@@ -79,7 +76,6 @@ public class RangerTasksListItem implements Serializable {
                                     taskImageUrlDB = (String) singleSnapshot.child("taskPicture").getValue();
                                     caseImageUrlDB = (String) singleSnapshot.child("casePicture").getValue();
                                     data.add(new RangerTasksListItem(titleDB, cityDB, countryDB, commentDB, taskImageUrlDB, caseImageUrlDB));
-
                                 }
 
                                 fragmentWait.changeToContentView(false);
@@ -91,7 +87,6 @@ public class RangerTasksListItem implements Serializable {
 
                             }
                         });
-
     }
 
     public List<RangerTasksListItem> getData() {
@@ -113,7 +108,6 @@ public class RangerTasksListItem implements Serializable {
     public String getTaskUrl() {
         return taskImageUrlDB;
     }
-
 
 
 }

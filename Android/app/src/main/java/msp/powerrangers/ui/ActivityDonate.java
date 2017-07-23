@@ -1,14 +1,11 @@
 package msp.powerrangers.ui;
 
 import android.content.Intent;
-import android.renderscript.Double2;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,31 +39,29 @@ public class ActivityDonate extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_donate);
 
-        Log.v("ActivityDonate", "ActivityDonate onCreate");
-        Log.i("KATJA", "********************   new donation   **************************");
-        Log.i("KATJA", "ActivityDonate onCreate");
-
         //get current User Object from Intent
         Intent myIntent = getIntent();
         us = (User) myIntent.getSerializableExtra("USER");
         usDbId = us.getDbId();
-        Log.i("KATJA", "user dbId:" + usDbId);
-
 
         textViewDonateValue = (TextView) findViewById(R.id.aDonate_donateValue);
         seekbar = (SeekBar) findViewById(R.id.seekBarDonate);
 
-        //* Show current seekbar value
+        // Show current seekbar value
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged (SeekBar seekBar,int progress, boolean fromUser){
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 int val = (progress * (seekBar.getWidth() - 2 * seekBar.getThumbOffset())) / seekBar.getMax();
                 textViewDonateValue.setText("" + val);
             }
+
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
         });
 
 
@@ -75,7 +70,6 @@ public class ActivityDonate extends AppCompatActivity {
         refPathCurrentUser = FirebaseDatabase.getInstance().getReference().child("users").child(usDbId);
 
         ButtonDonateNow = (Button) findViewById(R.id.aDonate_buttonDonate);
-
         ButtonDonateNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +79,6 @@ public class ActivityDonate extends AppCompatActivity {
                 if (!TextUtils.isEmpty(value)) {
 
                     final double donateValue = Double.parseDouble(value);
-                    Log.i("DONATION", "Donated" + donateValue);
 
                     try {
                         // create instance of donation class
@@ -102,7 +95,7 @@ public class ActivityDonate extends AppCompatActivity {
                                     public void onDataChange(DataSnapshot dataSnapshot) {
 
                                         String currentDonatedValue = String.valueOf(dataSnapshot.child("donatedValue").getValue());
-                                        double newDV = Double.parseDouble(currentDonatedValue)+donateValue;
+                                        double newDV = Double.parseDouble(currentDonatedValue) + donateValue;
                                         dataSnapshot.getRef().child("donatedValue").setValue(newDV);
                                     }
 
@@ -110,7 +103,6 @@ public class ActivityDonate extends AppCompatActivity {
                                     public void onCancelled(DatabaseError databaseError) {
 
                                     }
-
                                 });
 
                         //textViewDonateValue.setText("");
@@ -118,14 +110,10 @@ public class ActivityDonate extends AppCompatActivity {
                     } catch (Exception e) {
                         Toast.makeText(ActivityDonate.this, R.string.aDonate_toastFailDonate, Toast.LENGTH_SHORT).show();
                     }
-
                     // return to main activity
                     finish();
-
                 }
             }
         });
-
     }
-
 }

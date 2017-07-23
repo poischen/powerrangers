@@ -25,7 +25,6 @@ public class User extends Role implements Serializable  {
     private List<String> completedTasksIdList;
     private List<String> openTasksIdList;
     private List<Role> roleList;
-    //private List<Double> donationList;
 
     public User(){}
 
@@ -50,13 +49,9 @@ public class User extends Role implements Serializable  {
         openTasksIdList = new ArrayList<String>();
         openTasksIdList.add("DummyID");
 
-        //donationList = new ArrayList<Double>();
-        //donationList.add(0.0);
-
         roleList = new ArrayList<Role>();
 
     }
-
 
     // getter
     public String getName() {
@@ -107,16 +102,6 @@ public class User extends Role implements Serializable  {
         return openTasksIdList.size()-1;
     }
 
-    /*
-    public Double getDonations() {
-        Double donatedPower = 0.0;
-        for (int i=0; i<donationList.size();i++){
-            donatedPower = donatedPower + donationList.get(i);
-        }
-        return donatedPower;
-    }
-    */
-
     // setter
     public void setName(String userName) {
         this.userName = userName;
@@ -138,11 +123,6 @@ public class User extends Role implements Serializable  {
         this.donatedValue = donatedValue;
     }
 
-
-   /* public void setDoantedPower(double donation) {
-        this.donationList.add(donation);
-    }*/
-
     @Override
     public List<Role> getRoles() {
         if(roleList == null){
@@ -161,34 +141,6 @@ public class User extends Role implements Serializable  {
 
     }
 
-
-    public  void login(){
-        System.out.println("User Login");
-    }
-
-    public  void logout(){
-        System.out.println("User logout");
-    }
-
-    public  void confirmTask(Task t){
-
-    }
-
-    public List<Case> showAllCases(){
-        return null;
-    }
-
-    public List<Case> showAllCasesToConfirm(){
-        return null;
-    }
-
-    public void receiveReward(double reward){
-
-    }
-
-    public void voteForTask(){
-
-    }
 
 
 }

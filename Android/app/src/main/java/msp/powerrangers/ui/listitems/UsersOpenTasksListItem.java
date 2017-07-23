@@ -1,8 +1,5 @@
 package msp.powerrangers.ui.listitems;
 
-import android.graphics.Bitmap;
-import android.util.Log;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -13,12 +10,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import msp.powerrangers.R;
 import msp.powerrangers.ui.FragmentWait;
 
 /**
- * == Data
- * Tutorial: https://www.sitepoint.com/mastering-complex-lists-with-the-android-recyclerview/
+ * Data for OpenTasks in RecyclerView
  */
 public class UsersOpenTasksListItem implements Serializable {
 
@@ -44,7 +39,6 @@ public class UsersOpenTasksListItem implements Serializable {
 
     List<UsersOpenTasksListItem> data = new ArrayList<>();
 
-
     public UsersOpenTasksListItem(String title, String location, String comment,
                                   String taskIdDB, String caseIdDB, String taskImageUrlDB, Boolean taskCompletedDB) {
         this.title = title;
@@ -69,48 +63,30 @@ public class UsersOpenTasksListItem implements Serializable {
         dbRefTasks.orderByChild("rangerDbId").equalTo(userDbId)
                 .addValueEventListener(
                         new ValueEventListener() {
-
-
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-
                                 data = new ArrayList<UsersOpenTasksListItem>();
+
                                 // get data for each task from the db
                                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
 
                                     taskCompletedDB = (Boolean) singleSnapshot.child("taskCompleted").getValue();
-                                    Log.i("KATJA", "taskCompleted: "+ taskCompletedDB.toString());
                                     taskVotedDb = (Boolean) singleSnapshot.child("taskVoted").getValue();
-                                    Log.i("KATJA", "taskVoted: "+ taskVotedDb.toString());
 
                                     if (!taskCompletedDB || !taskVotedDb) {
-                                        titleDB = (String) singleSnapshot.child("name").getValue();
 
+                                        titleDB = (String) singleSnapshot.child("name").getValue();
                                         cityDB = (String) singleSnapshot.child("city").getValue();
                                         countryDB = (String) singleSnapshot.child("country").getValue();
                                         locationDB = cityDB + ", " + countryDB;
-
                                         commentDB = (String) singleSnapshot.child("comment").getValue();
-
-                                        // TODO: get first image for task from db
-                                       // taskImageUrlDB = (String) singleSnapshot.child("taskPicture").getValue();
-                                       // caseImageUrlDB = (String) singleSnapshot.child("casePicture").getValue();
-
                                         taskImageDB = (String) singleSnapshot.child("taskPicture").getValue();
-
                                         taskIdDB = (String) singleSnapshot.child("taskDbId").getValue();
-                                        Log.i("KATJA", "taskDbId in dataSnapshot: "+ taskIdDB);
-
                                         caseIdDB = (String) singleSnapshot.child("caseId").getValue();
 
                                         data.add(new UsersOpenTasksListItem(titleDB, locationDB, commentDB, taskIdDB, caseIdDB, taskImageDB, taskCompletedDB));
-
-                                        Log.i("This", this.toString());
-                                        Log.i("Data add", data.toString());
-
                                     }
 
-                                    Log.v("UOTListItem", "call fragmentWait.changeToContentView()");
                                     fragmentWait.changeToContentUOT();
                                 }
                             }
@@ -120,15 +96,11 @@ public class UsersOpenTasksListItem implements Serializable {
 
                             }
                         });
-
     }
 
     public List<UsersOpenTasksListItem> getData() {
-        Log.i("This", this.toString());
-        Log.i("THE DATA", data.toString());
         return data;
     }
-
 
     public String getTitle() {
         return titleDB;
@@ -153,7 +125,5 @@ public class UsersOpenTasksListItem implements Serializable {
     public String getTaskUrl() {
         return taskImageUrlDB;
     }
-
-
 
 }
