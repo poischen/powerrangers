@@ -209,8 +209,6 @@ public class FragmentDetailRangerTask extends Fragment {
                 taskID =  (String) singleSnapshot.child("taskId").getValue();
                 taskDBId = (String) singleSnapshot.child("taskDbId").getValue();
                 isAssigned = (Boolean) singleSnapshot.child("assigned").getValue();
-
-                Log.i("KATJA", "taskID: "+taskID);
                 Log.i("KATJA", "taskDBID: "+taskDBId);
                 Log.i("KATJA", "isAssigned: "+isAssigned.toString());
 
@@ -218,8 +216,6 @@ public class FragmentDetailRangerTask extends Fragment {
                 textRangerReward.setText(reward);
 
                 String numberRangers = String.valueOf(singleSnapshot.child("numberRangers").getValue());
-                Log.i("KATJA", "#rangers: "+numberRangers);
-
                 textNumberRangers.setText(numberRangers);
 
                 textPollutionLevel.setText(convertScaleToText(scale));
@@ -261,6 +257,7 @@ public class FragmentDetailRangerTask extends Fragment {
 
                 DatabaseReference db = FirebaseDatabase.getInstance().getReference();
                 refPathCurrentUser = db.child("users").child(userDbID);
+                Log.i("KATJA", "current user:" +userDbID);
 
                 refPathCurrentUser.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -276,9 +273,11 @@ public class FragmentDetailRangerTask extends Fragment {
                         dbRefTasks.child(taskDBId).child("assigned").getRef().setValue(true);
 
                         // update the number of user open tasks
-                        String currentNOT = (String) dataSnapshot.child("numberOpenTasks").getValue();
-                        int newCount = Integer.parseInt(currentNOT) + 1;
-                        refPathCurrentUser.child("numberOpenTasks").setValue(String.valueOf(newCount));
+                        String currentNOT = String.valueOf(dataSnapshot.child("numberOpenTasks").getValue());
+                        Log.i("KATJA", "currentNOT:" +currentNOT);
+                        int newNOT = Integer.parseInt(currentNOT) + 1;
+                        Log.i("KATJA", "newNOT:" +newNOT);
+                        refPathCurrentUser.child("numberOpenTasks").setValue(newNOT);
 
                     }
 

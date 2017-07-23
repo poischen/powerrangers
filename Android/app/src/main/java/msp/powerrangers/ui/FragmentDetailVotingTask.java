@@ -212,12 +212,12 @@ public class FragmentDetailVotingTask extends Fragment {
                                                 public void onDataChange(DataSnapshot dataSnap) {
 
                                                     // decrement the number of open tasks
-                                                    String currentNOT = (String) dataSnap.child("numberOpenTasks").getValue();
+                                                    String currentNOT = String.valueOf(dataSnap.child("numberOpenTasks").getValue());
                                                     int newNOT = Integer.parseInt(currentNOT) - 1;
                                                     dataSnap.getRef().child("numberOpenTasks").setValue(newNOT);
 
                                                     // decrement the number of completed tasks
-                                                    String currentNCT = (String) dataSnap.child("numberCompletedTasks").getValue();
+                                                    String currentNCT = String.valueOf(dataSnap.child("numberCompletedTasks").getValue());
                                                     int newNCT = Integer.parseInt(currentNCT) - 1;
                                                     dataSnap.getRef().child("numberCompletedTasks").setValue(newNCT);
                                                 }
@@ -286,7 +286,7 @@ public class FragmentDetailVotingTask extends Fragment {
                                                         public void onDataChange(DataSnapshot dataSnap) {
 
                                                             // decrement bubble number opentasks
-                                                            String currentNOT = String.valueOf( dataSnap.child("numberOpenTasks").getValue());
+                                                            String currentNOT = String.valueOf(dataSnap.child("numberOpenTasks").getValue());
                                                             Log.i("KATJA", "currentNOT: " + currentNOT);
                                                             int newNOT = Integer.parseInt(currentNOT) - 1;
                                                             dataSnap.child("numberOpenTasks").getRef().setValue(newNOT);

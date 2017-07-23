@@ -74,6 +74,7 @@ public class UsersOpenTasksListItem implements Serializable {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
+                                data = new ArrayList<UsersOpenTasksListItem>();
                                 // get data for each task from the db
                                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
 

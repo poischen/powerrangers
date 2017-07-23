@@ -262,7 +262,7 @@ public class FragmentDetailUsersOpenTask extends Fragment {
                                 Log.i("KATJA", "DUOT current NOT: "+currentCount);
                                 int newCount = Integer.valueOf(currentCount) + 1;
                                 Log.i("KATJA", "DUOT new NOT: "+currentCount);
-                                refPathCurrentUser.child("numberCompletedTasks").setValue(String.valueOf(newCount));
+                                refPathCurrentUser.child("numberCompletedTasks").setValue(newCount);
                             }
 
                             @Override
