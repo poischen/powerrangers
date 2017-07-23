@@ -286,10 +286,10 @@ public class FragmentDetailVotingTask extends Fragment {
                                                         public void onDataChange(DataSnapshot dataSnap) {
 
                                                             // decrement bubble number opentasks
-                                                            String currentNOT = (String) dataSnap.child("numberOpenTasks").getValue();
+                                                            String currentNOT = String.valueOf( dataSnap.child("numberOpenTasks").getValue());
                                                             Log.i("KATJA", "currentNOT: " + currentNOT);
                                                             int newNOT = Integer.parseInt(currentNOT) - 1;
-                                                            dataSnap.child("numberOpenTasks").getRef().setValue(String.valueOf(newNOT));
+                                                            dataSnap.child("numberOpenTasks").getRef().setValue(newNOT);
                                                             Log.i("KATJA", "newNOT: " + newNOT);
 
                                                             // update balance with reward
