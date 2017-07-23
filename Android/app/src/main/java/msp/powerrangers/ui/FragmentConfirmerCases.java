@@ -84,18 +84,6 @@ public class FragmentConfirmerCases extends Fragment {
                     @Override
                     public void onItemClick(View view, int position) {
 
-                        // switch to FragmentDetailConfirmerCase
-                        /*FragmentDetailConfirmerCase confirmCaseFragment = new FragmentDetailConfirmerCase();
-                        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-
-                        Bundle bundles = new Bundle();
-                        bundles.putInt("PositionConfirm", position);
-                        confirmCaseFragment.setArguments(bundles);
-                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        ft.replace(R.id.activity_main_fragment_container, confirmCaseFragment);
-                        ft.addToBackStack(null);
-                        ft.commit();*/
-
                         FragmentDetailConfirmerCase confirmCaseFragment = new FragmentDetailConfirmerCase();
                         Bundle bundle = new Bundle();
                         bundle.putInt("PositionConfirm", position);
@@ -119,6 +107,7 @@ public class FragmentConfirmerCases extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         List<ConfirmerCasesListItem> dataCC = confirmerCasesListItem.getData();
+
         if (dataCC.size()==0) {
             Log.i("KATJA", "confirmer cases list is empty");
             TextView tvEmptyList = (TextView) rootView.findViewById(R.id.textEmptyListCC);
@@ -164,10 +153,9 @@ public class FragmentConfirmerCases extends Fragment {
             //Use the provided View Holder on the onCreateViewHolder method to populate the current row on the RecyclerView
             holder.title.setText(listItem.get(position).title);
             holder.location.setText(listItem.get(position).city + ", " + listItem.get(position).country);
-            //holder.comment.setText(listItem.get(position).comment);
 
             String imageURL = listItem.get(position).caseImageUrlDB;
-            Log.v("FragmentConfirmerCases", "imageURL: " + imageURL);
+            Log.i("KATJA", "onBind imageURL: " + imageURL);
 
             try {
                 final File localFile = File.createTempFile("images", "jpg");
@@ -176,19 +164,20 @@ public class FragmentConfirmerCases extends Fragment {
                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                Log.v("FragmentConfirmerCases", "download erfolgreich");
+                                Log.i("KATJA", "CC image download erfolgreich");
                                 Bitmap caseImage = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                                 holder.image.setImageBitmap(blur(caseImage));
+                                Log.i("KATJA", "CC image set");
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        Log.d("FragmentConfirmerCases", "download nicht erfolgreich");
+                        Log.i("KATJA", "CC image download micht erfolgreich");
                         holder.image.setImageResource(R.drawable.placeholder_case);
                     }
                 });
             } catch (Exception e) {
-                Log.d("FragmentConfirmerCases", "download nicht erfolgreich");
+                Log.i("KATJA", "download nicht erfolgreich");
                 holder.image.setImageResource(R.drawable.placeholder_case);
 
             }

@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -242,6 +243,8 @@ public class ActivityReportCase extends AppCompatActivity {
                         && !TextUtils.isEmpty(caseCountry)
                         && pictureUrisList.size() > 1) {
 
+                    casePictures = uploadFiles(caseId, pictureUrisList);
+
                     //Create Case
                     c = new Case(dbId,
                             us.getDbId(),
@@ -283,7 +286,6 @@ public class ActivityReportCase extends AppCompatActivity {
 
                     });
 
-                    casePictures = uploadFiles(caseId, pictureUrisList);
                     Toast.makeText(getApplicationContext(), R.string.reportCaseSuccess, Toast.LENGTH_LONG).show();
                     finish();
 
@@ -403,6 +405,7 @@ public class ActivityReportCase extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Log.i("KATJA", "Case img was uploaded!");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -435,6 +438,7 @@ public class ActivityReportCase extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Log.i("KATJA", "task img  was uploaded!");
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

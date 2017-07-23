@@ -359,8 +359,7 @@ public class FragmentDetailConfirmerCase extends Fragment {
                                         new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnap) {
-                                        // TODO eigentlich sollte der fixedReward in der Confirmer-Instanz gesetzt werden. Zurzeit gibt es keinen Confimer objekt..
-                                        // [getFixedReward vom Confirmer benutzen]
+
                                         int fixedReward = 5;
                                         String currentBalance = String.valueOf(dataSnap.child("balance").getValue());
                                         int newBalance =Integer.parseInt(currentBalance)+fixedReward;
