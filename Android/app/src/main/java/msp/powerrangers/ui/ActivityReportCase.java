@@ -241,7 +241,6 @@ public class ActivityReportCase extends AppCompatActivity {
                         && !TextUtils.isEmpty(caseCity)
                         && !TextUtils.isEmpty(caseCountry)
                         && pictureUrisList.size() > 1) {
-                    casePictures = uploadFiles(caseId, pictureUrisList);
 
                     //Create Case
                     c = new Case(dbId,
@@ -284,6 +283,7 @@ public class ActivityReportCase extends AppCompatActivity {
 
                     });
 
+                    casePictures = uploadFiles(caseId, pictureUrisList);
                     Toast.makeText(getApplicationContext(), R.string.reportCaseSuccess, Toast.LENGTH_LONG).show();
                     finish();
 

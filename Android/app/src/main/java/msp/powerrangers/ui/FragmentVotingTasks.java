@@ -107,7 +107,15 @@ public class FragmentVotingTasks extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // 3. Create an adapter and fill
-        mAdapter = new FragmentVotingTasks.Recycler_View_Adapter(votingTasksListItem.getData(), getContext());
+        List<VotingTasksListItem> dataVT = votingTasksListItem.getData();
+        if (dataVT.size()==0) {
+            Log.i("KATJA", "voting list is empty");
+            TextView tvEmptyList = (TextView) rootView.findViewById(R.id.textEmptyListVT);
+            tvEmptyList.setVisibility(View.VISIBLE);
+        }
+
+        mAdapter = new FragmentVotingTasks.Recycler_View_Adapter(dataVT, getContext());
+
 
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);

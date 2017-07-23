@@ -112,7 +112,7 @@
 
     <!-- FragmentRangerTasks & DetailRangerTask-->
     <string name="titleRangerTasks">Ranger Tasks</string>
-    <string name="searchView">Search...</string>
+    <string name="emptyListRT">Sorry, there are no ranger jobs. \n You can confirm some cases :)</string>
     <string name="taskDescriptionDetail">Here comes the task description</string>
     <string name="pollutionDetail">Pollution:</string>
     <string name="rangersDetail">Rangers</string>
@@ -122,6 +122,7 @@
 
     <!-- FragmentConfirmerCases-->
     <string name="titleConfirmerCases">Cases to confirm</string>
+    <string name="emptyListCC">Sorry, there are no cases to confirm.</string>
 
     <!-- FragmentUsersOpenTasks & DetailUsersOpenTask-->
     <string name="titleUsersOpenTasks">Open Tasks</string>
@@ -133,6 +134,7 @@
 
     <!-- FragmentVotingTasks-->
     <string name="titleVotingTasks">Voting Tasks</string>
+    <string name="emptyListVT">Sorry, there are no tasks to vote for!</string>
     <string name="errorRangerVotesHisOwnTask">Sorry, you can not vote for your own task! ;-)</string>
     <string name="votingNotOk">Thank you for voting, ranger won\'t get his reward ;-(</string>
     <string name="votingOk">Thank you for voting, ranger will get his reward ;-)</string>

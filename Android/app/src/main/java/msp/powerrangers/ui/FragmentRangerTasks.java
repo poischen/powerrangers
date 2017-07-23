@@ -40,6 +40,7 @@ import msp.powerrangers.R;
 import msp.powerrangers.logic.Global;
 import msp.powerrangers.ui.listitems.ConfirmerCasesListItem;
 import msp.powerrangers.ui.listitems.RangerTasksListItem;
+import msp.powerrangers.ui.listitems.VotingTasksListItem;
 
 
 /**
@@ -106,8 +107,14 @@ public class FragmentRangerTasks extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+        List<RangerTasksListItem> dataRT = tasksListItem.getData();
+        if (dataRT.size()==0) {
+            Log.i("KATJA", "ranger tasks list is empty");
+            TextView tvEmptyList = (TextView) rootView.findViewById(R.id.textEmptyListRT);
+            tvEmptyList.setVisibility(View.VISIBLE);
+        }
         // 3. Create an adapter
-        mAdapter = new Recycler_View_Adapter(tasksListItem.getData(), getContext());
+        mAdapter = new Recycler_View_Adapter(dataRT, getContext());
 
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);

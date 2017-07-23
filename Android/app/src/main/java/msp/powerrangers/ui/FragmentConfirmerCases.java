@@ -35,9 +35,11 @@ import java.util.Collections;
 import java.util.List;
 
 import msp.powerrangers.R;
+import msp.powerrangers.logic.Confirmer;
 import msp.powerrangers.logic.Global;
 import msp.powerrangers.logic.User;
 import msp.powerrangers.ui.listitems.ConfirmerCasesListItem;
+import msp.powerrangers.ui.listitems.RangerTasksListItem;
 
 
 /**
@@ -116,8 +118,14 @@ public class FragmentConfirmerCases extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+        List<ConfirmerCasesListItem> dataCC = confirmerCasesListItem.getData();
+        if (dataCC.size()==0) {
+            Log.i("KATJA", "confirmer cases list is empty");
+            TextView tvEmptyList = (TextView) rootView.findViewById(R.id.textEmptyListCC);
+            tvEmptyList.setVisibility(View.VISIBLE);
+        }
         // 3. Create an adapter and fill
-        mAdapter = new Recycler_View_Adapter(confirmerCasesListItem.getData(), getContext());
+        mAdapter = new Recycler_View_Adapter(dataCC, getContext());
 
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);

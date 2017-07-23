@@ -271,21 +271,12 @@ public class FragmentStart extends Fragment implements View.OnClickListener {
                 }
                 break;
 
+            // gibt es nicht mehr
             case R.id.logoutButton:
-                Log.i("KATJA", "FrStart, want to log out");
                 FirebaseAuth.getInstance().signOut();
-
-                Log.i("KATJA", "FrStart,user from shared preferences:");
-                SharedPreferences preferences =getActivity().getSharedPreferences(getResources().getString(R.string.sharedPrefs_userDbIdPrefname), 0);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.clear();
-                editor.commit();
-                Log.i("KATJA", "FrStart, after clear shared preferences");
-
                 fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentTransaction = fragmentManager.beginTransaction();
                 FragmentLogin fl = new FragmentLogin();
-                Log.i("KATJA", "FrStart, new FrLogin");
                 fragmentTransaction.replace(R.id.activity_main_fragment_container, fl);
                 fragmentTransaction.commit();
                 break;

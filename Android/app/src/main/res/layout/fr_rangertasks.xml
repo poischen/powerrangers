@@ -28,12 +28,25 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true" />
 
+        <TextView
+            android:id="@+id/textEmptyListRT"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:textSize="12sp"
+            android:textColor="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:layout_below="@+id/titleRangerTasks"
+            android:text="@string/emptyListVT"
+            android:visibility="gone"/>
+
 
         <!-- Recycler View -->
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewRT"
             android:name="msp.powerrangers.ui.FragmentRangerTask"
-            android:layout_below="@+id/titleRangerTasks"
+            android:layout_below="@+id/textEmptyListRT"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="LinearLayoutManager"
